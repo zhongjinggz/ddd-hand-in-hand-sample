@@ -4,17 +4,8 @@ import java.util.Set;
 
 public class OrgType {
     private String code;
-    private Set<Org> orgs;
     private String name;
     private String status;
-
-    public Set<Org> getOrgs() {
-        return orgs;
-    }
-
-    public void setOrgs(Set<Org> orgs) {
-        this.orgs = orgs;
-    }
 
     public String getCode() {
         return code;

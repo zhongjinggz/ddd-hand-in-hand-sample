@@ -2,16 +2,16 @@ package qiyebao.domain.orgmng;
 
 public class Org {
     private Long id;
-    private OrgType orgType;         // [1]
+    private String orgTypeCode;         // [1]
     private String name;
     private String status;
 
-    public OrgType getOrgType() {
-        return orgType;
+    public String getOrgTypeCode() {
+        return orgTypeCode;
     }
 
-    public void setOrgType(OrgType orgType) {
-        this.orgType = orgType;
+    public void setOrgTypeCode(String orgTypeCode) {
+        this.orgTypeCode = orgTypeCode;
     }
 
     public Long getId() {
