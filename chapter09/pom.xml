@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>hand.in.hand.ddd</groupId>
-    <artifactId>chapter08</artifactId>
+    <artifactId>chapter09</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>chapter08</name>
-    <description>chapter08</description>
+    <name>chapter09</name>
+    <description>chapter09</description>
     <properties>
         <java.version>21</java.version>
         <!-- springboot 3.4.1 中默认的 logback1.5.12 有安全漏洞，通过以下属性可以使用新版本 -->
