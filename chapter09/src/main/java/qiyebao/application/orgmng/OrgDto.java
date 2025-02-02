@@ -1,4 +1,4 @@
-package qiyebao.adapter.driving.restful.orgmng;
+package qiyebao.application.orgmng;
 
 import java.time.LocalDateTime;
 

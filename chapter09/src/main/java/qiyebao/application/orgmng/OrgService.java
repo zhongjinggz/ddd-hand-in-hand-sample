@@ -4,7 +4,6 @@ import qiyebao.adapter.driven.persistence.orgmng.OrgRepository;
 import qiyebao.adapter.driven.persistence.orgmng.OrgTypeRepository;
 import qiyebao.adapter.driven.persistence.tenantmng.TenantRepository;
 import qiyebao.adapter.driven.persistence.usermng.UserRepository;
-import qiyebao.adapter.driving.restful.orgmng.OrgDto;
 import qiyebao.common.framework.exception.BusinessException;
 import qiyebao.domain.orgmng.*;
 import qiyebao.adapter.driven.persistence.orgmng.EmpRepository;
