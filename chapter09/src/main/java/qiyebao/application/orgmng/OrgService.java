@@ -44,7 +44,7 @@ public class OrgService {
         return buildOrgDto(org);
     }
 
-    private static OrgDto buildOrgDto(Org org) {
+    private OrgDto buildOrgDto(Org org) {
         OrgDto response = new OrgDto();
         response.setId(org.getId());
         response.setTenantId(org.getTenantId());
@@ -59,7 +59,7 @@ public class OrgService {
         return response;
     }
 
-    private static Org buildOrg(OrgDto request, Long userId) {
+    private Org buildOrg(OrgDto request, Long userId) {
         Org org = new Org();
         org.setOrgTypeCode(request.getOrgTypeCode());
         org.setLeaderId(request.getLeaderId());
