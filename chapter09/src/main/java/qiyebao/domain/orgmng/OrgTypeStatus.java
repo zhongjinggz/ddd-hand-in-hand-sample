@@ -1,8 +1,8 @@
 package qiyebao.domain.orgmng;
 
-import java.util.Arrays;
+import qiyebao.common.framework.domain.CodeEnum;
 
-public enum OrgTypeStatus {
+public enum OrgTypeStatus implements CodeEnum {
     EFFECTIVE("EF", "有效"),
     TERMINATED("TE", "终止");
 
@@ -15,7 +15,12 @@ public enum OrgTypeStatus {
 
     }
 
-    public String code() {
+    public static OrgTypeStatus ofCode(String code) {
+        return CodeEnum.ofCode(values(), code);
+    }
+
+    @Override
+    public String getCode() {
         return code;
     }
 

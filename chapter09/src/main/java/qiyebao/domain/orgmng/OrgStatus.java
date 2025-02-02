@@ -1,8 +1,8 @@
 package qiyebao.domain.orgmng;
 
-import java.util.Arrays;
+import qiyebao.common.framework.domain.CodeEnum;
 
-public enum OrgStatus {
+public enum OrgStatus implements CodeEnum {
     EFFECTIVE("EF", "有效"),
     CANCELLED("CA", "终止");
 
@@ -14,11 +14,16 @@ public enum OrgStatus {
         this.desc = desc;
     }
 
-    public String code() {
+    public String getCode() {
         return code;
     }
 
     public String getDesc() {
         return desc;
+    }
+
+
+    public static OrgStatus ofCode(String code) {
+        return CodeEnum.ofCode(values(), code);
     }
 }
