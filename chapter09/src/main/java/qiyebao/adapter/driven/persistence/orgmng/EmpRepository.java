@@ -1,29 +1,27 @@
 package qiyebao.adapter.driven.persistence.orgmng;
 
-import qiyebao.common.framework.adapter.driven.persistence.existsSelector;
+import qiyebao.common.framework.adapter.driven.persistence.Selector;
 import qiyebao.domain.orgmng.EmpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class EmpRepository implements existsSelector {
+public class EmpRepository {
 
     private final JdbcTemplate jdbc;
+    private final Selector selector;
 
-    public EmpRepository(JdbcTemplate jdbc) {
+    public EmpRepository(JdbcTemplate jdbc
+    , Selector selector) {
         this.jdbc = jdbc;
+        this.selector = selector;
     }
 
     public boolean existsByIdAndStatus(Long tenantId, Long id, EmpStatus... statuses) {
         String sql = buildSqlExistsByIdAndStatus(statuses.length);
         Object[] params = buildParamsExistsByIdAndStatus(tenantId, id, statuses);
 
-        return selectExists(sql, params);
-    }
-
-    @Override
-    public JdbcTemplate getJdbc() {
-        return jdbc;
+        return selector.selectExists(sql, params);
     }
 
     private static Object[] buildParamsExistsByIdAndStatus(Long tenantId, Long id, EmpStatus[] statuses) {

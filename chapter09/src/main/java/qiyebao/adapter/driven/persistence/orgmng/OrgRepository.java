@@ -1,6 +1,6 @@
 package qiyebao.adapter.driven.persistence.orgmng;
 
-import qiyebao.common.framework.adapter.driven.persistence.existsSelector;
+import qiyebao.common.framework.adapter.driven.persistence.Selector;
 import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.Org;
 import qiyebao.domain.orgmng.OrgStatus;
@@ -13,76 +13,60 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.apache.commons.lang3.ArrayUtils.toArray;
 import static qiyebao.common.utils.ReflectUtils.forceSet;
 
 @Repository
-public class OrgRepository implements existsSelector {
+public class OrgRepository {
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertOrg;
+    private final Selector selector;
 
-    public OrgRepository(JdbcTemplate jdbc) {
+    public OrgRepository(JdbcTemplate jdbc
+            , Selector selector) {
         this.jdbc = jdbc;
         this.insertOrg = new SimpleJdbcInsert(jdbc)
                 .withTableName("org")
                 .usingGeneratedKeyColumns("id");
+        this.selector = selector;
     }
 
-    @Override
-    public JdbcTemplate getJdbc() {
-        return jdbc;
-    }
+    private static String fields = " id"
+            + ", tenant_id"
+            + ", superior_id"
+            + ", org_type_code"
+            + ", leader_id"
+            + ", name"
+            + ", status_code"
+            + ", created_at"
+            + ", created_by"
+            + ", last_updated_at"
+            + ", last_updated_by ";
 
     public Optional<Org> findByIdAndStatus(Long tenantId, Long id, OrgStatus status) {
-        final String sql = " select id"
-                + ", tenant_id"
-                + ", superior_id"
-                + ", org_type_code"
-                + ", leader_id"
-                + ", name"
-                + ", status_code"
-                + ", created_at"
-                + ", created_by"
-                + ", last_updated_at"
-                + ", last_updated_by "
+        final String sql = " select " + fields
                 + " from org "
                 + " where tenant_id = ?  "
                 + "   and id = ? "
                 + "   and status_code = ? ";
 
-        List<Map<String, Object>> maps
-                = jdbc.queryForList(sql
+        return selector.selectOne(sql
+                , this::mapToOrg
                 , tenantId
                 , id
                 , status.getCode());
-        return maps.isEmpty()
-                ? Optional.empty()
-                : Optional.of(mapToOrg(maps.getFirst()));
     }
 
     public Optional<Org> findById(long tenantId, long id) {
-        final String sql = "select id"
-                + ", tenant_id"
-                + ", superior_id"
-                + ", org_type_code"
-                + ", leader_id"
-                + ", name"
-                + ", status_code"
-                + ", created_at"
-                + ", created_by"
-                + ", last_updated_at"
-                + ", last_updated_by "
-                + "from org "
-                + "where tenant_id = ? "
-                + "and id = ?";
+        final String sql = " select " + fields
+                + " from org "
+                + " where tenant_id = ? "
+                + "  and id = ?";
 
-        List<Map<String, Object>> maps
-                = jdbc.queryForList(sql
+
+        return selector.selectOne(sql
+                , this::mapToOrg
                 , tenantId
                 , id);
-        return maps.isEmpty()
-                ? Optional.empty()
-                : Optional.of(mapToOrg(maps.getFirst()));
     }
 
     private Org mapToOrg(Map<String, Object> map) {
@@ -129,7 +113,10 @@ public class OrgRepository implements existsSelector {
                 + "   and name = ?"
                 + " limit 1 ";
 
-        return selectExists(sql, toArray(tenantId, superiorId, name));
+        return selector.selectExists(sql
+                , tenantId
+                , superiorId
+                , name);
     }
 
     public int update(Org org) {
