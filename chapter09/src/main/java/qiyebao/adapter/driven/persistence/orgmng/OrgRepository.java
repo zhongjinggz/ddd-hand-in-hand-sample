@@ -62,7 +62,6 @@ public class OrgRepository {
                 + " where tenant_id = ? "
                 + "  and id = ?";
 
-
         return selector.selectOne(sql
                 , this::mapToOrg
                 , tenantId
