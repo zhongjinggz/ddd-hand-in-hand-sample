@@ -3,25 +3,25 @@ package qiyebao.adapter.driven.persistence.orgmng;
 import qiyebao.common.framework.adapter.driven.persistence.Selector;
 import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.Org;
+import qiyebao.domain.orgmng.OrgRepository;
 import qiyebao.domain.orgmng.OrgStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static qiyebao.common.utils.ReflectUtils.forceSet;
 
 @Repository
-public class OrgRepository {
+public class OrgRepositoryJdbc implements OrgRepository {
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertOrg;
     private final Selector selector;
 
-    public OrgRepository(JdbcTemplate jdbc
+    public OrgRepositoryJdbc(JdbcTemplate jdbc
             , Selector selector) {
         this.jdbc = jdbc;
         this.insertOrg = new SimpleJdbcInsert(jdbc)
@@ -42,6 +42,7 @@ public class OrgRepository {
             + ", last_updated_at"
             + ", last_updated_by ";
 
+    @Override
     public Optional<Org> findByIdAndStatus(Long tenantId, Long id, OrgStatus status) {
         final String sql = " select " + fields
                 + " from org "
@@ -56,6 +57,7 @@ public class OrgRepository {
                 , status.getCode());
     }
 
+    @Override
     public Optional<Org> findById(long tenantId, long id) {
         final String sql = " select " + fields
                 + " from org "
@@ -85,6 +87,7 @@ public class OrgRepository {
         return result;
     }
 
+    @Override
     public Org save(Org org) {
         Map<String, Object> params = new HashMap<>(8);
 
@@ -104,6 +107,7 @@ public class OrgRepository {
         return org;
     }
 
+    @Override
     public boolean existsBySuperiorAndName(Long tenantId, Long superiorId, String name) {
         final String sql = " select 1 "
                 + " from org "
@@ -118,6 +122,7 @@ public class OrgRepository {
                 , name);
     }
 
+    @Override
     public int update(Org org) {
         String sql = "update org "
                 + " set superior_id = ? "

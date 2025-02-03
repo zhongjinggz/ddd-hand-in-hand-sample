@@ -1,23 +1,24 @@
 package qiyebao.adapter.driven.persistence.orgmng;
 
+import qiyebao.common.framework.adapter.driven.persistence.Selector;
 import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.OrgType;
+import qiyebao.domain.orgmng.OrgTypeRepository;
 import qiyebao.domain.orgmng.OrgTypeStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class OrgTypeRepository {
-    private final JdbcTemplate jdbc;
+public class OrgTypeRepositoryJdbc implements OrgTypeRepository {
+    private final Selector selector;
 
-    public OrgTypeRepository(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
+    public OrgTypeRepositoryJdbc(Selector selector) {
+        this.selector = selector;
     }
 
+    @Override
     public Optional<OrgType> findByCodeAndStatus(long tenantId, String code, OrgTypeStatus status) {
         final String sql = "select code"
                 + ", tenant_id"
@@ -32,14 +33,12 @@ public class OrgTypeRepository {
                 + "and code = ? "
                 + "and status_code = ?";
 
-        List<Map<String, Object>> maps
-                = jdbc.queryForList(sql
+        return selector.selectOne(sql
+                , this::mapToOrgType
                 , tenantId
                 , code
                 , status.getCode());
-        return maps.isEmpty()
-                ? Optional.empty()
-                : Optional.of(mapToOrgType(maps.getFirst()));
+
     }
 
     private OrgType mapToOrgType(Map<String, Object> map) {
@@ -56,7 +55,8 @@ public class OrgTypeRepository {
         return result;
     }
 
-    public boolean existsByCodeAndStatus(long tenant, String code, OrgTypeStatus status) {
+    @Override
+    public boolean existsByCodeAndStatus(Long tenantId, String code, OrgTypeStatus status) {
         final String sql = "select 1"
                 + " from org_type "
                 + " where tenant_id = ? "
@@ -64,8 +64,6 @@ public class OrgTypeRepository {
                 + " and status_code = ?"
                 + " limit 1";
 
-        return !(jdbc.queryForList(sql
-                , tenant, code, status.getCode())
-        ).isEmpty();
+        return selector.selectExists(sql, tenantId, code, status.getCode());
     }
 }

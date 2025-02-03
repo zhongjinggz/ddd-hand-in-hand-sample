@@ -1,12 +1,12 @@
 package qiyebao.application.orgmng;
 
-import qiyebao.adapter.driven.persistence.orgmng.OrgRepository;
-import qiyebao.adapter.driven.persistence.orgmng.OrgTypeRepository;
+import qiyebao.domain.orgmng.OrgRepository;
+import qiyebao.domain.orgmng.OrgTypeRepository;
 import qiyebao.adapter.driven.persistence.tenantmng.TenantRepository;
 import qiyebao.adapter.driven.persistence.usermng.UserRepository;
 import qiyebao.common.framework.exception.BusinessException;
 import qiyebao.domain.orgmng.*;
-import qiyebao.adapter.driven.persistence.orgmng.EmpRepository;
+import qiyebao.domain.orgmng.EmpRepository;
 import qiyebao.domain.tenantmng.TenantStatus;
 import qiyebao.domain.usermng.UserStatus;
 import org.springframework.stereotype.Service;
