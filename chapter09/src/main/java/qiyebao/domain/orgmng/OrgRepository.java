@@ -1,4 +1,4 @@
-package qiyebao.domain.orgmng;
+package qiyebao.domain.orgmng;  // [1] 注意，仓库接口在领域层
 
 import java.util.Optional;
 
