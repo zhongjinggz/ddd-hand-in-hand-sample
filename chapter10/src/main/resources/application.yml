@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/unjuanable"
+    username: unjuanable
+    password: unjuanable
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  mapper-locations: "classpath:/mapper/**/*.xml"
+  type-aliases-package: qiyebao.domain.**
+  configuration:
+    map-underscore-to-camel-case: true
+
+log:
+  level:
+    root: INFO
+    org:
+      springframework:
+        jdbc:
+          core: DEBUG
