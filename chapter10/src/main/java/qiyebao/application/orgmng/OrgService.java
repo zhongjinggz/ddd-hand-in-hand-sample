@@ -70,39 +70,56 @@ public class OrgService {
     private void validate(OrgDto request, Long userId) {
         final var tenantId = request.getTenantId();
 
-        // 校验通用信息
-        tenantShouldValid(tenantId);
-        userShouldValid(tenantId, userId);
-
-        // 校验组织负责人
-        orgLeaderShouldValid(tenantId, request.getLeaderId());
-
-        // 校验组织名称
-        orgNameShouldNotBlank(request.getName());
-        orgNameUnderSameSuperiorShouldNotDuplicated(tenantId
-            , request.getSuperiorId()
-            , request.getName());
-
-        // 校验组织类型
-        orgTypeShouldNotBlank(request.getOrgTypeCode());
-        orgTypeShouldValid(tenantId, request.getOrgTypeCode());
-        orgTypeShouldNotEntp(request.getOrgTypeCode());
-
-        // 校验上级组织
-        Org superior = superiorShouldValid(tenantId, request.getSuperiorId());
-        OrgType superiorOrgType = superiorOrgTypeShouldValid(tenantId
-            , superior.getOrgTypeCode()
-            , request.getSuperiorId());
-        superiorOfDevGrpShouldDevCent(request.getId()
-            , request.getOrgTypeCode()
-            , request.getSuperiorId()
-            , superiorOrgType.getCode());
-        superiorOfDevCentAndDirectDeptShouldEntp(request.getId()
-            , request.getOrgTypeCode()
-            , request.getSuperiorId()
-            , superiorOrgType.getCode());
+        validateCommonInfo(userId, tenantId);
+        validateOrgLeader(tenantId, request.getLeaderId());
+        validateOrgName(tenantId, request.getSuperiorId(), request.getName());
+        validateOrgType(tenantId, request.getOrgTypeCode());
+        validateSuperior(tenantId, request.getId(), request.getOrgTypeCode(), request.getSuperiorId());
     }
 
+    // 校验通用信息
+    private void validateCommonInfo(Long userId, Long tenantId) {
+        tenantShouldValid(tenantId);
+        userShouldValid(tenantId, userId);
+    }
+
+    // 校验组织负责人
+    private void validateOrgLeader(Long tenantId, Long leaderId) {
+        orgLeaderShouldValid(tenantId, leaderId);
+    }
+
+    // 校验组织名称
+    private void validateOrgName(Long tenantId, Long superiorId, String name) {
+        orgNameShouldNotBlank(name);
+        orgNameUnderSameSuperiorShouldNotDuplicated(tenantId
+            , superiorId
+            , name);
+    }
+
+    // 校验组织类型
+    private void validateOrgType(Long tenantId, String orgTypeCode) {
+        orgTypeShouldNotBlank(orgTypeCode);
+        orgTypeShouldValid(tenantId, orgTypeCode);
+        orgTypeShouldNotEntp(orgTypeCode);
+    }
+
+    // 校验上级组织
+    private void validateSuperior(Long tenantId, Long id, String orgTypeCode, Long superiorId) {
+        Org superior = superiorShouldValid(tenantId, superiorId);
+        String superiorOrgTypeCode = superior.getOrgTypeCode();
+
+        superiorOrgTypeShouldValid(tenantId
+            , superiorId
+            , superiorOrgTypeCode);
+        superiorOfDevGrpShouldDevCent(id
+            , orgTypeCode
+            , superiorId
+            , superiorOrgTypeCode);
+        superiorOfDevCentAndDirectDeptShouldEntp(id
+            , orgTypeCode
+            , superiorId
+            , superiorOrgTypeCode);
+    }
 
     // 租户应当有效
     private void tenantShouldValid(Long tenantId) {
@@ -195,19 +212,19 @@ public class OrgService {
     }
 
     // 上级组织的组织类型应当有效
-    private OrgType superiorOrgTypeShouldValid(Long tenantId
-        , String superiorOrgTypeCode
-        , Long superiorId) {
-        OrgType superiorOrgType = orgTypeRepository.findByCodeAndStatus(tenantId
-                , superiorOrgTypeCode
-                , OrgTypeStatus.EFFECTIVE)
-            .orElseThrow(() -> new BusinessException(
+    private void superiorOrgTypeShouldValid(Long tenantId
+        , Long superiorId, String superiorOrgTypeCode) {
+        if (orgTypeRepository.existsByCodeAndStatus(tenantId
+            , superiorOrgTypeCode
+            , OrgTypeStatus.EFFECTIVE)) {
+            throw (
+                new BusinessException(
                     String.format("id 为 '%s' 的组织的组织类型代码 '%s' 无效!"
                         , superiorId
                         , superiorOrgTypeCode)
                 )
             );
-        return superiorOrgType;
+        }
     }
 
     // 开发中心和直属部门的上级只能是企业
