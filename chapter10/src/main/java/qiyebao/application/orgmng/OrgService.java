@@ -22,10 +22,10 @@ public class OrgService {
     private final EmpRepository empRepository;
 
     public OrgService(UserRepository userRepository
-            , TenantRepository tenantRepository
-            , OrgRepository orgRepository
-            , EmpRepository empRepository
-            , OrgTypeRepository orgTypeRepository) {
+        , TenantRepository tenantRepository
+        , OrgRepository orgRepository
+        , EmpRepository empRepository
+        , OrgTypeRepository orgTypeRepository) {
 
         this.userRepository = userRepository;
         this.tenantRepository = tenantRepository;
@@ -80,8 +80,8 @@ public class OrgService {
         // 校验组织名称
         orgNameShouldNotBlank(request.getName());
         orgNameUnderSameSuperiorShouldNotDuplicated(tenantId
-                , request.getSuperiorId()
-                , request.getName());
+            , request.getSuperiorId()
+            , request.getName());
 
         // 校验组织类型
         orgTypeShouldNotBlank(request.getOrgTypeCode());
@@ -91,16 +91,16 @@ public class OrgService {
         // 校验上级组织
         Org superior = superiorShouldValid(tenantId, request.getSuperiorId());
         OrgType superiorOrgType = superiorOrgTypeShouldValid(tenantId
-                , superior.getOrgTypeCode()
-                , request.getSuperiorId());
+            , superior.getOrgTypeCode()
+            , request.getSuperiorId());
         superiorOfDevGrpShouldDevCent(request.getId()
-                , request.getOrgTypeCode()
-                , request.getSuperiorId()
-                , superiorOrgType.getCode());
+            , request.getOrgTypeCode()
+            , request.getSuperiorId()
+            , superiorOrgType.getCode());
         superiorOfDevCentAndDirectDeptShouldEntp(request.getId()
-                , request.getOrgTypeCode()
-                , request.getSuperiorId()
-                , superiorOrgType.getCode());
+            , request.getOrgTypeCode()
+            , request.getSuperiorId()
+            , superiorOrgType.getCode());
     }
 
 
@@ -108,28 +108,31 @@ public class OrgService {
     private void tenantShouldValid(Long tenantId) {
         if (!tenantRepository.existsByIdAndStatus(tenantId, TenantStatus.EFFECTIVE)) {
             throw new BusinessException(
-                    "id为'" + tenantId + "'的租户不是有效租户！");
+                String.format("id为'%s'的租户不是有效租户！", tenantId)
+            );
         }
     }
 
     // 用户应当有效
     private void userShouldValid(Long tenantId, Long userId) {
         if (!userRepository.existsByIdAndStatus(tenantId, userId
-                , UserStatus.EFFECTIVE)) {
+            , UserStatus.EFFECTIVE)) {
             throw new BusinessException(
-                    "id为'" + userId + "'的用户不是有效用户！");
+                String.format("id为'%s'的用户不是有效用户！", userId)
+            );
         }
     }
 
     // 组织负责人可以空缺，如果有的话，的必须是一个在职员工（含试用期）
     private void orgLeaderShouldValid(Long tenantId, Long leaderId) {
         if (leaderId != null
-                && !empRepository.existsByIdAndStatus(tenantId
-                , leaderId
-                , EmpStatus.REGULAR
-                , EmpStatus.PROBATION)) {
+            && !empRepository.existsByIdAndStatus(tenantId
+            , leaderId
+            , EmpStatus.REGULAR
+            , EmpStatus.PROBATION)) {
             throw new BusinessException(
-                    "组织负责人(id='" + leaderId + "')不是在职员工！");
+                String.format("组织负责人(id='%s')不是在职员工！", leaderId)
+            );
         }
     }
 
@@ -142,13 +145,14 @@ public class OrgService {
 
     // 同一上级下的(直属）组织的名称不能重复
     private void orgNameUnderSameSuperiorShouldNotDuplicated(Long tenantId
-            , Long superiorId
-            , String name) {
+        , Long superiorId
+        , String name) {
         if (orgRepository.existsBySuperiorAndName(tenantId
-                , superiorId
-                , name)) {
+            , superiorId
+            , name)) {
             throw new BusinessException(
-                    "同一上级下已经有名为'" + name + "'的组织存在！");
+                String.format("同一上级下已经有名为'%s'的组织存在！", name)
+            );
         }
     }
 
@@ -162,10 +166,10 @@ public class OrgService {
     // 组织类别应当有效
     private void orgTypeShouldValid(Long tenantId, String orgTypeCode) {
         if (!orgTypeRepository.existsByCodeAndStatus(tenantId
-                , orgTypeCode
-                , OrgTypeStatus.EFFECTIVE)) {
+            , orgTypeCode
+            , OrgTypeStatus.EFFECTIVE)) {
             throw new BusinessException(
-                    "'" + orgTypeCode + "'不是有效的组织类别代码！");
+                String.format("'%s'不是有效的组织类别代码！", orgTypeCode));
         }
     }
 
@@ -173,62 +177,68 @@ public class OrgService {
     private void orgTypeShouldNotEntp(String orgTypeCode) {
         if ("ENTP".equals(orgTypeCode)) {
             throw new BusinessException(
-                    "企业是在创建租户的时候创建好的，因此不能单独创建企业!");
+                "企业是在创建租户的时候添加的，因此不能单独添加企业!");
         }
     }
 
     // 上级组织应当有效
     private Org superiorShouldValid(Long tenantId, Long superiorId) {
         Org superior = orgRepository.findByIdAndStatus(tenantId
-                        , superiorId
-                        , OrgStatus.EFFECTIVE)
-                .orElseThrow(() ->
-                        new BusinessException(
-                                "'" + superiorId + "' 不是有效的组织 id !"));
+                , superiorId
+                , OrgStatus.EFFECTIVE)
+            .orElseThrow(() ->
+                new BusinessException(
+                    String.format("'%s' 不是有效的组织 id !", superiorId)
+                )
+            );
         return superior;
     }
 
     // 上级组织的组织类型应当有效
     private OrgType superiorOrgTypeShouldValid(Long tenantId
-            , String superiorOrgTypeCode
-            , Long superiorId) {
+        , String superiorOrgTypeCode
+        , Long superiorId) {
         OrgType superiorOrgType = orgTypeRepository.findByCodeAndStatus(tenantId
-                        , superiorOrgTypeCode
-                        , OrgTypeStatus.EFFECTIVE)
-                .orElseThrow(() ->
-                        new BusinessException("id 为 '" + superiorId
-                                + "' 的组织的组织类型代码 '" + superiorOrgTypeCode
-                                + "' 无效!"));
+                , superiorOrgTypeCode
+                , OrgTypeStatus.EFFECTIVE)
+            .orElseThrow(() -> new BusinessException(
+                    String.format("id 为 '%s' 的组织的组织类型代码 '%s' 无效!"
+                        , superiorId
+                        , superiorOrgTypeCode)
+                )
+            );
         return superiorOrgType;
     }
 
     // 开发中心和直属部门的上级只能是企业
     private void superiorOfDevCentAndDirectDeptShouldEntp(Long id
-            , String orgTypeCode
-            , Long superiorId
-            , String superiorOrgTypeCode) {
+        , String orgTypeCode
+        , Long superiorId
+        , String superiorOrgTypeCode) {
         if (
-                ("DEVCENT".equals(orgTypeCode)
-                        || "DIRDEP".equals(orgTypeCode)
-                ) && !"ENTP".equals(superiorOrgTypeCode)
+            ("DEVCENT".equals(orgTypeCode) || "DIRDEP".equals(orgTypeCode)
+            ) && !"ENTP".equals(superiorOrgTypeCode)
         ) {
-            throw new BusinessException("开发中心或直属部门(id = '" + id
-                    + "') 的上级(id = '" + superiorId
-                    + "')不是企业！");
+            throw new BusinessException(
+                String.format("开发中心或直属部门(id = '%s') 的上级(id = '%s')不是企业！"
+                    , id
+                    , superiorId)
+            );
         }
     }
 
     // 开发组的上级只能是开发中心
     private void superiorOfDevGrpShouldDevCent(Long id
-            , String orgTypeCode
-            , Long superiorId
-            , String superiorOrgTypeCode) {
+        , String orgTypeCode
+        , Long superiorId
+        , String superiorOrgTypeCode) {
         if ("DEVGRP".equals(orgTypeCode)
-                && !"DEVCENT".equals(superiorOrgTypeCode)) {
-            throw new BusinessException("开发组(id = '" + id
-                    + "') 的上级(id = '" + superiorId
-                    + "')不是开发中心！");
+            && !"DEVCENT".equals(superiorOrgTypeCode)) {
+            throw new BusinessException(
+                String.format("开发组(id = '%s') 的上级(id = '%s')不是开发中心！"
+                    , id
+                    , superiorId)
+            );
         }
     }
-
 }
