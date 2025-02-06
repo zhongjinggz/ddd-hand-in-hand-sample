@@ -6,26 +6,26 @@ import qiyebao.domain.usermng.UserValidator;
 
 @Component
 public class OrgValidator {
-    private final TenantValidator tenantValidator;
-    private final UserValidator userValidator;
-    private final OrgTypeValidator orgTypeValidator;
-    private final OrgSuperiorValidator orgSuperiorValidator;
-    private final OrgNameValidator orgNameValidator;
-    private final OrgLeaderValidator orgLeaderValidator;
+    private final TenantValidator expectTenant;
+    private final UserValidator expectUser;
+    private final OrgTypeValidator expectOrgType;
+    private final OrgSuperiorValidator expectOrgSuperior;
+    private final OrgNameValidator expectOrgName;
+    private final OrgLeaderValidator expectOrgLeader;
 
-    public OrgValidator(TenantValidator tenantValidator
-        , UserValidator userValidator
-        , OrgTypeValidator orgTypeValidator
-        , OrgSuperiorValidator orgSuperiorValidator
-        , OrgNameValidator orgNameValidator
-        , OrgLeaderValidator orgLeaderValidator
+    public OrgValidator(TenantValidator expectTenant
+        , UserValidator expectUser
+        , OrgTypeValidator expectOrgType
+        , OrgSuperiorValidator expectOrgSuperior
+        , OrgNameValidator expectOrgName
+        , OrgLeaderValidator expectOrgLeader
     ) {
-        this.tenantValidator = tenantValidator;
-        this.userValidator = userValidator;
-        this.orgTypeValidator = orgTypeValidator;
-        this.orgSuperiorValidator = orgSuperiorValidator;
-        this.orgNameValidator = orgNameValidator;
-        this.orgLeaderValidator = orgLeaderValidator;
+        this.expectTenant = expectTenant;
+        this.expectUser = expectUser;
+        this.expectOrgType = expectOrgType;
+        this.expectOrgSuperior = expectOrgSuperior;
+        this.expectOrgName = expectOrgName;
+        this.expectOrgLeader = expectOrgLeader;
     }
 
     public void validate(Long tenantId
@@ -43,6 +43,31 @@ public class OrgValidator {
         validateSuperior(tenantId, id, orgTypeCode, superiorId);
     }
 
+    // 校验通用信息
+    public void validateCommonInfo(Long userId, Long tenantId) {
+        expectTenant.shouldValid(tenantId);
+        expectUser.shouldValid(tenantId, userId);
+    }
+
+    // 校验组织负责人
+    public void validateOrgLeader(Long tenantId, Long leaderId) {
+        expectOrgLeader.shouldValid(tenantId, leaderId);
+    }
+
+    // 校验组织名称
+    public void validateOrgName(Long tenantId, Long superiorId, String name) {
+        expectOrgName.shouldNotBlank(name);
+        expectOrgName.underSameSuperiorShouldNotDuplicated(tenantId
+            , superiorId
+            , name);
+    }
+
+    // 校验组织类型
+    public void validateOrgType(Long tenantId, String orgTypeCode) {
+        expectOrgType.shouldNotBlank(orgTypeCode);
+        expectOrgType.shouldValid(tenantId, orgTypeCode);
+        expectOrgType.shouldNotEntp(orgTypeCode);
+    }
 
     // 校验上级组织
     public void validateSuperior(Long tenantId
@@ -50,46 +75,22 @@ public class OrgValidator {
         , String orgTypeCode
         , Long superiorId
     ) {
-        Org superior = orgSuperiorValidator.superiorShouldValid(tenantId, superiorId);
+        Org superior = expectOrgSuperior.shouldValid(tenantId, superiorId);
         String superiorOrgTypeCode = superior.getOrgTypeCode();
 
-        orgSuperiorValidator.superiorOrgTypeShouldValid(tenantId
+        expectOrgSuperior.orgTypeShouldValid(tenantId
             , superiorId
             , superiorOrgTypeCode, this);
-        orgSuperiorValidator.superiorOfDevGrpShouldDevCent(id
+        expectOrgSuperior.ofDevGrpShouldDevCent(id
             , orgTypeCode
             , superiorId
             , superiorOrgTypeCode);
-        orgSuperiorValidator.superiorOfDevCentAndDirectDeptShouldEntp(id
+        expectOrgSuperior.ofDevCentAndDirectDeptShouldEntp(id
             , orgTypeCode
             , superiorId
             , superiorOrgTypeCode);
     }
 
-    // 校验组织类型
-    public void validateOrgType(Long tenantId, String orgTypeCode) {
-        orgTypeValidator.orgTypeShouldNotBlank(orgTypeCode);
-        orgTypeValidator.orgTypeShouldValid(tenantId, orgTypeCode);
-        orgTypeValidator.orgTypeShouldNotEntp(orgTypeCode);
-    }
 
-    // 校验组织名称
-    public void validateOrgName(Long tenantId, Long superiorId, String name) {
-        orgNameValidator.orgNameShouldNotBlank(name);
-        orgNameValidator.orgNameUnderSameSuperiorShouldNotDuplicated(tenantId
-            , superiorId
-            , name);
-    }
-
-    // 校验组织负责人
-    public void validateOrgLeader(Long tenantId, Long leaderId) {
-        orgLeaderValidator.orgLeaderShouldValid(tenantId, leaderId);
-    }
-
-    // 校验通用信息
-    public void validateCommonInfo(Long userId, Long tenantId) {
-        tenantValidator.tenantShouldValid(tenantId);
-        userValidator.userShouldValid(tenantId, userId);
-    }
 
 }

@@ -11,7 +11,7 @@ public class TenantValidator {
     }
 
     // 租户应当有效
-    public void tenantShouldValid(Long tenantId) {
+    public void shouldValid(Long tenantId) {
         if (!tenantRepository.existsByIdAndStatus(tenantId, TenantStatus.EFFECTIVE)) {
             throw new BusinessException(
                 String.format("id为'%s'的租户不是有效租户！", tenantId)

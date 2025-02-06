@@ -9,7 +9,7 @@ public class OrgLeaderValidator {
     }
 
     // 组织负责人可以空缺，如果有的话，的必须是一个在职员工（含试用期）
-    public void orgLeaderShouldValid(Long tenantId, Long leaderId) {
+    public void shouldValid(Long tenantId, Long leaderId) {
         if (leaderId != null
             && !empRepository.existsByIdAndStatus(tenantId
             , leaderId

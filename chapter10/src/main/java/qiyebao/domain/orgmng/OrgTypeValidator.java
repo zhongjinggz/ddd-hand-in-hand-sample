@@ -11,14 +11,14 @@ public class OrgTypeValidator {
         this.orgTypeRepository = orgTypeRepository;
     }
     // 组织类别不能为空
-    public void orgTypeShouldNotBlank(String orgTypeCode) {
+    public void shouldNotBlank(String orgTypeCode) {
         if (isBlank(orgTypeCode)) {
             throw new BusinessException("组织类别不能为空！");
         }
     }
 
     // 组织类别应当有效
-    public void orgTypeShouldValid(Long tenantId, String orgTypeCode) {
+    public void shouldValid(Long tenantId, String orgTypeCode) {
         if (!orgTypeRepository.existsByCodeAndStatus(tenantId
             , orgTypeCode
             , OrgTypeStatus.EFFECTIVE)
@@ -29,7 +29,7 @@ public class OrgTypeValidator {
     }
 
     // 组织类型不应是企业（企业是在创建租户的时候添加的，因此不能单独添加企业）
-    public void orgTypeShouldNotEntp(String orgTypeCode) {
+    public void shouldNotEntp(String orgTypeCode) {
         if ("ENTP".equals(orgTypeCode)) {
             throw new BusinessException(
                 "企业是在创建租户的时候添加的，因此不能单独添加企业!");

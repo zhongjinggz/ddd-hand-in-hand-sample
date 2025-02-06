@@ -12,14 +12,14 @@ public class OrgNameValidator {
     }
 
     // 组织名称不能为空
-    public void orgNameShouldNotBlank(String name) {
+    public void shouldNotBlank(String name) {
         if (isBlank(name)) {
             throw new BusinessException("组织没有名称！");
         }
     }
 
     // 同一上级下的(直属）组织的名称不能重复
-    public void orgNameUnderSameSuperiorShouldNotDuplicated(
+    public void underSameSuperiorShouldNotDuplicated(
         Long tenantId
         , Long superiorId
         , String name

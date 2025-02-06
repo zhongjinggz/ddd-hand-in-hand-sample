@@ -12,7 +12,7 @@ public class UserValidator {
     }
 
     // 用户应当有效
-    public void userShouldValid(Long tenantId, Long userId) {
+    public void shouldValid(Long tenantId, Long userId) {
         if (!userRepository.existsByIdAndStatus(tenantId, userId
             , UserStatus.EFFECTIVE)) {
             throw new BusinessException(

@@ -14,7 +14,7 @@ public class OrgSuperiorValidator {
     }
 
     // 上级组织应当有效
-    public Org superiorShouldValid(Long tenantId, Long superiorId) {
+    public Org shouldValid(Long tenantId, Long superiorId) {
         return orgRepository.findByIdAndStatus(tenantId
                 , superiorId
                 , OrgStatus.EFFECTIVE)
@@ -26,7 +26,7 @@ public class OrgSuperiorValidator {
     }
 
     // 上级组织的组织类型应当有效
-    public void superiorOrgTypeShouldValid(Long tenantId
+    public void orgTypeShouldValid(Long tenantId
         , Long superiorId
         , String superiorOrgTypeCode, OrgValidator orgValidator) {
 
@@ -44,7 +44,7 @@ public class OrgSuperiorValidator {
     }
 
     // 开发中心和直属部门的上级只能是企业
-    public void superiorOfDevCentAndDirectDeptShouldEntp(Long id
+    public void ofDevCentAndDirectDeptShouldEntp(Long id
         , String orgTypeCode
         , Long superiorId
         , String superiorOrgTypeCode) {
@@ -61,7 +61,7 @@ public class OrgSuperiorValidator {
     }
 
     // 开发组的上级只能是开发中心
-    public void superiorOfDevGrpShouldDevCent(Long id
+    public void ofDevGrpShouldDevCent(Long id
         , String orgTypeCode
         , Long superiorId
         , String superiorOrgTypeCode) {
