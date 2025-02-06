@@ -1,6 +1,5 @@
 package qiyebao.domain.tenantmng;
 
-import qiyebao.adapter.driven.persistence.tenantmng.TenantRepository;
 import qiyebao.common.framework.exception.BusinessException;
 
 public class TenantValidator {

@@ -1,6 +1,6 @@
 package qiyebao.domain.usermng;
 
-import qiyebao.adapter.driven.persistence.usermng.UserRepository;
+import qiyebao.adapter.driven.persistence.usermng.UserRepositoryJdbc;
 import qiyebao.common.framework.exception.BusinessException;
 
 public class UserValidator {

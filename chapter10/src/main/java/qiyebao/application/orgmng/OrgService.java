@@ -2,8 +2,8 @@ package qiyebao.application.orgmng;
 
 import qiyebao.domain.orgmng.OrgRepository;
 import qiyebao.domain.orgmng.OrgTypeRepository;
-import qiyebao.adapter.driven.persistence.tenantmng.TenantRepository;
-import qiyebao.adapter.driven.persistence.usermng.UserRepository;
+import qiyebao.domain.tenantmng.TenantRepository;
+import qiyebao.domain.usermng.UserRepository;
 import qiyebao.domain.orgmng.*;
 import qiyebao.domain.orgmng.EmpRepository;
 import org.springframework.stereotype.Service;
@@ -11,26 +11,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrgService {
     private final OrgValidator orgValidator;
-    private final UserRepository userRepository;
-    private final TenantRepository tenantRepository;
-    private final OrgTypeRepository orgTypeRepository;
     private final OrgRepository orgRepository;
-    private final EmpRepository empRepository;
 
     public OrgService(
         OrgValidator orgValidator
-        , UserRepository userRepository
-        , TenantRepository tenantRepository
         , OrgRepository orgRepository
-        , EmpRepository empRepository
-        , OrgTypeRepository orgTypeRepository) {
+    ) {
 
         this.orgValidator = orgValidator;
-        this.userRepository = userRepository;
-        this.tenantRepository = tenantRepository;
         this.orgRepository = orgRepository;
-        this.empRepository = empRepository;
-        this.orgTypeRepository = orgTypeRepository;
     }
 
     public OrgDto addOrg(OrgDto request, Long userId) {
