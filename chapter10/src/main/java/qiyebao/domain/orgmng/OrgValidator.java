@@ -44,18 +44,18 @@ public class OrgValidator {
     }
 
     // 校验通用信息
-    public void validateCommonInfo(Long userId, Long tenantId) {
+    private void validateCommonInfo(Long userId, Long tenantId) {
         expectTenant.shouldValid(tenantId);
         expectUser.shouldValid(tenantId, userId);
     }
 
     // 校验组织负责人
-    public void validateOrgLeader(Long tenantId, Long leaderId) {
+    private void validateOrgLeader(Long tenantId, Long leaderId) {
         expectOrgLeader.shouldValid(tenantId, leaderId);
     }
 
     // 校验组织名称
-    public void validateOrgName(Long tenantId, Long superiorId, String name) {
+    private void validateOrgName(Long tenantId, Long superiorId, String name) {
         expectOrgName.shouldNotBlank(name);
         expectOrgName.underSameSuperiorShouldNotDuplicated(tenantId
             , superiorId
@@ -63,14 +63,14 @@ public class OrgValidator {
     }
 
     // 校验组织类型
-    public void validateOrgType(Long tenantId, String orgTypeCode) {
+    private void validateOrgType(Long tenantId, String orgTypeCode) {
         expectOrgType.shouldNotBlank(orgTypeCode);
         expectOrgType.shouldValid(tenantId, orgTypeCode);
         expectOrgType.shouldNotEntp(orgTypeCode);
     }
 
     // 校验上级组织
-    public void validateSuperior(Long tenantId
+    private void validateSuperior(Long tenantId
         , Long id
         , String orgTypeCode
         , Long superiorId
@@ -90,7 +90,5 @@ public class OrgValidator {
             , superiorId
             , superiorOrgTypeCode);
     }
-
-
 
 }
