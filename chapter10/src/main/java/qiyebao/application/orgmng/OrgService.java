@@ -1,11 +1,7 @@
 package qiyebao.application.orgmng;
 
 import qiyebao.domain.orgmng.OrgRepository;
-import qiyebao.domain.orgmng.OrgTypeRepository;
-import qiyebao.domain.tenantmng.TenantRepository;
-import qiyebao.domain.usermng.UserRepository;
 import qiyebao.domain.orgmng.*;
-import qiyebao.domain.orgmng.EmpRepository;
 import org.springframework.stereotype.Service;
 
 @Service
