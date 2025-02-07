@@ -6,27 +6,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OrgService {
-    private final OrgValidator orgValidator;
     private final OrgRepository orgRepository;
+    private final OrgFactory orgFactory;
 
     public OrgService(
-        OrgValidator orgValidator
-        , OrgRepository orgRepository
+        OrgRepository orgRepository
+        , OrgFactory orgFactory
     ) {
 
-        this.orgValidator = orgValidator;
         this.orgRepository = orgRepository;
+        this.orgFactory = orgFactory;
     }
 
     public OrgDto addOrg(OrgDto request, Long userId) {
-        orgValidator.validate(request.getTenantId()
-            , request.getId()
-            , request.getLeaderId()
-            , request.getSuperiorId()
-            , request.getOrgTypeCode()
-            , request.getName()
-            , userId);
-        Org org = buildOrg(request, userId);
+        Org org = orgFactory.build(request, userId);
         org = orgRepository.save(org);
         return buildOrgDto(org);
     }
@@ -44,17 +37,6 @@ public class OrgService {
         response.setLastUpdatedBy(org.getLastUpdatedBy());
         response.setLastUpdatedAt(org.getLastUpdatedAt());
         return response;
-    }
-
-    private Org buildOrg(OrgDto request, Long userId) {
-        Org org = new Org();
-        org.setOrgTypeCode(request.getOrgTypeCode());
-        org.setLeaderId(request.getLeaderId());
-        org.setName(request.getName());
-        org.setSuperiorId(request.getSuperiorId());
-        org.setTenantId(request.getTenantId());
-        org.setCreatedBy(userId);
-        return org;
     }
 
 }
