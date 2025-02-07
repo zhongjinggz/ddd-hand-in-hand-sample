@@ -14,7 +14,13 @@ public class OrgBuilderFactory {
     private final OrgNameValidator expectOrgName;
     private final OrgLeaderValidator expectOrgLeader;
 
-    public OrgBuilderFactory(TenantValidator expectTenant, UserValidator expectUser, OrgTypeValidator expectOrgType, OrgSuperiorValidator expectOrgSuperior, OrgNameValidator expectOrgName, OrgLeaderValidator expectOrgLeader) {
+    public OrgBuilderFactory(TenantValidator expectTenant
+        , UserValidator expectUser
+        , OrgTypeValidator expectOrgType
+        , OrgSuperiorValidator expectOrgSuperior
+        , OrgNameValidator expectOrgName
+        , OrgLeaderValidator expectOrgLeader
+    ) {
         this.expectTenant = expectTenant;
         this.expectUser = expectUser;
         this.expectOrgType = expectOrgType;

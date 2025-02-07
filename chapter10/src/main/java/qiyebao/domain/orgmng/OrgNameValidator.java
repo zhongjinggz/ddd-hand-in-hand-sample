@@ -1,9 +1,11 @@
 package qiyebao.domain.orgmng;
 
+import org.springframework.stereotype.Component;
 import qiyebao.common.framework.exception.BusinessException;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+@Component
 public class OrgNameValidator {
     private final OrgRepository orgRepository;
 

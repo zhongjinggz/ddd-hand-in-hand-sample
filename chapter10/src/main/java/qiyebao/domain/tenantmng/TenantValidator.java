@@ -1,7 +1,9 @@
 package qiyebao.domain.tenantmng;
 
+import org.springframework.stereotype.Component;
 import qiyebao.common.framework.exception.BusinessException;
 
+@Component
 public class TenantValidator {
     private final TenantRepository tenantRepository;
 

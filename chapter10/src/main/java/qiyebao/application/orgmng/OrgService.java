@@ -9,9 +9,7 @@ public class OrgService {
     private final OrgRepository orgRepository;
     private final OrgBuilderFactory orgBuilderFactory;
 
-    public OrgService(
-        OrgRepository orgRepository
-        , OrgBuilder orgBuilder
+    public OrgService(OrgRepository orgRepository
         , OrgBuilderFactory orgBuilderFactory
     ) {
 

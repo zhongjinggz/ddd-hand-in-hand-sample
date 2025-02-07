@@ -1,8 +1,10 @@
 package qiyebao.domain.usermng;
 
+import org.springframework.stereotype.Component;
 import qiyebao.adapter.driven.persistence.usermng.UserRepositoryJdbc;
 import qiyebao.common.framework.exception.BusinessException;
 
+@Component
 public class UserValidator {
 
     private final UserRepository userRepository;
