@@ -24,6 +24,11 @@ public class OrgBuilderFactory {
     }
 
     public OrgBuilder newBuilder() {
-        return new OrgBuilder(expectTenant, expectUser, expectOrgType, expectOrgSuperior, expectOrgName, expectOrgLeader);
+        return new OrgBuilder(expectTenant
+            , expectUser
+            , expectOrgType
+            , expectOrgSuperior
+            , expectOrgName
+            , expectOrgLeader);
     }
 }

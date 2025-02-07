@@ -2,7 +2,6 @@ package qiyebao.domain.orgmng;
 
 import qiyebao.domain.tenantmng.TenantValidator;
 import qiyebao.domain.usermng.UserValidator;
-
 import java.time.LocalDateTime;
 
 public class OrgBuilder {
@@ -67,7 +66,7 @@ public class OrgBuilder {
     }
 
     public Org build() {
-        validate1();
+        validate();
 
         Org org = new Org();
         org.setTenantId(tenantId);
@@ -81,7 +80,7 @@ public class OrgBuilder {
         return org;
     }
 
-    private void validate1() {
+    private void validate() {
         validateCommonInfo();
         validateOrgLeader();
         validateOrgName();
