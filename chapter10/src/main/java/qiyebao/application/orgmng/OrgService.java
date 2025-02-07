@@ -7,25 +7,28 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrgService {
     private final OrgRepository orgRepository;
-    private final OrgFactory orgFactory;
+    private final OrgBuilderFactory orgBuilderFactory;
 
     public OrgService(
         OrgRepository orgRepository
-        , OrgFactory orgFactory
+        , OrgBuilder orgBuilder
+        , OrgBuilderFactory orgBuilderFactory
     ) {
 
         this.orgRepository = orgRepository;
-        this.orgFactory = orgFactory;
+        this.orgBuilderFactory = orgBuilderFactory;
     }
 
     public OrgDto addOrg(OrgDto request, Long userId) {
-        Org org = orgFactory.build(
-            request.getTenantId()
-            , request.getOrgTypeCode()
-            , request.getSuperiorId()
-            , request.getLeaderId()
-            , request.getName()
-            , userId);
+        Org org = orgBuilderFactory.newBuilder()
+            .tenantId(request.getTenantId())
+            .orgTypeCode(request.getOrgTypeCode())
+            .superiorId(request.getSuperiorId())
+            .leaderId(request.getLeaderId())
+            .name((request.getName()))
+            .createdBy(userId)
+            .build();
+
         return buildOrgDto(orgRepository.save(org));
     }
 
