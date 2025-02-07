@@ -1,7 +1,9 @@
 package qiyebao.domain.orgmng;
 
+import org.springframework.stereotype.Component;
 import qiyebao.application.orgmng.OrgDto;
 
+@Component
 public class OrgFactory {
     private final OrgValidator orgValidator;
 
@@ -18,10 +20,6 @@ public class OrgFactory {
             , request.getName()
             , userId);
 
-        return buildOrg(request, userId);
-    }
-
-    private Org buildOrg(OrgDto request, Long userId) {
         Org org = new Org();
         org.setOrgTypeCode(request.getOrgTypeCode());
         org.setLeaderId(request.getLeaderId());
@@ -31,4 +29,5 @@ public class OrgFactory {
         org.setCreatedBy(userId);
         return org;
     }
+
 }
