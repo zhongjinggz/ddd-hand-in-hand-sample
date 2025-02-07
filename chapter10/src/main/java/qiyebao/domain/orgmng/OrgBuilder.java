@@ -1,16 +1,9 @@
 package qiyebao.domain.orgmng;
 
-import qiyebao.domain.tenantmng.TenantValidator;
-import qiyebao.domain.usermng.UserValidator;
 import java.time.LocalDateTime;
 
 public class OrgBuilder {
-    private final TenantValidator expectTenant;
-    private final UserValidator expectUser;
-    private final OrgTypeValidator expectOrgType;
-    private final OrgSuperiorValidator expectOrgSuperior;
-    private final OrgNameValidator expectOrgName;
-    private final OrgLeaderValidator expectOrgLeader;
+    private final OrgValidators expect;
 
     private Long tenantId;
     private Long superiorId;
@@ -19,20 +12,8 @@ public class OrgBuilder {
     private String name;
     private Long createdBy;
 
-    public OrgBuilder(TenantValidator expectTenant
-        , UserValidator expectUser
-        , OrgTypeValidator expectOrgType
-        , OrgSuperiorValidator expectOrgSuperior
-        , OrgNameValidator expectOrgName
-        , OrgLeaderValidator expectOrgLeader
-    ) {
-        this.expectTenant = expectTenant;
-        this.expectUser = expectUser;
-        this.expectOrgType = expectOrgType;
-        this.expectOrgSuperior = expectOrgSuperior;
-        this.expectOrgName = expectOrgName;
-        this.expectOrgLeader = expectOrgLeader;
-
+    public OrgBuilder(OrgValidators expect) {
+        this.expect = expect;
     }
 
     public OrgBuilder tenantId(Long tenantId) {
@@ -90,43 +71,43 @@ public class OrgBuilder {
 
     // 校验通用信息
     private void validateCommonInfo() {
-        expectTenant.shouldValid(tenantId);
-        expectUser.shouldValid(tenantId, createdBy);
+        expect.tenant().shouldValid(tenantId);
+        expect.user().shouldValid(tenantId, createdBy);
     }
 
     // 校验组织负责人
     private void validateOrgLeader() {
-        expectOrgLeader.shouldValid(tenantId, leaderId);
+        expect.orgLeader().shouldValid(tenantId, leaderId);
     }
 
     // 校验组织名称
     private void validateOrgName() {
-        expectOrgName.shouldNotBlank(name);
-        expectOrgName.underSameSuperiorShouldNotDuplicated(tenantId
+        expect.orgName().shouldNotBlank(name);
+        expect.orgName().underSameSuperiorShouldNotDuplicated(tenantId
             , superiorId
             , name);
     }
 
     // 校验组织类型
     private void validateOrgType() {
-        expectOrgType.shouldNotBlank(orgTypeCode);
-        expectOrgType.shouldValid(tenantId, orgTypeCode);
-        expectOrgType.shouldNotEntp(orgTypeCode);
+        expect.orgType().shouldNotBlank(orgTypeCode);
+        expect.orgType().shouldValid(tenantId, orgTypeCode);
+        expect.orgType().shouldNotEntp(orgTypeCode);
     }
 
     // 校验上级组织
     private void validateSuperior() {
-        Org superior = expectOrgSuperior.shouldValid(tenantId, superiorId);
+        Org superior = expect.orgSuperior().shouldValid(tenantId, superiorId);
         String superiorOrgTypeCode = superior.getOrgTypeCode();
 
-        expectOrgSuperior.orgTypeShouldValid(tenantId
+        expect.orgSuperior().orgTypeShouldValid(tenantId
             , superiorId
-            , superiorOrgTypeCode );
-        expectOrgSuperior.ofDevGrpShouldDevCent(
+            , superiorOrgTypeCode);
+        expect.orgSuperior().ofDevGrpShouldDevCent(
             orgTypeCode
             , superiorId
             , superiorOrgTypeCode);
-        expectOrgSuperior.ofDevCentAndDirectDeptShouldEntp(
+        expect.orgSuperior().ofDevCentAndDirectDeptShouldEntp(
             orgTypeCode
             , superiorId
             , superiorOrgTypeCode);
