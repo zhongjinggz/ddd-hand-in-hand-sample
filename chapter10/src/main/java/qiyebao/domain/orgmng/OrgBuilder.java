@@ -1,12 +1,17 @@
 package qiyebao.domain.orgmng;
 
-import org.springframework.stereotype.Component;
+import qiyebao.domain.tenantmng.TenantValidator;
+import qiyebao.domain.usermng.UserValidator;
 
 import java.time.LocalDateTime;
 
-@Component
 public class OrgBuilder {
-    private final OrgValidator orgValidator;
+    private final TenantValidator expectTenant;
+    private final UserValidator expectUser;
+    private final OrgTypeValidator expectOrgType;
+    private final OrgSuperiorValidator expectOrgSuperior;
+    private final OrgNameValidator expectOrgName;
+    private final OrgLeaderValidator expectOrgLeader;
 
     private Long tenantId;
     private Long superiorId;
@@ -15,8 +20,20 @@ public class OrgBuilder {
     private String name;
     private Long createdBy;
 
-    public OrgBuilder(OrgValidator orgValidator) {
-        this.orgValidator = orgValidator;
+    public OrgBuilder(TenantValidator expectTenant
+        , UserValidator expectUser
+        , OrgTypeValidator expectOrgType
+        , OrgSuperiorValidator expectOrgSuperior
+        , OrgNameValidator expectOrgName
+        , OrgLeaderValidator expectOrgLeader
+    ) {
+        this.expectTenant = expectTenant;
+        this.expectUser = expectUser;
+        this.expectOrgType = expectOrgType;
+        this.expectOrgSuperior = expectOrgSuperior;
+        this.expectOrgName = expectOrgName;
+        this.expectOrgLeader = expectOrgLeader;
+
     }
 
     public OrgBuilder tenantId(Long tenantId) {
@@ -48,13 +65,9 @@ public class OrgBuilder {
         this.createdBy = userId;
         return this;
     }
+
     public Org build() {
-        orgValidator.validate(tenantId
-            , leaderId
-            , superiorId
-            , orgTypeCode
-            , name
-            , createdBy);
+        validate1();
 
         Org org = new Org();
         org.setTenantId(tenantId);
@@ -68,4 +81,55 @@ public class OrgBuilder {
         return org;
     }
 
+    private void validate1() {
+        validateCommonInfo();
+        validateOrgLeader();
+        validateOrgName();
+        validateOrgType();
+        validateSuperior();
+    }
+
+    // 校验通用信息
+    private void validateCommonInfo() {
+        expectTenant.shouldValid(tenantId);
+        expectUser.shouldValid(tenantId, createdBy);
+    }
+
+    // 校验组织负责人
+    private void validateOrgLeader() {
+        expectOrgLeader.shouldValid(tenantId, leaderId);
+    }
+
+    // 校验组织名称
+    private void validateOrgName() {
+        expectOrgName.shouldNotBlank(name);
+        expectOrgName.underSameSuperiorShouldNotDuplicated(tenantId
+            , superiorId
+            , name);
+    }
+
+    // 校验组织类型
+    private void validateOrgType() {
+        expectOrgType.shouldNotBlank(orgTypeCode);
+        expectOrgType.shouldValid(tenantId, orgTypeCode);
+        expectOrgType.shouldNotEntp(orgTypeCode);
+    }
+
+    // 校验上级组织
+    private void validateSuperior() {
+        Org superior = expectOrgSuperior.shouldValid(tenantId, superiorId);
+        String superiorOrgTypeCode = superior.getOrgTypeCode();
+
+        expectOrgSuperior.orgTypeShouldValid(tenantId
+            , superiorId
+            , superiorOrgTypeCode );
+        expectOrgSuperior.ofDevGrpShouldDevCent(
+            orgTypeCode
+            , superiorId
+            , superiorOrgTypeCode);
+        expectOrgSuperior.ofDevCentAndDirectDeptShouldEntp(
+            orgTypeCode
+            , superiorId
+            , superiorOrgTypeCode);
+    }
 }

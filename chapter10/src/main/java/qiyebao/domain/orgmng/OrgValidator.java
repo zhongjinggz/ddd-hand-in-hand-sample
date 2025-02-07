@@ -28,65 +28,14 @@ public class OrgValidator {
         this.expectOrgLeader = expectOrgLeader;
     }
 
-    public void validate(Long tenantId
-        , Long leaderId
-        , Long superiorId
-        , String orgTypeCode
-        , String name
-        , Long userId
-    ) {
-        validateCommonInfo(userId, tenantId);
-        validateOrgLeader(tenantId, leaderId);
-        validateOrgName(tenantId, superiorId, name);
-        validateOrgType(tenantId, orgTypeCode);
-        validateSuperior(tenantId, orgTypeCode, superiorId);
-    }
-
     // 校验通用信息
-    private void validateCommonInfo(Long userId, Long tenantId) {
-        expectTenant.shouldValid(tenantId);
-        expectUser.shouldValid(tenantId, userId);
-    }
 
     // 校验组织负责人
-    private void validateOrgLeader(Long tenantId, Long leaderId) {
-        expectOrgLeader.shouldValid(tenantId, leaderId);
-    }
 
     // 校验组织名称
-    private void validateOrgName(Long tenantId, Long superiorId, String name) {
-        expectOrgName.shouldNotBlank(name);
-        expectOrgName.underSameSuperiorShouldNotDuplicated(tenantId
-            , superiorId
-            , name);
-    }
 
     // 校验组织类型
-    private void validateOrgType(Long tenantId, String orgTypeCode) {
-        expectOrgType.shouldNotBlank(orgTypeCode);
-        expectOrgType.shouldValid(tenantId, orgTypeCode);
-        expectOrgType.shouldNotEntp(orgTypeCode);
-    }
 
     // 校验上级组织
-    private void validateSuperior(Long tenantId
-        , String orgTypeCode
-        , Long superiorId
-    ) {
-        Org superior = expectOrgSuperior.shouldValid(tenantId, superiorId);
-        String superiorOrgTypeCode = superior.getOrgTypeCode();
-
-        expectOrgSuperior.orgTypeShouldValid(tenantId
-            , superiorId
-            , superiorOrgTypeCode, this);
-        expectOrgSuperior.ofDevGrpShouldDevCent(
-            orgTypeCode
-            , superiorId
-            , superiorOrgTypeCode);
-        expectOrgSuperior.ofDevCentAndDirectDeptShouldEntp(
-            orgTypeCode
-            , superiorId
-            , superiorOrgTypeCode);
-    }
 
 }

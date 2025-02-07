@@ -28,7 +28,7 @@ public class OrgSuperiorValidator {
     // 上级组织的组织类型应当有效
     public void orgTypeShouldValid(Long tenantId
         , Long superiorId
-        , String superiorOrgTypeCode, OrgValidator orgValidator) {
+        , String superiorOrgTypeCode) {
 
         if (orgTypeRepository.existsByCodeAndStatus(tenantId
             , superiorOrgTypeCode
