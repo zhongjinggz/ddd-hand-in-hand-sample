@@ -19,9 +19,14 @@ public class OrgService {
     }
 
     public OrgDto addOrg(OrgDto request, Long userId) {
-        Org org = orgFactory.build(request, userId);
-        org = orgRepository.save(org);
-        return buildOrgDto(org);
+        Org org = orgFactory.build(
+            request.getTenantId()
+            , request.getOrgTypeCode()
+            , request.getSuperiorId()
+            , request.getLeaderId()
+            , request.getName()
+            , userId);
+        return buildOrgDto(orgRepository.save(org));
     }
 
     private OrgDto buildOrgDto(Org org) {

@@ -29,18 +29,17 @@ public class OrgValidator {
     }
 
     public void validate(Long tenantId
-        , Long id
         , Long leaderId
         , Long superiorId
         , String orgTypeCode
         , String name
-        , Long userId) {
-
+        , Long userId
+    ) {
         validateCommonInfo(userId, tenantId);
         validateOrgLeader(tenantId, leaderId);
         validateOrgName(tenantId, superiorId, name);
         validateOrgType(tenantId, orgTypeCode);
-        validateSuperior(tenantId, id, orgTypeCode, superiorId);
+        validateSuperior(tenantId, orgTypeCode, superiorId);
     }
 
     // 校验通用信息
@@ -71,7 +70,6 @@ public class OrgValidator {
 
     // 校验上级组织
     private void validateSuperior(Long tenantId
-        , Long id
         , String orgTypeCode
         , Long superiorId
     ) {
@@ -81,12 +79,12 @@ public class OrgValidator {
         expectOrgSuperior.orgTypeShouldValid(tenantId
             , superiorId
             , superiorOrgTypeCode, this);
-        expectOrgSuperior.ofDevGrpShouldDevCent(id
-            , orgTypeCode
+        expectOrgSuperior.ofDevGrpShouldDevCent(
+            orgTypeCode
             , superiorId
             , superiorOrgTypeCode);
-        expectOrgSuperior.ofDevCentAndDirectDeptShouldEntp(id
-            , orgTypeCode
+        expectOrgSuperior.ofDevCentAndDirectDeptShouldEntp(
+            orgTypeCode
             , superiorId
             , superiorOrgTypeCode);
     }

@@ -44,8 +44,7 @@ public class OrgSuperiorValidator {
     }
 
     // 开发中心和直属部门的上级只能是企业
-    public void ofDevCentAndDirectDeptShouldEntp(Long id
-        , String orgTypeCode
+    public void ofDevCentAndDirectDeptShouldEntp(String orgTypeCode
         , Long superiorId
         , String superiorOrgTypeCode) {
         if (
@@ -53,25 +52,20 @@ public class OrgSuperiorValidator {
             ) && !"ENTP".equals(superiorOrgTypeCode)
         ) {
             throw new BusinessException(
-                String.format("开发中心或直属部门(id = '%s') 的上级(id = '%s')不是企业！"
-                    , id
-                    , superiorId)
+                String.format("开发中心或直属部门的上级(id = '%s')不是企业！", superiorId)
             );
         }
     }
 
     // 开发组的上级只能是开发中心
-    public void ofDevGrpShouldDevCent(Long id
-        , String orgTypeCode
+    public void ofDevGrpShouldDevCent(String orgTypeCode
         , Long superiorId
         , String superiorOrgTypeCode) {
 
         if ("DEVGRP".equals(orgTypeCode)
             && !"DEVCENT".equals(superiorOrgTypeCode)) {
             throw new BusinessException(
-                String.format("开发组(id = '%s') 的上级(id = '%s')不是开发中心！"
-                    , id
-                    , superiorId)
+                String.format("开发组(id = '%s')不是开发中心！", superiorId)
             );
         }
     }

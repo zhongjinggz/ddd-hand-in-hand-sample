@@ -1,7 +1,6 @@
 package qiyebao.domain.orgmng;
 
 import org.springframework.stereotype.Component;
-import qiyebao.application.orgmng.OrgDto;
 
 @Component
 public class OrgFactory {
@@ -11,21 +10,26 @@ public class OrgFactory {
         this.orgValidator = orgValidator;
     }
 
-    public Org build(OrgDto request, Long userId) {
-        orgValidator.validate(request.getTenantId()
-            , request.getId()
-            , request.getLeaderId()
-            , request.getSuperiorId()
-            , request.getOrgTypeCode()
-            , request.getName()
+    public Org build(Long tenantId
+        , String orgTypeCode
+        , Long superiorId
+        , Long leaderId
+        , String name
+        , Long userId
+    ) {
+        orgValidator.validate(tenantId
+            , leaderId
+            , superiorId
+            , orgTypeCode
+            , name
             , userId);
 
         Org org = new Org();
-        org.setOrgTypeCode(request.getOrgTypeCode());
-        org.setLeaderId(request.getLeaderId());
-        org.setName(request.getName());
-        org.setSuperiorId(request.getSuperiorId());
-        org.setTenantId(request.getTenantId());
+        org.setOrgTypeCode(orgTypeCode);
+        org.setLeaderId(leaderId);
+        org.setName(name);
+        org.setSuperiorId(superiorId);
+        org.setTenantId(tenantId);
         org.setCreatedBy(userId);
         return org;
     }
