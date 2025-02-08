@@ -1,7 +1,8 @@
-package qiyebao.domain.orgmng.org;
+package qiyebao.domain.orgmng.org.validator;
 
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.exception.BusinessException;
+import qiyebao.domain.orgmng.org.OrgRepository;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 

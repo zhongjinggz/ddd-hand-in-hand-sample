@@ -1,4 +1,4 @@
-package qiyebao.domain.orgmng.org;
+package qiyebao.domain.orgmng.org.validator;
 
 import org.springframework.stereotype.Component;
 import qiyebao.domain.tenantmng.TenantValidator;
