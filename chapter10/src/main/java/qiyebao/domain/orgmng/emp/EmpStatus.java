@@ -1,4 +1,4 @@
-package qiyebao.domain.orgmng.entity;
+package qiyebao.domain.orgmng.emp;
 
 public enum EmpStatus {
     REGULAR("REG", "正式"),

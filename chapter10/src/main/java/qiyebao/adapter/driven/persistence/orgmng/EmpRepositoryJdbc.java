@@ -1,8 +1,8 @@
 package qiyebao.adapter.driven.persistence.orgmng;
 
 import qiyebao.common.framework.adapter.driven.persistence.Selector;
-import qiyebao.domain.orgmng.repository.EmpRepository;
-import qiyebao.domain.orgmng.entity.EmpStatus;
+import qiyebao.domain.orgmng.emp.EmpRepository;
+import qiyebao.domain.orgmng.emp.EmpStatus;
 import org.springframework.stereotype.Repository;
 
 import static org.apache.commons.lang3.ArrayUtils.*;

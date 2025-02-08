@@ -1,6 +1,4 @@
-package qiyebao.domain.orgmng.repository;
-
-import qiyebao.domain.orgmng.entity.EmpStatus;
+package qiyebao.domain.orgmng.emp;
 
 public interface EmpRepository {
     boolean existsByIdAndStatus(Long tenantId, Long id, EmpStatus... statuses);

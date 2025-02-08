@@ -1,9 +1,9 @@
 package qiyebao.application.orgmng;
 
-import qiyebao.domain.orgmng.repository.OrgRepository;
+import qiyebao.domain.orgmng.org.OrgRepository;
 import org.springframework.stereotype.Service;
-import qiyebao.domain.orgmng.entity.Org;
-import qiyebao.domain.orgmng.factory.OrgBuilderFactory;
+import qiyebao.domain.orgmng.org.Org;
+import qiyebao.domain.orgmng.org.OrgBuilderFactory;
 
 @Service
 public class OrgService {

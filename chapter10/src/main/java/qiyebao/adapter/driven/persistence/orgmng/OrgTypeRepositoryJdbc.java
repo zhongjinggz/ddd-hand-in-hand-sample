@@ -2,9 +2,9 @@ package qiyebao.adapter.driven.persistence.orgmng;
 
 import qiyebao.common.framework.adapter.driven.persistence.Selector;
 import qiyebao.common.utils.TypedMap;
-import qiyebao.domain.orgmng.entity.OrgType;
-import qiyebao.domain.orgmng.repository.OrgTypeRepository;
-import qiyebao.domain.orgmng.entity.OrgTypeStatus;
+import qiyebao.domain.orgmng.orgtype.OrgType;
+import qiyebao.domain.orgmng.orgtype.OrgTypeRepository;
+import qiyebao.domain.orgmng.orgtype.OrgTypeStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;

@@ -1,9 +1,9 @@
-package qiyebao.domain.orgmng.domainservice;
+package qiyebao.domain.orgmng.org;
 
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.exception.BusinessException;
-import qiyebao.domain.orgmng.entity.OrgTypeStatus;
-import qiyebao.domain.orgmng.repository.OrgTypeRepository;
+import qiyebao.domain.orgmng.orgtype.OrgTypeStatus;
+import qiyebao.domain.orgmng.orgtype.OrgTypeRepository;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
