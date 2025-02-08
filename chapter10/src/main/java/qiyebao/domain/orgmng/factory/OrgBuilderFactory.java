@@ -1,6 +1,7 @@
-package qiyebao.domain.orgmng;
+package qiyebao.domain.orgmng.factory;
 
 import org.springframework.stereotype.Component;
+import qiyebao.domain.orgmng.domainservice.OrgValidators;
 
 @Component
 public class OrgBuilderFactory {

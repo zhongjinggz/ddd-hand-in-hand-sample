@@ -1,26 +1,23 @@
-package qiyebao.domain.orgmng;
+package qiyebao.domain.orgmng.entity;
 
 import java.time.LocalDateTime;
 
-public class Org {
-    private Long id;
+public class OrgType {
+    private String code;
     private Long tenantId;
-    private Long superiorId;
-    private String orgTypeCode;         // [1]
-    private Long leaderId;
     private String name;
-    private OrgStatus status;
+    private OrgTypeStatus status;
     private LocalDateTime createdAt;
     private Long createdBy;
     private LocalDateTime lastUpdatedAt;
     private Long lastUpdatedBy;
 
-    public Long getId() {
-        return id;
+    public String getCode() {
+        return code;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Long getTenantId() {
@@ -31,30 +28,6 @@ public class Org {
         this.tenantId = tenantId;
     }
 
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
-    }
-
-    public String getOrgTypeCode() {
-        return orgTypeCode;
-    }
-
-    public void setOrgTypeCode(String orgTypeCode) {
-        this.orgTypeCode = orgTypeCode;
-    }
-
-    public Long getLeaderId() {
-        return leaderId;
-    }
-
-    public void setLeaderId(Long leaderId) {
-        this.leaderId = leaderId;
-    }
-
     public String getName() {
         return name;
     }
@@ -63,11 +36,11 @@ public class Org {
         this.name = name;
     }
 
-    public OrgStatus getStatus() {
+    public OrgTypeStatus getStatus() {
         return status;
     }
 
-    public void setStatus(OrgStatus status) {
+    public void setStatus(OrgTypeStatus status) {
         this.status = status;
     }
 

@@ -1,4 +1,8 @@
-package qiyebao.domain.orgmng;
+package qiyebao.domain.orgmng.factory;
+
+import qiyebao.domain.orgmng.entity.OrgStatus;
+import qiyebao.domain.orgmng.domainservice.OrgValidators;
+import qiyebao.domain.orgmng.entity.Org;
 
 import java.time.LocalDateTime;
 

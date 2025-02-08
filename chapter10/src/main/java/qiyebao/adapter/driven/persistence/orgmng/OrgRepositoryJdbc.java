@@ -2,9 +2,9 @@ package qiyebao.adapter.driven.persistence.orgmng; // [1] 注意，仓库的实�
 
 import qiyebao.common.framework.adapter.driven.persistence.Selector;
 import qiyebao.common.utils.TypedMap;
-import qiyebao.domain.orgmng.Org;
-import qiyebao.domain.orgmng.OrgRepository;
-import qiyebao.domain.orgmng.OrgStatus;
+import qiyebao.domain.orgmng.entity.Org;
+import qiyebao.domain.orgmng.repository.OrgRepository;
+import qiyebao.domain.orgmng.entity.OrgStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;

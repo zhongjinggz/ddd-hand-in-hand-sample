@@ -1,4 +1,4 @@
-package qiyebao.domain.orgmng;
+package qiyebao.domain.orgmng.domainservice;
 
 import org.springframework.stereotype.Component;
 import qiyebao.domain.tenantmng.TenantValidator;
@@ -29,27 +29,27 @@ public class OrgValidators {
         this.orgLeaderValidator = orgLeaderValidator;
     }
 
-    TenantValidator tenant() {
+    public TenantValidator tenant() {
         return tenantValidator;
     }
 
-    UserValidator user() {
+    public UserValidator user() {
         return userValidator;
     }
 
-    OrgTypeValidator orgType() {
+    public OrgTypeValidator orgType() {
         return orgTypeValidator;
     }
 
-    OrgSuperiorValidator orgSuperior() {
+    public OrgSuperiorValidator orgSuperior() {
         return orgSuperiorValidator;
     }
 
-    OrgNameValidator orgName() {
+    public OrgNameValidator orgName() {
         return orgNameValidator;
     }
 
-    OrgLeaderValidator orgLeader() {
+    public OrgLeaderValidator orgLeader() {
         return orgLeaderValidator;
     }
 }

@@ -1,7 +1,12 @@
-package qiyebao.domain.orgmng;
+package qiyebao.domain.orgmng.domainservice;
 
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.exception.BusinessException;
+import qiyebao.domain.orgmng.repository.OrgTypeRepository;
+import qiyebao.domain.orgmng.entity.OrgTypeStatus;
+import qiyebao.domain.orgmng.entity.Org;
+import qiyebao.domain.orgmng.entity.OrgStatus;
+import qiyebao.domain.orgmng.repository.OrgRepository;
 
 @Component
 public class OrgSuperiorValidator {

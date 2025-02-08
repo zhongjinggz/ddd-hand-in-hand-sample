@@ -1,4 +1,4 @@
-package qiyebao.domain.orgmng;
+package qiyebao.domain.orgmng.entity;
 
 import qiyebao.common.framework.domain.CodeEnum;
 

@@ -1,4 +1,7 @@
-package qiyebao.domain.orgmng;
+package qiyebao.domain.orgmng.repository;
+
+import qiyebao.domain.orgmng.entity.OrgType;
+import qiyebao.domain.orgmng.entity.OrgTypeStatus;
 
 import java.util.Optional;
 
