@@ -5,6 +5,8 @@ import qiyebao.domain.orgmng.emp.EmpRepository;
 import qiyebao.domain.orgmng.emp.EmpStatus;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
+
 import static org.apache.commons.lang3.ArrayUtils.*;
 
 @Repository
@@ -18,26 +20,43 @@ public class EmpRepositoryJdbc implements EmpRepository {
 
     @Override
     public boolean existsByIdAndStatus(Long tenantId, Long id, EmpStatus... statuses) {
-        String sql = buildSqlExistsByIdAndStatus(statuses.length);
-        Object[] params = addAll(toArray(tenantId, id), statuses);
+        String sql = " select 1 from emp  "
+            + "where tenant_id = ? and id = ?"
+            + statusCondition(statuses.length)
+            + " limit 1 ";
+
+        Object[] params = addAll( toArray(tenantId, id)
+            , Arrays.stream(statuses).map(EmpStatus::getCode).toArray()
+        );
 
         return selector.selectExists(sql, params);
     }
 
-    private static String buildSqlExistsByIdAndStatus(int statusCount) {
-        String status_condition = "";
+    @Override
+    public boolean existsByOrgIdAndStatus(Long tenantId, Long orgId, EmpStatus... statuses) {
+        String sql = " select 1 from emp  "
+            + "where tenant_id = ? and orgId = ?"
+            + statusCondition(statuses.length)
+            + " limit 1 ";
+
+        Object[] params = addAll( toArray(tenantId, orgId)
+            , Arrays.stream(statuses).map(EmpStatus::getCode).toArray()
+        );
+
+        return selector.selectExists(sql, params);
+    }
+
+    private static String statusCondition(int statusCount) {
+        StringBuilder statusCondition = new StringBuilder();
+
         for (int i = 0; i < statusCount; i++) {
             if (i == 0) {
-                status_condition = status_condition + " and (status_code = ?";
+                statusCondition.append(" and (status_code = ?");
             } else {
-                status_condition = status_condition + "or status_code = ?";
+                statusCondition.append("or status_code = ?");
             }
         }
-        status_condition += ")";
-
-        String sql = " select 1 from emp  where tenant_id = ? and id = ?"
-                + status_condition
-                + " limit 1 ";
-        return sql;
+        statusCondition.append(")");
+        return statusCondition.toString();
     }
 }

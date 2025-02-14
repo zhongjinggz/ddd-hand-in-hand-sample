@@ -13,6 +13,7 @@ public class OrgValidators {
     private final OrgSuperiorValidator orgSuperiorValidator;
     private final OrgNameValidator orgNameValidator;
     private final OrgLeaderValidator orgLeaderValidator;
+    private final OrgToBeCancelledValidator orgToBeCancelledValidator;
 
     public OrgValidators(TenantValidator tenantValidator
         , UserValidator userValidator
@@ -20,6 +21,7 @@ public class OrgValidators {
         , OrgSuperiorValidator orgSuperiorValidator
         , OrgNameValidator orgNameValidator
         , OrgLeaderValidator orgLeaderValidator
+        , OrgToBeCancelledValidator orgToBeCancelledValidator
     ) {
         this.tenantValidator = tenantValidator;
         this.userValidator = userValidator;
@@ -27,6 +29,7 @@ public class OrgValidators {
         this.orgSuperiorValidator = orgSuperiorValidator;
         this.orgNameValidator = orgNameValidator;
         this.orgLeaderValidator = orgLeaderValidator;
+        this.orgToBeCancelledValidator = orgToBeCancelledValidator;
     }
 
     public TenantValidator tenant() {
@@ -51,5 +54,9 @@ public class OrgValidators {
 
     public OrgLeaderValidator orgLeader() {
         return orgLeaderValidator;
+    }
+
+    public OrgToBeCancelledValidator orgToBeCancelled() {
+        return orgToBeCancelledValidator;
     }
 }

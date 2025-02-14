@@ -1,5 +1,8 @@
 package qiyebao.application.orgmng;
 
+import org.springframework.transaction.annotation.Transactional;
+import qiyebao.common.framework.exception.BusinessException;
+import qiyebao.domain.orgmng.org.OrgHandler;
 import qiyebao.domain.orgmng.org.OrgRepository;
 import org.springframework.stereotype.Service;
 import qiyebao.domain.orgmng.org.Org;
@@ -9,15 +12,19 @@ import qiyebao.domain.orgmng.org.OrgBuilderFactory;
 public class OrgService {
     private final OrgRepository orgRepository;
     private final OrgBuilderFactory orgBuilderFactory;
+    private final OrgHandler orgHandler;
 
     public OrgService(OrgRepository orgRepository
         , OrgBuilderFactory orgBuilderFactory
+        , OrgHandler orgHandler
     ) {
 
         this.orgRepository = orgRepository;
         this.orgBuilderFactory = orgBuilderFactory;
+        this.orgHandler = orgHandler;
     }
 
+    @Transactional
     public OrgDto addOrg(OrgDto request, Long userId) {
         Org org = orgBuilderFactory.newBuilder()
             .tenantId(request.getTenantId())
@@ -30,6 +37,35 @@ public class OrgService {
 
         return buildOrgDto(orgRepository.save(org));
     }
+
+
+    @Transactional
+    public OrgDto modifyOrg(Long id, OrgDto request, Long userId) {
+        Org org = orgRepository.findById(request.getTenantId(), id)
+            .orElseThrow(() -> new BusinessException("要修改的组织(id =" + id + "  )不存在！"));
+
+        orgHandler.modify(org
+            , request.getName()
+            , request.getLeaderId()
+            , userId);
+
+        orgRepository.update(org);
+        return buildOrgDto(org);
+    }
+
+
+    @Transactional
+    public Long cancelOrg(Long id, Long tenantId, Long userId) {
+        Org org = orgRepository.findById(tenantId, id)
+            .orElseThrow(() -> new BusinessException(
+                "要取消的组织(id =" + id + "  )不存在！"));
+
+        orgHandler.cancel(org, userId);
+        orgRepository.update(org);
+
+        return org.getId();
+    }
+
 
     private OrgDto buildOrgDto(Org org) {
         OrgDto response = new OrgDto();

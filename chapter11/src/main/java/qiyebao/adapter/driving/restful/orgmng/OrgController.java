@@ -1,9 +1,6 @@
 package qiyebao.adapter.driving.restful.orgmng;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import qiyebao.application.orgmng.OrgDto;
 import qiyebao.application.orgmng.OrgService;
 
@@ -16,9 +13,23 @@ public class OrgController {
     }
 
     @PostMapping("/api/organizations")
-    public OrgDto addOrg(@RequestParam("userid") Long userId
-            , @RequestBody OrgDto request) {
+    public OrgDto addOrg(@RequestBody OrgDto request
+        , @RequestParam("userid") Long userId
+    ) {
         return orgService.addOrg(request, userId);
     }
 
+    @PatchMapping("/api/organizations/{id}")
+    public OrgDto modifyOrg(@PathVariable Long id
+        , @RequestBody OrgDto request
+        , @RequestParam("userid") Long userId) {
+        return orgService.modifyOrg(id, request, userId);
+    }
+
+    @PostMapping("/api/organizations/{id}/cancel")
+    public Long cancelOrg(@PathVariable Long id
+        , @RequestParam Long tenant
+        , @RequestParam Long userId) {
+        return orgService.cancelOrg(id, tenant, userId);
+    }
 }
