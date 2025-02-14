@@ -7,9 +7,9 @@ public interface OrgRepository {
 
     Optional<Org> findById(long tenantId, long id);
 
-    Org save(Org org);
+    Org add(Org org);
 
     boolean existsBySuperiorAndName(Long tenantId, Long superiorId, String name);
 
-    int update(Org org);
+    int modify(Org org);
 }

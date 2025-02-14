@@ -35,7 +35,7 @@ public class OrgService {
             .createdBy(userId)
             .build();
 
-        return buildOrgDto(orgRepository.save(org));
+        return buildOrgDto(orgRepository.add(org));
     }
 
 
@@ -49,7 +49,7 @@ public class OrgService {
             , request.getLeaderId()
             , userId);
 
-        orgRepository.update(org);
+        orgRepository.modify(org);
         return buildOrgDto(org);
     }
 
@@ -61,7 +61,7 @@ public class OrgService {
                 "要取消的组织(id =" + id + "  )不存在！"));
 
         orgHandler.cancel(org, userId);
-        orgRepository.update(org);
+        orgRepository.modify(org);
 
         return org.getId();
     }

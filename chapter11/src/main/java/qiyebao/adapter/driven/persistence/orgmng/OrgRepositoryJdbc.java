@@ -88,7 +88,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
     }
 
     @Override
-    public Org save(Org org) {
+    public Org add(Org org) {
         Map<String, Object> params = new HashMap<>(8);
 
         params.put("tenant_id", org.getTenantId());
@@ -123,7 +123,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
     }
 
     @Override
-    public int update(Org org) {
+    public int modify(Org org) {
         String sql = "update org "
                 + " set superior_id = ? "
                 + ", org_type_code =? "
