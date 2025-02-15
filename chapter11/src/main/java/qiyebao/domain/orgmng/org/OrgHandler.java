@@ -1,9 +1,7 @@
 package qiyebao.domain.orgmng.org;
 
 import qiyebao.domain.orgmng.org.validator.OrgValidators;
-
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 
 @Component
