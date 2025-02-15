@@ -30,7 +30,7 @@ public class OrgToBeCancelledValidator {
     }
 
     // 要撤销的组织必须是生效状态
-    public void shouldBeEffective(Org org) {
+    public void shouldEffective(Org org) {
         if (!(org.getStatus() == OrgStatus.EFFECTIVE)) {
             throw new BusinessException("该组织不是有效状态，不能撤销！");
         }
