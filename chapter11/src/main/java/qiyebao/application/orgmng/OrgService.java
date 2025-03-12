@@ -42,7 +42,8 @@ public class OrgService {
     @Transactional
     public OrgDto modifyOrg(Long id, OrgDto request, Long userId) {
         Org org = orgRepository.findById(request.getTenantId(), id)
-            .orElseThrow(() -> new BusinessException("要修改的组织(id =" + id + "  )不存在！"));
+            .orElseThrow(() -> new BusinessException(
+                "要修改的组织(id =" + id + "  )不存在！"));
 
         orgHandler.modify(org
             , request.getName()
