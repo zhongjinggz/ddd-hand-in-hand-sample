@@ -6,29 +6,33 @@ public class Org {
     private Long id;
     private Long tenantId;
     private Long superiorId;
-    private String orgTypeCode;         // [1]
+    private String orgTypeCode;
     private Long leaderId;
     private String name;
     private OrgStatus status;
     private LocalDateTime createdAt;
     private Long createdBy;
-    private LocalDateTime lastUpdatedAt;
-    private Long lastUpdatedBy;
+    private LocalDateTime updatedAt;
+    private Long updatedBy;
+
+    public Org(Long id
+        , Long tenantId
+        , String orgTypeCode
+        , LocalDateTime createdAt
+        , Long createdBy
+    ) {
+        this.tenantId = tenantId;
+        this.orgTypeCode = orgTypeCode;
+        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getTenantId() {
         return tenantId;
-    }
-
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
     }
 
     public Long getSuperiorId() {
@@ -41,10 +45,6 @@ public class Org {
 
     public String getOrgTypeCode() {
         return orgTypeCode;
-    }
-
-    public void setOrgTypeCode(String orgTypeCode) {
-        this.orgTypeCode = orgTypeCode;
     }
 
     public Long getLeaderId() {
@@ -75,31 +75,23 @@ public class Org {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Long getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
-    public LocalDateTime getLastUpdatedAt() {
-        return lastUpdatedAt;
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
-        this.lastUpdatedAt = lastUpdatedAt;
+    public Long getUpdatedBy() {
+        return updatedBy;
     }
 
-    public Long getLastUpdatedBy() {
-        return lastUpdatedBy;
-    }
-
-    public void setLastUpdatedBy(Long lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
+    public void setUpdatedBy(Long updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }

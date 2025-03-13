@@ -48,7 +48,7 @@ public class OrgHandler {
     }
 
     private void modifyAuditInfo(Org org, Long userId) {
-        org.setLastUpdatedBy(userId);
-        org.setLastUpdatedAt(LocalDateTime.now());
+        org.setUpdatedBy(userId);
+        org.setUpdatedAt(LocalDateTime.now());
     }
 }

@@ -9,7 +9,7 @@ public class OrgResponse {
     private String orgTypeCode;
     private Long leaderId;
     private String name;
-    private String status;
+    private String statusCode;
     private LocalDateTime createdAt;
     private Long createdBy;
     private LocalDateTime lastUpdatedAt;
@@ -63,12 +63,12 @@ public class OrgResponse {
         this.name = name;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusCode() {
+        return statusCode;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
     }
 
     public LocalDateTime getCreatedAt() {

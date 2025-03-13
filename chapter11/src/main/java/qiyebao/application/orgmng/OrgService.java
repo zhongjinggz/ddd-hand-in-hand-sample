@@ -78,8 +78,8 @@ public class OrgService {
         response.setSuperiorId(org.getSuperiorId());
         response.setCreatedBy(org.getCreatedBy());
         response.setCreatedAt(org.getCreatedAt());
-        response.setLastUpdatedBy(org.getLastUpdatedBy());
-        response.setLastUpdatedAt(org.getLastUpdatedAt());
+        response.setLastUpdatedBy(org.getUpdatedBy());
+        response.setLastUpdatedAt(org.getUpdatedAt());
         return response;
     }
 

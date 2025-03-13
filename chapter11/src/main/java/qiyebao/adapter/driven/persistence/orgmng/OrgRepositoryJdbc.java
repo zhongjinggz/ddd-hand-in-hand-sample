@@ -22,68 +22,70 @@ public class OrgRepositoryJdbc implements OrgRepository {
     private final Selector selector;
 
     public OrgRepositoryJdbc(JdbcTemplate jdbc
-            , Selector selector) {
+        , Selector selector) {
         this.jdbc = jdbc;
         this.insertOrg = new SimpleJdbcInsert(jdbc)
-                .withTableName("org")
-                .usingGeneratedKeyColumns("id");
+            .withTableName("org")
+            .usingGeneratedKeyColumns("id");
         this.selector = selector;
     }
 
     private static String fields = " id"
-            + ", tenant_id"
-            + ", superior_id"
-            + ", org_type_code"
-            + ", leader_id"
-            + ", name"
-            + ", status_code"
-            + ", created_at"
-            + ", created_by"
-            + ", last_updated_at"
-            + ", last_updated_by ";
+        + ", tenant_id"
+        + ", superior_id"
+        + ", org_type_code"
+        + ", leader_id"
+        + ", name"
+        + ", status_code"
+        + ", created_at"
+        + ", created_by"
+        + ", last_updated_at"
+        + ", last_updated_by ";
 
     @Override
     public Optional<Org> findByIdAndStatus(Long tenantId, Long id, OrgStatus status) {
         final String sql = " select " + fields
-                + " from org "
-                + " where tenant_id = ?  "
-                + "   and id = ? "
-                + "   and status_code = ? ";
+            + " from org "
+            + " where tenant_id = ?  "
+            + "   and id = ? "
+            + "   and status_code = ? ";
 
         return selector.selectOne(sql
-                , this::mapToOrg
-                , tenantId
-                , id
-                , status.getCode());
+            , this::mapToOrg
+            , tenantId
+            , id
+            , status.getCode());
     }
 
     @Override
     public Optional<Org> findById(long tenantId, long id) {
         final String sql = " select " + fields
-                + " from org "
-                + " where tenant_id = ? "
-                + "  and id = ?";
+            + " from org "
+            + " where tenant_id = ? "
+            + "  and id = ?";
 
         return selector.selectOne(sql
-                , this::mapToOrg
-                , tenantId
-                , id);
+            , this::mapToOrg
+            , tenantId
+            , id);
     }
 
     private Org mapToOrg(Map<String, Object> map) {
         TypedMap typedMap = new TypedMap(map);
-        Org result = new Org();
-        result.setId(typedMap.getLong("id"));
-        result.setTenantId(typedMap.getLong("tenant_id"));
+
+        Org result = new Org(typedMap.getLong("id")
+            , typedMap.getLong("tenant_id")
+            , typedMap.getString("org_type_code")
+            , typedMap.getLocalDateTime("created_at")
+            , typedMap.getLong("created_by")
+        );
         result.setSuperiorId(typedMap.getLong("superior_id"));
-        result.setOrgTypeCode(typedMap.getString("org_type_code"));
         result.setLeaderId(typedMap.getLong("leader_id"));
         result.setName(typedMap.getString("name"));
         result.setStatus(OrgStatus.ofCode(typedMap.getString("status_code")));
-        result.setCreatedAt(typedMap.getLocalDateTime("created_at"));
-        result.setCreatedBy(typedMap.getLong("created_by"));
-        result.setLastUpdatedAt(typedMap.getLocalDateTime("last_updated_at"));
-        result.setLastUpdatedBy(typedMap.getLong("last_updated_by"));
+        result.setUpdatedAt(typedMap.getLocalDateTime("last_updated_at"));
+        result.setUpdatedBy(typedMap.getLong("last_updated_by"));
+
         return result;
     }
 
@@ -110,40 +112,40 @@ public class OrgRepositoryJdbc implements OrgRepository {
     @Override
     public boolean existsBySuperiorAndName(Long tenantId, Long superiorId, String name) {
         final String sql = " select 1 "
-                + " from org "
-                + " where tenant_id = ?  "
-                + "   and superior_id = ? "
-                + "   and name = ?"
-                + " limit 1 ";
+            + " from org "
+            + " where tenant_id = ?  "
+            + "   and superior_id = ? "
+            + "   and name = ?"
+            + " limit 1 ";
 
         return selector.selectExists(sql
-                , tenantId
-                , superiorId
-                , name);
+            , tenantId
+            , superiorId
+            , name);
     }
 
     @Override
     public int modify(Org org) {
         String sql = "update org "
-                + " set superior_id = ? "
-                + ", org_type_code =? "
-                + ", leader_id = ?"
-                + ", name = ?"
-                + ", status_code =?"
-                + ", last_updated_at = ?"
-                + ", last_updated_by = ? "
-                + " where tenant_id = ? and id = ? ";
+            + " set superior_id = ? "
+            + ", org_type_code =? "
+            + ", leader_id = ?"
+            + ", name = ?"
+            + ", status_code =?"
+            + ", last_updated_at = ?"
+            + ", last_updated_by = ? "
+            + " where tenant_id = ? and id = ? ";
 
         return this.jdbc.update(sql
-                , org.getSuperiorId()
-                , org.getOrgTypeCode()
-                , org.getLeaderId()
-                , org.getName()
-                , org.getStatus().getCode()
-                , org.getLastUpdatedAt()
-                , org.getLastUpdatedBy()
-                , org.getTenantId()
-                , org.getId()
+            , org.getSuperiorId()
+            , org.getOrgTypeCode()
+            , org.getLeaderId()
+            , org.getName()
+            , org.getStatus().getCode()
+            , org.getUpdatedAt()
+            , org.getUpdatedBy()
+            , org.getTenantId()
+            , org.getId()
         );
     }
 

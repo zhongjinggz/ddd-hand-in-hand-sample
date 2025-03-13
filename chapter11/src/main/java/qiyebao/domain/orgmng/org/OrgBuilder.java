@@ -51,15 +51,15 @@ public class OrgBuilder {
     public Org build() {
         validate();
 
-        Org org = new Org();
-        org.setTenantId(tenantId);
-        org.setOrgTypeCode(orgTypeCode);
+        Org org = new Org(null
+            , tenantId
+            , orgTypeCode
+            , LocalDateTime.now()
+            , createdBy);
         org.setSuperiorId(superiorId);
         org.setLeaderId(leaderId);
         org.setName(name);
         org.setStatus(OrgStatus.EFFECTIVE);
-        org.setCreatedBy(createdBy);
-        org.setCreatedAt(LocalDateTime.now());
         return org;
     }
 
