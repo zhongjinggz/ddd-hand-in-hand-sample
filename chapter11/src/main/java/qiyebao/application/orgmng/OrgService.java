@@ -25,7 +25,7 @@ public class OrgService {
     }
 
     @Transactional
-    public OrgResponse addOrg(OrgResponse request, Long userId) {
+    public OrgResponse addOrg(AddOrgRequest request, Long userId) {
         Org org = orgBuilderFactory.newBuilder()
             .tenantId(request.getTenantId())
             .orgTypeCode(request.getOrgTypeCode())
@@ -35,12 +35,12 @@ public class OrgService {
             .createdBy(userId)
             .build();
 
-        return buildOrgDto(orgRepository.add(org));
+        return buildOrgResponse(orgRepository.add(org));
     }
 
 
     @Transactional
-    public OrgResponse modifyOrg(Long id, OrgResponse request, Long userId) {
+    public OrgResponse modifyOrg(Long id, ModifyOrgRequest request, Long userId) {
         Org org = orgRepository.findById(request.getTenantId(), id)
             .orElseThrow(() -> new BusinessException(
                 "要修改的组织(id =" + id + "  )不存在！"));
@@ -51,7 +51,7 @@ public class OrgService {
             , userId);
 
         orgRepository.modify(org);
-        return buildOrgDto(org);
+        return buildOrgResponse(org);
     }
 
 
@@ -68,7 +68,7 @@ public class OrgService {
     }
 
 
-    private OrgResponse buildOrgDto(Org org) {
+    private OrgResponse buildOrgResponse(Org org) {
         OrgResponse response = new OrgResponse();
         response.setId(org.getId());
         response.setTenantId(org.getTenantId());

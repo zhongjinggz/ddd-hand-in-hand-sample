@@ -1,6 +1,8 @@
 package qiyebao.adapter.driving.restful.orgmng;
 
 import org.springframework.web.bind.annotation.*;
+import qiyebao.application.orgmng.AddOrgRequest;
+import qiyebao.application.orgmng.ModifyOrgRequest;
 import qiyebao.application.orgmng.OrgResponse;
 import qiyebao.application.orgmng.OrgService;
 
@@ -13,7 +15,7 @@ public class OrgController {
     }
 
     @PostMapping("/api/organizations")
-    public OrgResponse addOrg(@RequestBody OrgResponse request
+    public OrgResponse addOrg(@RequestBody AddOrgRequest request
         , @RequestParam("userid") Long userId
     ) {
         return orgService.addOrg(request, userId);
@@ -21,7 +23,7 @@ public class OrgController {
 
     @PatchMapping("/api/organizations/{id}")
     public OrgResponse modifyOrg(@PathVariable Long id
-        , @RequestBody OrgResponse request
+        , @RequestBody ModifyOrgRequest request
         , @RequestParam("userid") Long userId) {
         return orgService.modifyOrg(id, request, userId);
     }
