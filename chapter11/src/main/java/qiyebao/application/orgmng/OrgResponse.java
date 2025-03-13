@@ -2,7 +2,7 @@ package qiyebao.application.orgmng;
 
 import java.time.LocalDateTime;
 
-public class OrgDto {
+public class OrgResponse {
     private Long id;
     private Long tenantId;
     private Long superiorId;
