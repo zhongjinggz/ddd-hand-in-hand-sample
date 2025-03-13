@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import qiyebao.common.framework.exception.BusinessException;
 import qiyebao.domain.orgmng.emp.EmpRepository;
 import qiyebao.domain.orgmng.emp.EmpStatus;
-import qiyebao.domain.orgmng.org.Org;
 import qiyebao.domain.orgmng.org.OrgStatus;
 
 @Component
@@ -30,8 +29,8 @@ public class OrgToBeCancelledValidator {
     }
 
     // 要撤销的组织必须是生效状态
-    public void shouldEffective(Org org) {
-        if (!(org.getStatus() == OrgStatus.EFFECTIVE)) {
+    public void shouldEffective(OrgStatus orgStatus) {
+        if (!(orgStatus == OrgStatus.EFFECTIVE)) {
             throw new BusinessException("该组织不是有效状态，不能撤销！");
         }
     }
