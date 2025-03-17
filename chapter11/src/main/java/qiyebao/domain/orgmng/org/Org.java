@@ -1,5 +1,7 @@
 package qiyebao.domain.orgmng.org;
 
+import qiyebao.common.framework.exception.BusinessException;
+
 import java.time.LocalDateTime;
 
 public class Org {
@@ -93,5 +95,18 @@ public class Org {
 
     public void setUpdatedBy(Long updatedBy) {
         this.updatedBy = updatedBy;
+    }
+
+    //Org 管理自己的状态
+    public void cancel() {
+        shouldEffective();   // 校验组织状态的业务规则移至对象内部
+        this.status = OrgStatus.CANCELLED;
+    }
+
+    // 要撤销的组织必须是生效状态
+    public void shouldEffective() {
+        if (!(status == OrgStatus.EFFECTIVE)) {
+            throw new BusinessException("该组织不是有效状态，不能撤销！");
+        }
     }
 }

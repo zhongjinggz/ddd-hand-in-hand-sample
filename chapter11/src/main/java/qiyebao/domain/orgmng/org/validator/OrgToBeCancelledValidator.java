@@ -27,11 +27,4 @@ public class OrgToBeCancelledValidator {
             throw new BusinessException("该组织中仍然有员工，不能撤销！");
         }
     }
-
-    // 要撤销的组织必须是生效状态
-    public void shouldEffective(OrgStatus orgStatus) {
-        if (!(orgStatus == OrgStatus.EFFECTIVE)) {
-            throw new BusinessException("该组织不是有效状态，不能撤销！");
-        }
-    }
 }

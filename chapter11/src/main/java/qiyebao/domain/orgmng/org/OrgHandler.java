@@ -24,9 +24,8 @@ public class OrgHandler {
 
     public void cancel(Org org, Long userId) {
         expect.orgToBeCancelled().shouldNotHasEmp(org.getTenantId(), org.getId());
-        expect.orgToBeCancelled().shouldEffective(org.getStatus());
 
-        org.setStatus(OrgStatus.CANCELLED);
+        org.cancel();  // 不再直接修改Org的状态
         modifyAuditInfo(org, userId);
     }
 
