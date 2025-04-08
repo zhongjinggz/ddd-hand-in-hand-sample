@@ -2,7 +2,7 @@ package qiyebao.domain.orgmng.org.validator;
 
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.exception.BusinessException;
-import qiyebao.domain.orgmng.emp.EmpStatus;
+import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.EmpRepository;
 
 @Component
@@ -17,8 +17,8 @@ public class OrgLeaderValidator {
         if (leaderId != null
             && !empRepository.existsByIdAndStatus(tenantId
             , leaderId
-            , EmpStatus.REGULAR
-            , EmpStatus.PROBATION)) {
+            , Emp.Status.REGULAR
+            , Emp.Status.PROBATION)) {
             throw new BusinessException(
                 String.format("组织负责人(id='%s')不是在职员工！", leaderId)
             );

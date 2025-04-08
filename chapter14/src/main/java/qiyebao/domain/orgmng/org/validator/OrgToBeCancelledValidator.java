@@ -3,9 +3,8 @@ package qiyebao.domain.orgmng.org.validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.exception.BusinessException;
+import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.EmpRepository;
-import qiyebao.domain.orgmng.emp.EmpStatus;
-import qiyebao.domain.orgmng.org.OrgStatus;
 
 @Component
 public class OrgToBeCancelledValidator {
@@ -21,8 +20,8 @@ public class OrgToBeCancelledValidator {
     public void shouldNotHasEmp(Long tenantId, Long orgId) {
         if (empRepository.existsByOrgIdAndStatus(tenantId
             , orgId
-            , EmpStatus.PROBATION
-            , EmpStatus.REGULAR)
+            , Emp.Status.PROBATION
+            , Emp.Status.REGULAR)
         ) {
             throw new BusinessException("该组织中仍然有员工，不能撤销！");
         }

@@ -18,7 +18,6 @@ public class WorkExperience extends AuditableEntity {
         , Long tenantId
         , LocalDate startDate
         , LocalDate endDate
-        , String company
         , LocalDateTime createdAt
         , Long createdBy) {
 
@@ -27,7 +26,6 @@ public class WorkExperience extends AuditableEntity {
         this.tenantId = tenantId;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.company = company;
     }
 
     public Emp getEmp() {
