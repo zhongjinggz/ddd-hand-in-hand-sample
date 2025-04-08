@@ -1,10 +1,11 @@
 package qiyebao.domain.orgmng.org;
 
+import qiyebao.common.framework.domain.AuditableEntity;
 import qiyebao.common.framework.exception.BusinessException;
 
 import java.time.LocalDateTime;
 
-public class Org {
+public class Org extends AuditableEntity {
     private Long id;
     private Long tenantId;
     private Long superiorId;
@@ -12,21 +13,16 @@ public class Org {
     private Long leaderId;
     private String name;
     private OrgStatus status;
-    private LocalDateTime createdAt;
-    private Long createdBy;
-    private LocalDateTime updatedAt;
-    private Long updatedBy;
 
-    public Org(Long id
+    public Org (Long id
         , Long tenantId
         , String orgTypeCode
         , LocalDateTime createdAt
         , Long createdBy
     ) {
+        super(createdAt, createdBy);
         this.tenantId = tenantId;
         this.orgTypeCode = orgTypeCode;
-        this.createdAt = createdAt;
-        this.createdBy = createdBy;
     }
 
     public Long getId() {
@@ -71,30 +67,6 @@ public class Org {
 
     public void setStatus(OrgStatus status) {
         this.status = status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public Long getCreatedBy() {
-        return createdBy;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Long getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(Long updatedBy) {
-        this.updatedBy = updatedBy;
     }
 
     //Org 管理自己的状态
