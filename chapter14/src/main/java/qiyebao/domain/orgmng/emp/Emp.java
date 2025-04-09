@@ -2,6 +2,7 @@ package qiyebao.domain.orgmng.emp;
 
 import qiyebao.common.framework.domain.AuditableEntity;
 import qiyebao.common.framework.domain.CodeEnum;
+import qiyebao.common.framework.exception.BusinessException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -117,11 +118,14 @@ public class Emp extends AuditableEntity {
             .findAny();
     }
 
-    public void addSkill(Long skillTypeId
+    void addSkill(Long skillTypeId
         , Skill.Level level
         , Integer duration
         , Long userId
     ) {
+        // 固定规则: 同一技能不能录入两次
+        expectSkillTypeNotDuplicated(skillTypeId);
+
         Skill newSkill = new Skill(this
             , tenantId
             , skillTypeId
@@ -131,6 +135,13 @@ public class Emp extends AuditableEntity {
         newSkill.setDuration(duration);
 
         skills.add(newSkill);
+    }
+
+    private void expectSkillTypeNotDuplicated(Long otherSkillTypeId) {
+        if (skills.stream().anyMatch(
+            s -> s.getSkillTypeId() == otherSkillTypeId)) {
+            throw new BusinessException("同一技能不能录入两次！");
+        }
     }
 
     public List<WorkExperience> getExperiences() {
@@ -150,6 +161,9 @@ public class Emp extends AuditableEntity {
         , String company
         , Long userId
     ) {
+        // 调用业务规则: 工作经验的时间段不能重叠
+        expectDurationNotOverlap(startDate, endDate);
+
         WorkExperience newExperience = new WorkExperience(this
             , tenantId
             , startDate
@@ -159,6 +173,22 @@ public class Emp extends AuditableEntity {
         newExperience.setCompany(company);
 
         experiences.add(newExperience);
+    }
+
+    private void expectDurationNotOverlap(LocalDate startDate, LocalDate endDate) {
+        if (experiences.stream().anyMatch(
+            e -> overlap(e, startDate, endDate))) {
+            throw new BusinessException("工作经验的时间段不能重叠!");
+        }
+    }
+
+    private boolean overlap(WorkExperience experience
+        , LocalDate otherStart, LocalDate otherEnd) {
+        LocalDate thisStart = experience.getStartDate();
+        LocalDate thisEnd = experience.getEndDate();
+
+        return otherStart.isBefore(thisEnd)
+            && otherEnd.isAfter(thisStart);
     }
 
     public List<Post> getPosts() {
@@ -171,7 +201,7 @@ public class Emp extends AuditableEntity {
             .findAny();
     }
 
-    public Emp addPost(String postTypeCode, Long userId) {
+    Emp addPost(String postTypeCode, Long userId) {
         Post newPost = new Post(this
             , tenantId
             , postTypeCode

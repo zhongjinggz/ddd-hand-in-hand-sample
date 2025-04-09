@@ -4,12 +4,6 @@ spring:
     username: unjuanable
     password: unjuanable
     driver-class-name: com.mysql.cj.jdbc.Driver
-mybatis:
-  mapper-locations: "classpath:/mapper/**/*.xml"
-  type-aliases-package: qiyebao.domain.**
-  configuration:
-    map-underscore-to-camel-case: true
-
 log:
   level:
     root: INFO
