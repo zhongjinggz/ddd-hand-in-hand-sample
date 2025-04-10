@@ -1,6 +1,5 @@
-package qiyebao.adapter.driven.persistence.orgmng;
+package qiyebao.adapter.driven.persistence.orgmng.empnumcounter;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
@@ -13,7 +12,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 @Component
 public class EmpNumCounterRepositoryJdbc implements EmpNumCounterRepository {

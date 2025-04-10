@@ -1,4 +1,4 @@
-package qiyebao.adapter.driven.persistence.orgmng;
+package qiyebao.adapter.driven.persistence.orgmng.posttype;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

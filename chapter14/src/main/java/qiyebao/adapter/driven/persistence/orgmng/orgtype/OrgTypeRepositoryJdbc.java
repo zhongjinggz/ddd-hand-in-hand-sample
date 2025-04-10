@@ -1,4 +1,4 @@
-package qiyebao.adapter.driven.persistence.orgmng;
+package qiyebao.adapter.driven.persistence.orgmng.orgtype;
 
 import qiyebao.common.framework.adapter.driven.persistence.Selector;
 import qiyebao.common.utils.TypedMap;

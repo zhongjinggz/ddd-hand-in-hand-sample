@@ -1,4 +1,4 @@
-package qiyebao.adapter.driven.persistence.orgmng; // [1] 注意，仓库的实现在适配器层
+package qiyebao.adapter.driven.persistence.orgmng.org; // [1] 注意，仓库的实现在适配器层
 
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
 import qiyebao.common.utils.SqlUtils;

@@ -1,4 +1,4 @@
-package qiyebao.adapter.driven.persistence.orgmng;
+package qiyebao.adapter.driven.persistence.orgmng.emp;
 
 import qiyebao.common.framework.adapter.driven.persistence.Selector;
 import qiyebao.domain.orgmng.emp.Emp;
