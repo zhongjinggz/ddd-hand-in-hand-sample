@@ -93,7 +93,7 @@ public class EmpBuilder {
         return this;
     }
 
-    public EmpBuilder addPostTypeCode(String postTypeCode) {
+    public EmpBuilder addPost(String postTypeCode) {
         posts.add(postTypeCode);
         return this;
     }
