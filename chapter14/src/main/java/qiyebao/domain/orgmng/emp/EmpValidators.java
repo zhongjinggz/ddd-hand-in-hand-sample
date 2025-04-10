@@ -11,14 +11,17 @@ public class EmpValidators {
     private final TenantValidator tenantValidator;
     private final UserValidator userValidator;
     private final OrgValidator orgValidator;
+    private final PostValidator postValidator;
 
     public EmpValidators(TenantValidator tenantValidator
         , UserValidator userValidator
         , OrgValidator orgValidator
+        , PostValidator postValidator
     ) {
         this.tenantValidator = tenantValidator;
         this.userValidator = userValidator;
         this.orgValidator = orgValidator;
+        this.postValidator = postValidator;
     }
 
     public TenantValidator tenant() {
@@ -33,4 +36,7 @@ public class EmpValidators {
         return orgValidator;
     }
 
+    public PostValidator post() {
+        return postValidator;
+    }
 }

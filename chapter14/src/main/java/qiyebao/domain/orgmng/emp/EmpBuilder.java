@@ -92,8 +92,8 @@ public class EmpBuilder {
         return this;
     }
 
-    public EmpBuilder addPostCode(String postCode) {
-        posts.add(postCode);
+    public EmpBuilder addPostTypeCode(String postTypeCode) {
+        posts.add(postTypeCode);
         return this;
     }
 
@@ -137,12 +137,15 @@ public class EmpBuilder {
     }
 
     private void validatePosts() {
-//        for (String postCode : posts) {
-//            expect.post().shouldValid(tenantId, postCode);
-//        }
+        for (String postTypeCode : posts) {
+            expect.post().typeShouldValid(tenantId, postTypeCode);
+        }
     }
 
     private void validateSkills() {
+//        for (Map<String, Object> skill : skills) {
+//            expect.skill().typeShouldValid(tenantId, (Long) skill.get("skillTypeId"));
+//        }
 
     }
 
