@@ -12,16 +12,19 @@ public class EmpValidators {
     private final UserValidator userValidator;
     private final OrgValidator orgValidator;
     private final PostValidator postValidator;
+    private final SkillValidator skillValidator;
 
     public EmpValidators(TenantValidator tenantValidator
         , UserValidator userValidator
         , OrgValidator orgValidator
         , PostValidator postValidator
+        , SkillValidator skillValidator
     ) {
         this.tenantValidator = tenantValidator;
         this.userValidator = userValidator;
         this.orgValidator = orgValidator;
         this.postValidator = postValidator;
+        this.skillValidator = skillValidator;
     }
 
     public TenantValidator tenant() {
