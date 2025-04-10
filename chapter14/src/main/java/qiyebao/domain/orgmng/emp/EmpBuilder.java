@@ -137,19 +137,6 @@ public class EmpBuilder {
         validatePosts();
     }
 
-    private void validatePosts() {
-        for (String postTypeCode : posts) {
-            expect.post().typeShouldValid(tenantId, postTypeCode);
-        }
-    }
-
-    private void validateSkills() {
-        for (Map<String, Object> skill : skills) {
-            expect.skill().typeShouldValid(tenantId, (Long) skill.get("skillTypeId"));
-        }
-
-    }
-
     private void validateCommonInfo() {
         expect.tenant().shouldValid(tenantId);
         expect.user().shouldValid(tenantId, createdBy);
@@ -157,5 +144,17 @@ public class EmpBuilder {
 
     private void validateOrg() {
         expect.org().shouldValid(tenantId, orgId);
+    }
+
+    private void validateSkills() {
+        for (Map<String, Object> skill : skills) {
+            expect.skill().typeShouldValid(tenantId, (Long) skill.get("skillTypeId"));
+        }
+    }
+
+    private void validatePosts() {
+        for (String postTypeCode : posts) {
+            expect.post().typeShouldValid(tenantId, postTypeCode);
+        }
     }
 }

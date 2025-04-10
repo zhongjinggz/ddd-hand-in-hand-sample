@@ -28,6 +28,12 @@ public class TypedMap {
                 : null;
     }
 
+    public Integer getInteger(String key) {
+        return internal.get(key) instanceof Number number
+                ? number.intValue()
+                : null;
+    }
+
     public String getString(String key) {
         Object value = internal.get(key);
         return value != null
