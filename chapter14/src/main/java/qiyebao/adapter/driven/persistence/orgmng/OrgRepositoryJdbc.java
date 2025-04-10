@@ -2,10 +2,8 @@ package qiyebao.adapter.driven.persistence.orgmng; // [1] 注意，仓库的实�
 
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
 import qiyebao.common.utils.SqlUtils;
-import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.org.Org;
 import qiyebao.domain.orgmng.org.OrgRepository;
-import qiyebao.domain.orgmng.org.OrgStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +37,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
         + ", last_updated_by ";
 
     @Override
-    public Optional<Org> findByIdAndStatus(Long tenantId, Long id, OrgStatus status) {
+    public Optional<Org> findByIdAndStatus(Long tenantId, Long id, Org.Status status) {
         final String sql = " select " + fields
             + " from org "
             + " where tenant_id = ?  "
@@ -77,7 +75,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
         result.setSuperiorId(rs.getLong("superior_id"));
         result.setLeaderId(rs.getLong("leader_id"));
         result.setName(rs.getString("name"));
-        result.setStatus(OrgStatus.ofCode(rs.getString("status_code")));
+        result.setStatus(Org.Status.ofCode(rs.getString("status_code")));
         result.setUpdatedAt(SqlUtils.toLocalDateTime(rs, "updated_at"));
         result.setUpdatedBy(rs.getLong("updated_by"));
         return result;
@@ -85,7 +83,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
     }
 
     @Override
-    public boolean existsByIdAndStatus(Long tenantId, Long id, OrgStatus status) {
+    public boolean existsByIdAndStatus(Long tenantId, Long id, Org.Status status) {
         String sql = """ 
             select 1 from org
             where tenant_id = ?  and id = ? and status_code = ?"

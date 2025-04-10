@@ -7,11 +7,11 @@ public interface OrgRepository {
 
     int modify(Org org);
 
-    Optional<Org> findByIdAndStatus(Long tenantId, Long id, OrgStatus status);
+    Optional<Org> findByIdAndStatus(Long tenantId, Long id, Org.Status status);
 
     Optional<Org> findById(long tenantId, long id);
 
     boolean existsBySuperiorAndName(Long tenantId, Long superiorId, String name);
 
-    boolean existsByIdAndStatus(Long tenantId, Long orgId, OrgStatus orgStatus);
+    boolean existsByIdAndStatus(Long tenantId, Long orgId, Org.Status status);
 }

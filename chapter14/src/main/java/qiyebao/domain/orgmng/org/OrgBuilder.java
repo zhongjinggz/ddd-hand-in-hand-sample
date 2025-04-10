@@ -59,7 +59,7 @@ public class OrgBuilder {
         org.setSuperiorId(superiorId);
         org.setLeaderId(leaderId);
         org.setName(name);
-        org.setStatus(OrgStatus.EFFECTIVE);
+        org.setStatus(Org.Status.EFFECTIVE);
         return org;
     }
 

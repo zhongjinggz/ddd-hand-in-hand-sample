@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import qiyebao.common.framework.exception.BusinessException;
 import qiyebao.domain.orgmng.org.Org;
 import qiyebao.domain.orgmng.org.OrgRepository;
-import qiyebao.domain.orgmng.org.OrgStatus;
 import qiyebao.domain.orgmng.orgtype.OrgTypeRepository;
 import qiyebao.domain.orgmng.orgtype.OrgTypeStatus;
 
@@ -24,7 +23,7 @@ public class OrgSuperiorValidator {
     public Org shouldValid(Long tenantId, Long superiorId) {
         return orgRepository.findByIdAndStatus(tenantId
                 , superiorId
-                , OrgStatus.EFFECTIVE)
+                , Org.Status.EFFECTIVE)
             .orElseThrow(() ->
                 new BusinessException(
                     String.format("'%s' 不是有效的组织 id !", superiorId)

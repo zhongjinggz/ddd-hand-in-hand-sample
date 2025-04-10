@@ -1,6 +1,7 @@
 package qiyebao.domain.orgmng.org;
 
 import qiyebao.common.framework.domain.AuditableEntity;
+import qiyebao.common.framework.domain.CodeEnum;
 import qiyebao.common.framework.exception.BusinessException;
 
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ public class Org extends AuditableEntity {
     private String orgTypeCode;
     private Long leaderId;
     private String name;
-    private OrgStatus status;
+    private Status status;
 
     public Org (Long id
         , Long tenantId
@@ -61,24 +62,50 @@ public class Org extends AuditableEntity {
         this.name = name;
     }
 
-    public OrgStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(OrgStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
     //Org 管理自己的状态
     public void cancel() {
         shouldEffective();   // 校验组织状态的业务规则移至对象内部
-        this.status = OrgStatus.CANCELLED;
+        this.status = Status.CANCELLED;
     }
 
     // 要撤销的组织必须是生效状态
     public void shouldEffective() {
-        if (!(status == OrgStatus.EFFECTIVE)) {
+        if (!(status == Status.EFFECTIVE)) {
             throw new BusinessException("该组织不是有效状态，不能撤销！");
+        }
+    }
+
+    public static enum Status implements CodeEnum {
+        EFFECTIVE("EF", "有效"),
+        CANCELLED("CA", "终止");
+
+        private final String code;
+        private final String desc;
+
+        Status(String code, String desc) {
+            this.code = code;
+            this.desc = desc;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+
+        public static Status ofCode(String code) {
+            return CodeEnum.ofCode(values(), code);
         }
     }
 }
