@@ -1,6 +1,5 @@
 package qiyebao.domain.orgmng.emp;
 
-import qiyebao.common.framework.exception.BusinessException;
 import qiyebao.domain.orgmng.empnumcounter.EmpNumCounterRepository;
 
 import java.time.LocalDate;
@@ -99,39 +98,52 @@ public class EmpBuilder {
     }
 
     public Emp build() {
-        return null;
+        validate();
+
+        Emp result = new Emp(tenantId, Emp.Status.ofCode(statusCode), createdBy);
+        result.setEmpNum(generateEmpNum(tenantId));
+        result.setIdNum(idNum);
+        result.setDob(dob);
+        result.setOrgId(orgId);
+        result.setName(name);
+        result.setGender(Gender.ofCode(genderCode));
+
+
+        skills.forEach(s ->
+            result.addSkill(
+                (Long) s.get("skillTypeId")
+                , Skill.Level.ofCode((String) s.get("levelCode"))
+                , (Integer) s.get("duration")
+                , createdBy)
+        );
+
+        experiences.forEach(e -> result.addExperience(
+            (LocalDate) e.get("startDate")
+            , (LocalDate) e.get("endDate")
+            , (String) e.get("company")
+            , createdBy)
+        );
+
+        posts.forEach((p -> result.addPost(p, createdBy)));
+
+        return result;
     }
 
     public void validate() {
         validateCommonInfo();
         validateOrg();
-        validateIdNum();
-        validateDob();
-        validateName();
-        validateGender();
-        validateStatus();
+        validateSkills();
+        validatePosts();
     }
 
-    private void validateStatus() {
-        if (!Emp.Status.isValidCode(statusCode)) {
-           throw new BusinessException("无效的状态代码");
-        }
+    private void validatePosts() {
+//        for (String postCode : posts) {
+//            expect.post().shouldValid(tenantId, postCode);
+//        }
     }
 
-    private void validateGender() {
+    private void validateSkills() {
 
-    }
-
-    private void validateName() {
-
-    }
-
-    private void validateDob() {
-        
-    }
-
-    private void validateIdNum() {
-        
     }
 
     private void validateCommonInfo() {
