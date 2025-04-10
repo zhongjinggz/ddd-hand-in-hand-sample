@@ -1,5 +1,6 @@
 package qiyebao.adapter.driven.persistence.orgmng;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
 import qiyebao.domain.orgmng.skilltype.SkillType;
@@ -9,8 +10,8 @@ import qiyebao.domain.orgmng.skilltype.SkillTypeRepository;
 public class SkillTypeRepositoryJdbc implements SkillTypeRepository {
     private final JdbcHelper jdbc;
 
-    public SkillTypeRepositoryJdbc(JdbcHelper jdbc) {
-        this.jdbc = jdbc;
+    public SkillTypeRepositoryJdbc(JdbcTemplate jdbcTemplate){
+        this.jdbc = new JdbcHelper(jdbcTemplate, "skill_type", "id" );
      }
 
     @Override

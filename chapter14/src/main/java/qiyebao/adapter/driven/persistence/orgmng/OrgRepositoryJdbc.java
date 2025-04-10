@@ -19,8 +19,7 @@ import static qiyebao.common.utils.ReflectUtils.forceSet;
 public class OrgRepositoryJdbc implements OrgRepository {
     private final JdbcHelper jdbc;
 
-    public OrgRepositoryJdbc(JdbcTemplate jdbcTemplate
-        , JdbcHelper jdbc) {
+    public OrgRepositoryJdbc(JdbcTemplate jdbcTemplate) {
         this.jdbc = new JdbcHelper(jdbcTemplate, "org", "id");
     }
 
@@ -66,11 +65,11 @@ public class OrgRepositoryJdbc implements OrgRepository {
 
     private Org mapToOrg(ResultSet rs, int rowNum) throws SQLException {
         Org result = new Org(
-                rs.getLong("id")
-                , rs.getLong("tenant_id")
-                , rs.getString("org_type_code")
-                , rs.getTimestamp("created_at").toLocalDateTime()
-                , rs.getLong("created_by")
+            rs.getLong("id")
+            , rs.getLong("tenant_id")
+            , rs.getString("org_type_code")
+            , rs.getTimestamp("created_at").toLocalDateTime()
+            , rs.getLong("created_by")
         );
         result.setSuperiorId(rs.getLong("superior_id"));
         result.setLeaderId(rs.getLong("leader_id"));
@@ -91,6 +90,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
             """;
         return jdbc.selectExists(sql, tenantId, id, status.getCode());
     }
+
     @Override
     public Org add(Org org) {
         Map<String, Object> params = new HashMap<>(8);

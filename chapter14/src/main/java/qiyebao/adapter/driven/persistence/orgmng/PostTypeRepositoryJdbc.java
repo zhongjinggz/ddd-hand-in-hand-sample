@@ -1,5 +1,6 @@
 package qiyebao.adapter.driven.persistence.orgmng;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
 import qiyebao.domain.orgmng.posttype.PostType;
@@ -9,8 +10,8 @@ import qiyebao.domain.orgmng.posttype.PostTypeRepository;
 public class PostTypeRepositoryJdbc implements PostTypeRepository {
     private final JdbcHelper jdbc;
 
-    public PostTypeRepositoryJdbc(JdbcHelper jdbc) {
-        this.jdbc = jdbc;
+    public PostTypeRepositoryJdbc(JdbcTemplate  jdbcTemplate) {
+        this.jdbc = new JdbcHelper(jdbcTemplate, "post_type", "code");
      }
 
     @Override
