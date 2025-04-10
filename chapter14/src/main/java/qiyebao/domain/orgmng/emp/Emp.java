@@ -44,27 +44,24 @@ public class Emp extends AuditableEntity {
         return orgId;
     }
 
-    public Emp setOrgId(Long orgId) {
+    public void setOrgId(Long orgId) {
         this.orgId = orgId;
-        return this;
     }
 
     public String getEmpNum() {
         return empNum;
     }
 
-    public Emp setEmpNum(String empNum) {
+    public void setEmpNum(String empNum) {
         this.empNum = empNum;
-        return this;
     }
 
     public String getIdNum() {
         return idNum;
     }
 
-    public Emp setIdNum(String idNum) {
+    public void setIdNum(String idNum) {
         this.idNum = idNum;
-        return this;
     }
 
 
@@ -72,27 +69,24 @@ public class Emp extends AuditableEntity {
         return name;
     }
 
-    public Emp setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public Gender getGender() {
         return gender;
     }
 
-    public Emp setGender(Gender gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
-        return this;
     }
 
     public LocalDate getDob() {
         return dob;
     }
 
-    public Emp setDob(LocalDate dob) {
+    public void setDob(LocalDate dob) {
         this.dob = dob;
-        return this;
     }
 
     public Status getStatus() {
@@ -201,7 +195,7 @@ public class Emp extends AuditableEntity {
             .findAny();
     }
 
-    Emp addPost(String postTypeCode, Long userId) {
+    void addPost(String postTypeCode, Long userId) {
         Post newPost = new Post(this
             , tenantId
             , postTypeCode
@@ -209,8 +203,6 @@ public class Emp extends AuditableEntity {
             , userId);
 
         posts.add(newPost);
-
-        return this;
     }
 
     public enum Status implements CodeEnum {
@@ -228,6 +220,10 @@ public class Emp extends AuditableEntity {
 
         public static Status ofCode(String code) {
             return CodeEnum.ofCode(Status.values(), code);
+        }
+
+        public static boolean isValidCode(String statusCode) {
+            return CodeEnum.isValidCode(Status.values(), statusCode);
         }
 
         @Override

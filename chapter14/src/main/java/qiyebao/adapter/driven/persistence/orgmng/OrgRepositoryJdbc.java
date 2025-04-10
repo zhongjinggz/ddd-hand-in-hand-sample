@@ -1,14 +1,16 @@
 package qiyebao.adapter.driven.persistence.orgmng; // [1] 注意，仓库的实现在适配器层
 
-import qiyebao.common.framework.adapter.driven.persistence.Selector;
+import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
+import qiyebao.common.utils.SqlUtils;
 import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.org.Org;
 import qiyebao.domain.orgmng.org.OrgRepository;
 import qiyebao.domain.orgmng.org.OrgStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -17,17 +19,11 @@ import static qiyebao.common.utils.ReflectUtils.forceSet;
 
 @Repository
 public class OrgRepositoryJdbc implements OrgRepository {
-    private final JdbcTemplate jdbc;
-    private final SimpleJdbcInsert insertOrg;
-    private final Selector selector;
+    private final JdbcHelper jdbc;
 
-    public OrgRepositoryJdbc(JdbcTemplate jdbc
-        , Selector selector) {
-        this.jdbc = jdbc;
-        this.insertOrg = new SimpleJdbcInsert(jdbc)
-            .withTableName("org")
-            .usingGeneratedKeyColumns("id");
-        this.selector = selector;
+    public OrgRepositoryJdbc(JdbcTemplate jdbcTemplate
+        , JdbcHelper jdbc) {
+        this.jdbc = new JdbcHelper(jdbcTemplate, "org", "id");
     }
 
     private static String fields = " id"
@@ -50,7 +46,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
             + "   and id = ? "
             + "   and status_code = ? ";
 
-        return selector.selectOne(sql
+        return jdbc.selectOne(sql
             , this::mapToOrg
             , tenantId
             , id
@@ -64,31 +60,39 @@ public class OrgRepositoryJdbc implements OrgRepository {
             + " where tenant_id = ? "
             + "  and id = ?";
 
-        return selector.selectOne(sql
+        return jdbc.selectOne(sql
             , this::mapToOrg
             , tenantId
             , id);
     }
 
-    private Org mapToOrg(Map<String, Object> map) {
-        TypedMap typedMap = new TypedMap(map);
-
-        Org result = new Org(typedMap.getLong("id")
-            , typedMap.getLong("tenant_id")
-            , typedMap.getString("org_type_code")
-            , typedMap.getLocalDateTime("created_at")
-            , typedMap.getLong("created_by")
+    private Org mapToOrg(ResultSet rs, int rowNum) throws SQLException {
+        Org result = new Org(
+                rs.getLong("id")
+                , rs.getLong("tenant_id")
+                , rs.getString("org_type_code")
+                , rs.getTimestamp("created_at").toLocalDateTime()
+                , rs.getLong("created_by")
         );
-        result.setSuperiorId(typedMap.getLong("superior_id"));
-        result.setLeaderId(typedMap.getLong("leader_id"));
-        result.setName(typedMap.getString("name"));
-        result.setStatus(OrgStatus.ofCode(typedMap.getString("status_code")));
-        result.setUpdatedAt(typedMap.getLocalDateTime("last_updated_at"));
-        result.setUpdatedBy(typedMap.getLong("last_updated_by"));
-
+        result.setSuperiorId(rs.getLong("superior_id"));
+        result.setLeaderId(rs.getLong("leader_id"));
+        result.setName(rs.getString("name"));
+        result.setStatus(OrgStatus.ofCode(rs.getString("status_code")));
+        result.setUpdatedAt(SqlUtils.toLocalDateTime(rs, "updated_at"));
+        result.setUpdatedBy(rs.getLong("updated_by"));
         return result;
+
     }
 
+    @Override
+    public boolean existsByIdAndStatus(Long tenantId, Long id, OrgStatus status) {
+        String sql = """ 
+            select 1 from org
+            where tenant_id = ?  and id = ? and status_code = ?"
+            limit 1 
+            """;
+        return jdbc.selectExists(sql, tenantId, id, status.getCode());
+    }
     @Override
     public Org add(Org org) {
         Map<String, Object> params = new HashMap<>(8);
@@ -102,7 +106,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
         params.put("created_at", org.getCreatedAt());
         params.put("created_by", org.getCreatedBy());
 
-        Number createdId = insertOrg.executeAndReturnKey(params);
+        Number createdId = jdbc.insertAndReturnKey(params);
 
         forceSet(org, "id", createdId.longValue());
 
@@ -118,7 +122,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
             + "   and name = ?"
             + " limit 1 ";
 
-        return selector.selectExists(sql
+        return jdbc.selectExists(sql
             , tenantId
             , superiorId
             , name);
@@ -136,7 +140,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
             + ", last_updated_by = ? "
             + " where tenant_id = ? and id = ? ";
 
-        return this.jdbc.update(sql
+        return jdbc.update(sql
             , org.getSuperiorId()
             , org.getOrgTypeCode()
             , org.getLeaderId()
