@@ -1,5 +1,6 @@
 package qiyebao.domain.orgmng.emp;
 
+import qiyebao.domain.orgmng.emp.validator.EmpValidators;
 import qiyebao.domain.orgmng.empnumcounter.EmpNumCounterRepository;
 
 import java.time.LocalDate;
@@ -143,9 +144,9 @@ public class EmpBuilder {
     }
 
     private void validateSkills() {
-//        for (Map<String, Object> skill : skills) {
-//            expect.skill().typeShouldValid(tenantId, (Long) skill.get("skillTypeId"));
-//        }
+        for (Map<String, Object> skill : skills) {
+            expect.skill().typeShouldValid(tenantId, (Long) skill.get("skillTypeId"));
+        }
 
     }
 

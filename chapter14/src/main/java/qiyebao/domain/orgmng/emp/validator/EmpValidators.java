@@ -1,4 +1,4 @@
-package qiyebao.domain.orgmng.emp;
+package qiyebao.domain.orgmng.emp.validator;
 
 import org.springframework.stereotype.Component;
 import qiyebao.domain.orgmng.org.validator.OrgValidator;
@@ -38,5 +38,9 @@ public class EmpValidators {
 
     public PostValidator post() {
         return postValidator;
+    }
+
+    public SkillValidator skill() {
+        return skillValidator;
     }
 }

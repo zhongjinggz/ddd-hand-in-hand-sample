@@ -1,4 +1,4 @@
-package qiyebao.domain.orgmng.emp;
+package qiyebao.domain.orgmng.emp.validator;
 
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.exception.BusinessException;
