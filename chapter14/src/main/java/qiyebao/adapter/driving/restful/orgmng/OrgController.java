@@ -1,10 +1,10 @@
 package qiyebao.adapter.driving.restful.orgmng;
 
 import org.springframework.web.bind.annotation.*;
-import qiyebao.application.orgmng.AddOrgRequest;
-import qiyebao.application.orgmng.ModifyOrgRequest;
-import qiyebao.application.orgmng.OrgResponse;
-import qiyebao.application.orgmng.OrgService;
+import qiyebao.application.orgmng.orgservice.AddOrgRequest;
+import qiyebao.application.orgmng.orgservice.ModifyOrgRequest;
+import qiyebao.application.orgmng.orgservice.OrgResponse;
+import qiyebao.application.orgmng.orgservice.OrgService;
 
 @RestController
 public class OrgController {

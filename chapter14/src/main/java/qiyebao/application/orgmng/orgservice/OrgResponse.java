@@ -1,4 +1,4 @@
-package qiyebao.application.orgmng;
+package qiyebao.application.orgmng.orgservice;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package qiyebao.application.orgmng;
+package qiyebao.application.orgmng.orgservice;
 
 import org.springframework.transaction.annotation.Transactional;
 import qiyebao.common.framework.exception.BusinessException;
