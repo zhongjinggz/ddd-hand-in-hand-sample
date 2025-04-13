@@ -33,18 +33,23 @@ public class EmpService {
                 .statusCode(request.getStatusCode())
                 .createdBy(userId);
 
-        request.getSkills().forEach(
-                s -> builder.addSkill(
-                        s.getSkillTypeId(),
-                        s.getLevelCode(),
-                        s.getDuration()));
-        request.getExperiences().forEach(
-                e -> builder.addExperience(
-                        e.getStartDate(),
-                        e.getEndDate(),
-                        e.getCompany())
-        );
-        request.getPosts().forEach(builder::addPost);
+        for ( var skill : request.getSkills()) {
+            builder.addSkill(
+                    skill.getSkillTypeId(),
+                    skill.getLevelCode(),
+                    skill.getDuration());
+        }
+
+        for (var exp : request.getExperiences()) {
+            builder.addExperience(
+                exp.getStartDate(),
+                exp.getEndDate(),
+                exp.getCompany());
+        }
+
+        for (var post : request.getPosts()) {
+            builder.addPost(post);
+        }
 
         Emp emp = builder.build();
 
