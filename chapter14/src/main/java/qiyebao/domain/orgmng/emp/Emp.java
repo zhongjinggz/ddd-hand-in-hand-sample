@@ -112,7 +112,7 @@ public class Emp extends AuditableEntity {
             .findAny();
     }
 
-    void addSkill(Long skillTypeId
+    public void addSkill(Long skillTypeId
         , Skill.Level level
         , Integer duration
         , Long userId
@@ -150,7 +150,7 @@ public class Emp extends AuditableEntity {
             .findAny();
     }
 
-    void addExperience(LocalDate startDate
+    public void addExperience(LocalDate startDate
         , LocalDate endDate
         , String company
         , Long userId
@@ -195,7 +195,7 @@ public class Emp extends AuditableEntity {
             .findAny();
     }
 
-    void addPost(String postTypeCode, Long userId) {
+    public void addPost(String postTypeCode, Long userId) {
         Post newPost = new Post(this
             , tenantId
             , postTypeCode
