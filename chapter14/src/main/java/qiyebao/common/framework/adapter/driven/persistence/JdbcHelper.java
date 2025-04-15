@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import qiyebao.common.framework.exception.SystemException;
+import qiyebao.common.utils.TypedMap;
 
 import java.util.List;
 import java.util.Map;
@@ -88,4 +89,11 @@ public class JdbcHelper {
 
         return objList.isEmpty() ? Optional.empty() : Optional.of(objList.getFirst());
     }
+
+    public List<TypedMap> selectMapList(String sql, Object... params) {
+        return jdbc.queryForList(sql, params).stream()
+            .map(TypedMap::new)
+            .toList();
+    }
+
 }

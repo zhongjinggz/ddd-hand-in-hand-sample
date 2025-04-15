@@ -3,9 +3,11 @@ package qiyebao.adapter.driven.persistence.orgmng.emp;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
+import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.emp.WorkExperience;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -32,4 +34,20 @@ public class WorkExperienceDao {
         return experience;
     }
 
+    public List<TypedMap> selectByEmpId(Long tenantId, Long id) {
+        var sql = """
+            select start_date
+                 , end_date
+                 , company
+                 , created_at
+                 , created_by
+                 , updated_at
+                 , updated_by
+            from work_experience
+            where tenant_id = ? 
+              and emp_id = ?
+            """;
+
+        return jdbc.selectMapList(sql, tenantId, id);
+    }
 }

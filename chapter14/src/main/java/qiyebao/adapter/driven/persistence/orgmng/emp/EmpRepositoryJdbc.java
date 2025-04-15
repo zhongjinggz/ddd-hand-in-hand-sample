@@ -2,12 +2,16 @@ package qiyebao.adapter.driven.persistence.orgmng.emp;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
+import qiyebao.common.framework.domain.AuditInfo;
+import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.EmpRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.apache.commons.lang3.ArrayUtils.*;
 import static qiyebao.common.utils.ReflectUtils.forceSet;
@@ -60,6 +64,103 @@ public class EmpRepositoryJdbc implements EmpRepository {
 
         forceSet(emp, "id", createdId.longValue());
     }
+
+
+    @Override
+    public Optional<Emp> findById(Long tenantId, Long id) {
+        Emp.Loader loader = loadEmp(tenantId, id);
+
+        if (loader == null) {
+            return Optional.empty();
+        }
+
+        loadSkills(loader, tenantId, id);
+        loadExperiences(loader, tenantId, id);
+        loadPosts(loader, tenantId, id);
+        return Optional.of(loader.load());
+    }
+
+    private Emp.Loader loadEmp(Long tenantId, Long id) {
+        List<TypedMap> empMapList = selectEmpById(tenantId, id);
+        if (empMapList.isEmpty()) {
+            return null;
+        } else {
+            TypedMap empMap = empMapList.get(0);
+            var loader = Emp.loader()
+                .tenantId(empMap.getLong("tenant_id"))
+                .id(empMap.getLong("id"))
+                .orgId(empMap.getLong("org_id"))
+                .empNum(empMap.getString("emp_num"))
+                .idNum(empMap.getString("id_num"))
+                .name(empMap.getString("name"))
+                .genderCode(empMap.getString("gender_code"))
+                .statusCode(empMap.getString("status_code"))
+                .createdAt(empMap.getLocalDateTime("created_at"))
+                .createdBy(empMap.getLong("created_by"))
+                .updatedAt(empMap.getLocalDateTime("updated_at"))
+                .updatedBy(empMap.getLong("updated_by"));
+            return loader;
+        }
+    }
+
+    private List<TypedMap> selectEmpById(Long tenantId, Long id) {
+        String sql = """
+            select org_id
+                 , emp_num
+                 , id_num
+                 , name
+                 , gender_code
+                 , dob
+                 , status_code
+                 , created_at
+                 , created_by
+                 , updated_at
+                 , updated_by
+            from emp
+            where tenant_id = ? and id = ? 
+            """;
+
+        return jdbc.selectMapList(sql, tenantId, id);
+    }
+
+    private void loadSkills(Emp.Loader loader, Long tenantId, Long id) {
+        var skillMapList = skillDao.selectByEmpId(tenantId, id);
+
+        for (var skillMap : skillMapList) {
+            loader.addSkill(skillMap.getLong("skill_type_id")
+                , skillMap.getString("level_code")
+                , skillMap.getInteger("duration")
+                , new AuditInfo(skillMap.getLocalDateTime("created_at")
+                    , skillMap.getLong("created_by")
+                    , skillMap.getLocalDateTime("updated_at")
+                    , skillMap.getLong("updated_by")));
+        }
+    }
+
+    private void loadExperiences(Emp.Loader loader, Long tenantId, Long id) {
+        List<TypedMap> expMapList = workExperienceDao.selectByEmpId(tenantId, id);
+        for (var expMap : expMapList) {
+            loader.addExperience(expMap.getLocalDate("start_date")
+                , expMap.getLocalDate("end_date")
+                , expMap.getString("company")
+                , new AuditInfo(expMap.getLocalDateTime("created_at")
+                    , expMap.getLong("created_by")
+                    , expMap.getLocalDateTime("updated_at")
+                    , expMap.getLong("updated_by")));
+        }
+    }
+
+    private void loadPosts(Emp.Loader loader, Long tenantId, Long id) {
+        List<TypedMap> postMapList = postDao.selectByEmpId(tenantId, id);
+        for (var postMap : postMapList) {
+            loader.addPost(postMap.getString("post_type_code")
+                , new AuditInfo(postMap.getLocalDateTime("created_at")
+                    , postMap.getLong("created_by")
+                    , postMap.getLocalDateTime("updated_at")
+                    , postMap.getLong("updated_by")));
+        }
+    }
+
 
     @Override
     public boolean existsByIdAndStatus(Long tenantId, Long id, Emp.Status... statuses) {

@@ -1,5 +1,6 @@
 package qiyebao.common.utils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +46,14 @@ public class TypedMap {
         return switch (internal.get(key)) {
             case LocalDateTime dateTime -> dateTime;
             case java.sql.Timestamp timestamp -> timestamp.toLocalDateTime();
+            default -> null;
+        };
+    }
+
+    public LocalDate getLocalDate(String key) {
+        return switch (internal.get(key)) {
+            case LocalDate date -> date;
+            case java.sql.Date date -> date.toLocalDate();
             default -> null;
         };
     }

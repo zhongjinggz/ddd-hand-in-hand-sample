@@ -4,8 +4,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
+import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.emp.Post;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -29,4 +31,18 @@ public class PostDao {
 
     }
 
+    public List<TypedMap> selectByEmpId(Long tenantId, Long empId) {
+        var sql = """
+            select post_type_code
+                 , created_at
+                 , created_by
+                 , updated_at
+                 , updated_by
+            from post
+            where tenant_id = ? 
+              and emp_id = ?
+            """;
+
+        return jdbc.selectMapList(sql, tenantId, empId);
+    }
 }
