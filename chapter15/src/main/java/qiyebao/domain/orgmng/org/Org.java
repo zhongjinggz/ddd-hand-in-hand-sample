@@ -2,6 +2,7 @@ package qiyebao.domain.orgmng.org;
 
 import qiyebao.common.framework.domain.AuditableEntity;
 import qiyebao.common.framework.domain.CodeEnum;
+import qiyebao.common.framework.domain.PersistentStatus;
 import qiyebao.common.framework.exception.BusinessException;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class Org extends AuditableEntity {
         , LocalDateTime createdAt
         , Long createdBy
     ) {
-        super(createdAt, createdBy);
+        super(PersistentStatus.NEW, createdAt, createdBy);
         this.tenantId = tenantId;
         this.orgTypeCode = orgTypeCode;
     }

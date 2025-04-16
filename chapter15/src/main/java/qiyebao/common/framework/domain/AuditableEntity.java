@@ -3,6 +3,7 @@ package qiyebao.common.framework.domain;
 import java.time.LocalDateTime;
 
 public abstract class AuditableEntity {
+    protected PersistentStatus persistentStatus;
     protected LocalDateTime createdAt;
     protected Long createdBy;
     protected LocalDateTime updatedAt;
@@ -10,11 +11,34 @@ public abstract class AuditableEntity {
 
     public AuditableEntity() {}
 
-    public AuditableEntity(LocalDateTime createdAt, Long createdBy) {
+    public AuditableEntity(PersistentStatus persistentStatus
+        , LocalDateTime createdAt
+        , Long createdBy
+    ) {
+        this.persistentStatus = persistentStatus;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
     }
 
+    public void toAsIs () {
+        this.persistentStatus = PersistentStatus.AS_IS;
+    }
+
+    public PersistentStatus getPersistentStatus() {
+        return persistentStatus;
+    }
+
+    public void toNew () {
+        this.persistentStatus = PersistentStatus.NEW;
+    }
+
+    public void toDeleted () {
+        this.persistentStatus = PersistentStatus.DELETED;
+    }
+
+    public void toUpdated() {
+        this.persistentStatus = PersistentStatus.UPDATED;
+    }
 
     public Long getCreatedBy() {
         return createdBy;

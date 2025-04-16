@@ -2,7 +2,7 @@ package qiyebao.domain.orgmng.skilltype;
 
 import qiyebao.common.framework.domain.AuditableEntity;
 import qiyebao.common.framework.domain.CodeEnum;
-import qiyebao.domain.orgmng.posttype.PostType;
+import qiyebao.common.framework.domain.PersistentStatus;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +16,7 @@ public class SkillType extends AuditableEntity {
         , String name
         , LocalDateTime createdAt
         , Long createdBy) {
-        super(createdAt, createdBy);
+        super(PersistentStatus.NEW, createdAt, createdBy);
         this.tenantId = tenantId;
         this.id = id;
         this.name = name;

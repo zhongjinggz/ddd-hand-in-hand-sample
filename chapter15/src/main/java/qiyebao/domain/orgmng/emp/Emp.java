@@ -3,6 +3,7 @@ package qiyebao.domain.orgmng.emp;
 import qiyebao.common.framework.domain.AuditInfo;
 import qiyebao.common.framework.domain.AuditableEntity;
 import qiyebao.common.framework.domain.CodeEnum;
+import qiyebao.common.framework.domain.PersistentStatus;
 import qiyebao.common.framework.exception.BusinessException;
 
 import java.time.LocalDate;
@@ -35,7 +36,7 @@ public class Emp extends AuditableEntity {
     }
 
     Emp(Long tenantId, Status status, Long createdBy) {
-        super(LocalDateTime.now(), createdBy);
+        super(PersistentStatus.NEW, LocalDateTime.now(), createdBy);
         this.tenantId = tenantId;
         this.status = status;
     }

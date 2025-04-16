@@ -2,8 +2,8 @@ package qiyebao.domain.orgmng.emp;
 
 import qiyebao.common.framework.domain.AuditableEntity;
 import qiyebao.common.framework.domain.CodeEnum;
+import qiyebao.common.framework.domain.PersistentStatus;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Skill extends AuditableEntity {
@@ -18,7 +18,7 @@ public class Skill extends AuditableEntity {
         , Long skillTypeId
         , LocalDateTime createdAt
         , Long createdBy) {
-        super(createdAt, createdBy);
+        super(PersistentStatus.NEW, createdAt, createdBy);
         this.emp = emp;
         this.tenantId = tenantId;
         this.skillTypeId = skillTypeId;
