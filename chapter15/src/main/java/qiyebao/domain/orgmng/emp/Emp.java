@@ -10,6 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static qiyebao.domain.orgmng.emp.Emp.Status.PROBATION;
+import static qiyebao.domain.orgmng.emp.Emp.Status.TERMINATED;
+
 public class Emp extends AuditableEntity {
     private Long id;
     private Long tenantId;
@@ -102,12 +105,32 @@ public class Emp extends AuditableEntity {
         return status;
     }
 
+    //转正
     void becomeRegular() {
+        // 调用业务规则: 试用期的员工才能被转正
+        onlyProbationCanBecomeRegular();
         status = Status.REGULAR;
     }
 
+    // 实现业务规则: 试用期的员工才能被转正
+    private void onlyProbationCanBecomeRegular() {
+        if (status != PROBATION) {
+            throw new BusinessException("试用期员工才能转正！");
+        }
+    }
+
+    //终止
     void terminate() {
-        status = Status.TERMINATED;
+        // 调用业务规则: 已经终止的员工不能再次终止
+        shouldNotTerminateAgain();
+        status = TERMINATED;
+    }
+
+    // 实现业务规则: 已经终止的员工不能再次终止
+    private void shouldNotTerminateAgain() {
+        if (status == TERMINATED) {
+            throw new BusinessException("已经终止的员工不能再次终止！");
+        }
     }
 
     public List<Skill> getSkills() {
@@ -153,6 +176,31 @@ public class Emp extends AuditableEntity {
         newSkill.setUpdatedBy(audit.getUpdatedBy());
 
         skills.add(newSkill);
+    }
+
+    public void updateSkill(Long skillTypeId
+        , Skill.Level level
+        , Integer duration
+        , Long userId
+    ) {
+        Skill skill = this.getSkill(skillTypeId)
+            .orElseThrow(() -> new IllegalArgumentException("不存在要修改的skillTypeId!"));
+
+        if (skill.getLevel() != level
+            || !skill.getDuration().equals(duration)
+        ) {
+            skill.setLevel(level);
+            skill.setDuration(duration);
+            skill.setUpdatedBy(userId);
+            skill.setUpdatedAt(LocalDateTime.now());
+            skill.toUpdated();
+        }
+    }
+
+    public void deleteSkill(Long skillTypeId) {
+        this.getSkill(skillTypeId)
+            .orElseThrow(() -> new IllegalArgumentException("中不存在要删除的skillTypeId!"))
+            .toDeleted();
     }
 
     private void expectSkillTypeNotDuplicated(Long otherSkillTypeId) {
@@ -209,6 +257,28 @@ public class Emp extends AuditableEntity {
         return newExperience;
     }
 
+    public void updateExperience(LocalDate startDate
+        , LocalDate endDate
+        , String company
+        , Long userId
+    ) {
+        WorkExperience experience = this.getExperience(startDate, endDate)
+            .orElseThrow(() -> new IllegalArgumentException("不存在要修改的 WorkExperience!"));
+
+        if (!experience.getCompany().equals(company)) {
+            experience.setCompany(company);
+            experience.setUpdatedBy(userId);
+            experience.setUpdatedAt(LocalDateTime.now());
+            experience.toUpdated();
+        }
+    }
+
+    public void deleteExperience(LocalDate startDate, LocalDate endDate) {
+        this.getExperience(startDate, endDate)
+            .orElseThrow(() -> new IllegalArgumentException("不存在要删除的WorkExperience!"))
+            .toDeleted();
+    }
+
     private void expectDurationNotOverlap(LocalDate startDate, LocalDate endDate) {
         if (experiences.stream().anyMatch(
             e -> overlap(e, startDate, endDate))) {
@@ -253,6 +323,13 @@ public class Emp extends AuditableEntity {
         newPost.setUpdatedBy(audit.getUpdatedBy());
 
         posts.add(newPost);
+    }
+
+
+    void deletePost(String postTypeCode) {
+        this.getPost(postTypeCode)
+            .orElseThrow(() -> new IllegalArgumentException("不存在要删除的岗位!"))
+            .toDeleted();
     }
 
     private void expectPostNotDuplicated(String postTypeCode) {

@@ -20,12 +20,12 @@ public abstract class AuditableEntity {
         this.createdBy = createdBy;
     }
 
-    public void toAsIs () {
-        this.persistentStatus = PersistentStatus.AS_IS;
-    }
-
     public PersistentStatus getPersistentStatus() {
         return persistentStatus;
+    }
+
+    public void toAsIs () {
+        this.persistentStatus = PersistentStatus.AS_IS;
     }
 
     public void toNew () {

@@ -41,18 +41,16 @@ public class Skill extends AuditableEntity {
         return level;
     }
 
-    Skill setLevel(Level level) {
+    void setLevel(Level level) {
         this.level = level;
-        return this;
     }
 
     public Integer getDuration() {
         return duration;
     }
 
-    Skill setDuration(Integer duration) {
+    void setDuration(Integer duration) {
         this.duration = duration;
-        return this;
     }
 
     public static enum Level implements CodeEnum {
