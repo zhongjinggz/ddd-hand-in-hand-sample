@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-
 public class Emp extends AuditableEntity {
     private Long id;
     private Long tenantId;
@@ -32,15 +31,10 @@ public class Emp extends AuditableEntity {
         return new Loader();
     }
 
-    public static Loader loader(Emp emp) {
-        return new Loader(emp);
-
+    private Emp() {
     }
 
-    public Emp() {
-    }
-
-    public Emp(Long tenantId, Status status, Long createdBy) {
+    Emp(Long tenantId, Status status, Long createdBy) {
         super(LocalDateTime.now(), createdBy);
         this.tenantId = tenantId;
         this.status = status;
@@ -58,7 +52,7 @@ public class Emp extends AuditableEntity {
         return orgId;
     }
 
-    public void setOrgId(Long orgId) {
+    void setOrgId(Long orgId) {
         this.orgId = orgId;
     }
 
@@ -66,7 +60,7 @@ public class Emp extends AuditableEntity {
         return empNum;
     }
 
-    public void setEmpNum(String empNum) {
+    void setEmpNum(String empNum) {
         this.empNum = empNum;
     }
 
@@ -74,7 +68,7 @@ public class Emp extends AuditableEntity {
         return idNum;
     }
 
-    public void setIdNum(String idNum) {
+    void setIdNum(String idNum) {
         this.idNum = idNum;
     }
 
@@ -83,7 +77,7 @@ public class Emp extends AuditableEntity {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
@@ -91,7 +85,7 @@ public class Emp extends AuditableEntity {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    void setGender(Gender gender) {
         this.gender = gender;
     }
 
@@ -99,7 +93,7 @@ public class Emp extends AuditableEntity {
         return dob;
     }
 
-    public void setDob(LocalDate dob) {
+    void setDob(LocalDate dob) {
         this.dob = dob;
     }
 
@@ -107,11 +101,11 @@ public class Emp extends AuditableEntity {
         return status;
     }
 
-    public void becomeRegular() {
+    void becomeRegular() {
         status = Status.REGULAR;
     }
 
-    public void terminate() {
+    void terminate() {
         status = Status.TERMINATED;
     }
 
@@ -311,10 +305,6 @@ public class Emp extends AuditableEntity {
             this.emp = new Emp();
         }
 
-        public Loader(Emp emp) {
-            this.emp = emp;
-        }
-
         public Loader tenantId(Long tenantId) {
             emp.tenantId = tenantId;
             return this;
@@ -418,5 +408,4 @@ public class Emp extends AuditableEntity {
         }
 
     }
-
 }

@@ -94,6 +94,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
                 .idNum(empMap.getString("id_num"))
                 .name(empMap.getString("name"))
                 .genderCode(empMap.getString("gender_code"))
+                .dob(empMap.getLocalDate("dob"))
                 .statusCode(empMap.getString("status_code"))
                 .createdAt(empMap.getLocalDateTime("created_at"))
                 .createdBy(empMap.getLong("created_by"))
