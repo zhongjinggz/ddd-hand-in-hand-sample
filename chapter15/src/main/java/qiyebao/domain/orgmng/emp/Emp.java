@@ -178,7 +178,7 @@ public class Emp extends AuditableEntity {
         skills.add(newSkill);
     }
 
-    public void updateSkill(Long skillTypeId
+    public void modifySkill(Long skillTypeId
         , Skill.Level level
         , Integer duration
         , Long userId
@@ -197,7 +197,7 @@ public class Emp extends AuditableEntity {
         }
     }
 
-    public void deleteSkill(Long skillTypeId) {
+    public void removeSkill(Long skillTypeId) {
         this.getSkill(skillTypeId)
             .orElseThrow(() -> new IllegalArgumentException("中不存在要删除的skillTypeId!"))
             .toDeleted();
@@ -257,7 +257,7 @@ public class Emp extends AuditableEntity {
         return newExperience;
     }
 
-    public void updateExperience(LocalDate startDate
+    public void modifyExperience(LocalDate startDate
         , LocalDate endDate
         , String company
         , Long userId
@@ -273,7 +273,7 @@ public class Emp extends AuditableEntity {
         }
     }
 
-    public void deleteExperience(LocalDate startDate, LocalDate endDate) {
+    public void removeExperience(LocalDate startDate, LocalDate endDate) {
         this.getExperience(startDate, endDate)
             .orElseThrow(() -> new IllegalArgumentException("不存在要删除的WorkExperience!"))
             .toDeleted();
@@ -326,7 +326,7 @@ public class Emp extends AuditableEntity {
     }
 
 
-    void deletePost(String postTypeCode) {
+    void removePost(String postTypeCode) {
         this.getPost(postTypeCode)
             .orElseThrow(() -> new IllegalArgumentException("不存在要删除的岗位!"))
             .toDeleted();
