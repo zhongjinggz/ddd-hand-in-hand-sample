@@ -46,6 +46,11 @@ public class EmpRepositoryJdbc implements EmpRepository {
         return emp;
     }
 
+    @Override
+    public Emp save(Emp emp) {
+        return null;
+    }
+
     private void insertEmp(Emp emp) {
         Map<String, Object> parms = Map.of(
             "tenant_id", emp.getTenantId()
@@ -128,7 +133,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
         var skillMapList = skillDao.selectByEmpId(tenantId, id);
 
         for (var skillMap : skillMapList) {
-            loader.addSkill(skillMap.getLong("skill_type_id")
+            loader.loadSkill(skillMap.getLong("skill_type_id")
                 , skillMap.getString("level_code")
                 , skillMap.getInteger("duration")
                 , new AuditInfo(skillMap.getLocalDateTime("created_at")
@@ -141,7 +146,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
     private void loadExperiences(Emp.Loader loader, Long tenantId, Long id) {
         List<TypedMap> expMapList = workExperienceDao.selectByEmpId(tenantId, id);
         for (var expMap : expMapList) {
-            loader.addExperience(expMap.getLocalDate("start_date")
+            loader.loadExperience(expMap.getLocalDate("start_date")
                 , expMap.getLocalDate("end_date")
                 , expMap.getString("company")
                 , new AuditInfo(expMap.getLocalDateTime("created_at")
@@ -154,7 +159,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
     private void loadPosts(Emp.Loader loader, Long tenantId, Long id) {
         List<TypedMap> postMapList = postDao.selectByEmpId(tenantId, id);
         for (var postMap : postMapList) {
-            loader.addPost(postMap.getString("post_type_code")
+            loader.loadPost(postMap.getString("post_type_code")
                 , new AuditInfo(postMap.getLocalDateTime("created_at")
                     , postMap.getLong("created_by")
                     , postMap.getLocalDateTime("updated_at")

@@ -40,6 +40,19 @@ public abstract class AuditableEntity {
         this.persistentStatus = PersistentStatus.UPDATED;
     }
 
+    protected void asIsToUpdated() {
+        if(this.persistentStatus == PersistentStatus.AS_IS) {
+            this.toUpdated();
+        }
+    }
+
+    public void setUpdatedInfo(Long userId) {
+        if(this.persistentStatus == PersistentStatus.UPDATED) {
+            this.updatedAt = LocalDateTime.now();
+            this.updatedBy = userId;
+        }
+    }
+
     public Long getCreatedBy() {
         return createdBy;
     }

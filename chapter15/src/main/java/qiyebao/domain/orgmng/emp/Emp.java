@@ -57,7 +57,10 @@ public class Emp extends AuditableEntity {
     }
 
     void setOrgId(Long orgId) {
-        this.orgId = orgId;
+        if (!Objects.equals(this.orgId, orgId)) {
+            this.orgId = orgId;
+            asIsToUpdated();
+        }
     }
 
     public String getEmpNum() {
@@ -65,7 +68,10 @@ public class Emp extends AuditableEntity {
     }
 
     void setEmpNum(String empNum) {
-        this.empNum = empNum;
+        if(!Objects.equals(this.empNum, empNum)) {
+            this.empNum = empNum;
+            asIsToUpdated();
+        }
     }
 
     public String getIdNum() {
@@ -73,7 +79,10 @@ public class Emp extends AuditableEntity {
     }
 
     void setIdNum(String idNum) {
-        this.idNum = idNum;
+        if (!Objects.equals(this.idNum, idNum)) {
+            this.idNum = idNum;
+            asIsToUpdated();
+        }
     }
 
 
@@ -82,7 +91,10 @@ public class Emp extends AuditableEntity {
     }
 
     void setName(String name) {
-        this.name = name;
+        if(!Objects.equals(this.name, name)) {
+            this.name = name;
+            asIsToUpdated();
+        }
     }
 
     public Gender getGender() {
@@ -90,7 +102,10 @@ public class Emp extends AuditableEntity {
     }
 
     void setGender(Gender gender) {
-        this.gender = gender;
+        if(!Objects.equals(this.gender, gender)) {
+            this.gender = gender;
+            asIsToUpdated();
+        }
     }
 
     public LocalDate getDob() {
@@ -98,7 +113,10 @@ public class Emp extends AuditableEntity {
     }
 
     void setDob(LocalDate dob) {
-        this.dob = dob;
+        if(!Objects.equals(this.dob, dob)) {
+            this.dob = dob;
+            asIsToUpdated();
+        }
     }
 
     public Status getStatus() {
@@ -110,6 +128,7 @@ public class Emp extends AuditableEntity {
         // 调用业务规则: 试用期的员工才能被转正
         onlyProbationCanBecomeRegular();
         status = Status.REGULAR;
+        asIsToUpdated();
     }
 
     // 实现业务规则: 试用期的员工才能被转正
@@ -124,6 +143,7 @@ public class Emp extends AuditableEntity {
         // 调用业务规则: 已经终止的员工不能再次终止
         shouldNotTerminateAgain();
         status = TERMINATED;
+        asIsToUpdated();
     }
 
     // 实现业务规则: 已经终止的员工不能再次终止
@@ -132,10 +152,8 @@ public class Emp extends AuditableEntity {
             throw new BusinessException("已经终止的员工不能再次终止！");
         }
     }
-
     public List<Skill> getSkills() {
         return Collections.unmodifiableList(skills);
-
     }
 
     public Optional<Skill> getSkill(Long skillTypeId) {
@@ -152,14 +170,17 @@ public class Emp extends AuditableEntity {
         // 固定规则: 同一技能不能录入两次
         expectSkillTypeNotDuplicated(skillTypeId);
 
-        addSkillInternal(skillTypeId
+        newSkill(skillTypeId
             , level
             , duration
             , new AuditInfo(LocalDateTime.now(), userId)
-        );
+        ).toNew();
+
+        asIsToUpdated();
+        setUpdatedInfo(userId);
     }
 
-    private void addSkillInternal(Long skillTypeId
+    private Skill newSkill(Long skillTypeId
         , Skill.Level level
         , Integer duration
         , AuditInfo audit
@@ -176,6 +197,7 @@ public class Emp extends AuditableEntity {
         newSkill.setUpdatedBy(audit.getUpdatedBy());
 
         skills.add(newSkill);
+        return newSkill;
     }
 
     public void modifySkill(Long skillTypeId
@@ -194,13 +216,19 @@ public class Emp extends AuditableEntity {
             skill.setUpdatedBy(userId);
             skill.setUpdatedAt(LocalDateTime.now());
             skill.toUpdated();
+
+            asIsToUpdated();
+            setUpdatedInfo(userId);
         }
     }
 
-    public void removeSkill(Long skillTypeId) {
+    public void removeSkill(Long skillTypeId, Long userId) {
         this.getSkill(skillTypeId)
             .orElseThrow(() -> new IllegalArgumentException("中不存在要删除的skillTypeId!"))
             .toDeleted();
+
+        asIsToUpdated();
+        setUpdatedInfo(userId);
     }
 
     private void expectSkillTypeNotDuplicated(Long otherSkillTypeId) {
@@ -230,16 +258,17 @@ public class Emp extends AuditableEntity {
         // 调用业务规则: 工作经验的时间段不能重叠
         expectDurationNotOverlap(startDate, endDate);
 
-        WorkExperience newExperience = addExperienceInternal(startDate
+        newExperience(startDate
             , endDate
             , company
             , new AuditInfo(LocalDateTime.now(), userId)
-        );
+        ).toNew();
 
-        experiences.add(newExperience);
+        asIsToUpdated();
+        setUpdatedInfo(userId);
     }
 
-    private WorkExperience addExperienceInternal(LocalDate startDate
+    private WorkExperience newExperience(LocalDate startDate
         , LocalDate endDate
         , String company
         , AuditInfo audit) {
@@ -254,6 +283,7 @@ public class Emp extends AuditableEntity {
         newExperience.setUpdatedAt(audit.getUpdatedAt());
         newExperience.setUpdatedBy(audit.getUpdatedBy());
 
+        experiences.add(newExperience);
         return newExperience;
     }
 
@@ -262,21 +292,27 @@ public class Emp extends AuditableEntity {
         , String company
         , Long userId
     ) {
-        WorkExperience experience = this.getExperience(startDate, endDate)
+        WorkExperience exp = this.getExperience(startDate, endDate)
             .orElseThrow(() -> new IllegalArgumentException("不存在要修改的 WorkExperience!"));
 
-        if (!experience.getCompany().equals(company)) {
-            experience.setCompany(company);
-            experience.setUpdatedBy(userId);
-            experience.setUpdatedAt(LocalDateTime.now());
-            experience.toUpdated();
+        if (!exp.getCompany().equals(company)) {
+            exp.setCompany(company);
+            exp.setUpdatedBy(userId);
+            exp.setUpdatedAt(LocalDateTime.now());
+            exp.toUpdated();
+
+            asIsToUpdated();
+            setUpdatedInfo(userId);
         }
     }
 
-    public void removeExperience(LocalDate startDate, LocalDate endDate) {
+    public void removeExperience(LocalDate startDate, LocalDate endDate, Long userId) {
         this.getExperience(startDate, endDate)
             .orElseThrow(() -> new IllegalArgumentException("不存在要删除的WorkExperience!"))
             .toDeleted();
+
+        asIsToUpdated();
+        setUpdatedInfo(userId);
     }
 
     private void expectDurationNotOverlap(LocalDate startDate, LocalDate endDate) {
@@ -307,12 +343,15 @@ public class Emp extends AuditableEntity {
 
     void addPost(String postTypeCode, Long userId) {
         expectPostNotDuplicated(postTypeCode);
-        addPostInternal(postTypeCode
+        newPost(postTypeCode
             , new AuditInfo(LocalDateTime.now(), userId)
-        );
+        ).toNew();
+
+        asIsToUpdated();
+        setUpdatedInfo(userId);
     }
 
-    private void addPostInternal(String postTypeCode, AuditInfo audit) {
+    private Post newPost(String postTypeCode, AuditInfo audit) {
         Post newPost = new Post(this
             , tenantId
             , postTypeCode
@@ -323,13 +362,18 @@ public class Emp extends AuditableEntity {
         newPost.setUpdatedBy(audit.getUpdatedBy());
 
         posts.add(newPost);
+
+        return newPost;
     }
 
 
-    void removePost(String postTypeCode) {
+    void removePost(String postTypeCode, Long userId) {
         this.getPost(postTypeCode)
             .orElseThrow(() -> new IllegalArgumentException("不存在要删除的岗位!"))
             .toDeleted();
+
+        asIsToUpdated();
+        setUpdatedInfo(userId);
     }
 
     private void expectPostNotDuplicated(String postTypeCode) {
@@ -448,36 +492,40 @@ public class Emp extends AuditableEntity {
             return this;
         }
 
-        public Loader addSkill(Long skillTypeId
+        public Loader loadSkill(Long skillTypeId
             , String levelCode
             , Integer duration
             , AuditInfo audit
         ) {
-            emp.addSkillInternal(skillTypeId
-                , Skill.Level.ofCode(levelCode)
-                , duration
-                , audit
-            );
+            emp.newSkill(
+                    skillTypeId
+                    , Skill.Level.ofCode(levelCode)
+                    , duration
+                    , audit)
+                .toAsIs();
+
             return this;
         }
 
-        public Loader addExperience(LocalDate startDate
+        public Loader loadExperience(LocalDate startDate
             , LocalDate endDate
             , String company
             , AuditInfo audit
         ) {
-            emp.addExperienceInternal(startDate
-                , endDate
-                , company
-                , audit);
+            emp.newExperience(
+                    startDate
+                    , endDate
+                    , company
+                    , audit)
+                .toAsIs();
 
             return this;
         }
 
-        public Loader addPost(String postTypeCode
-            , AuditInfo audit
+        public Loader loadPost(String postTypeCode, AuditInfo audit
         ) {
-            emp.addPostInternal(postTypeCode, audit);
+            emp.newPost(postTypeCode, audit)
+                .toAsIs();
             return this;
         }
 
