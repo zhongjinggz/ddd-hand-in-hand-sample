@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import qiyebao.common.framework.exception.BusinessException;
 import qiyebao.domain.orgmng.emp.*;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmpService {
@@ -82,15 +82,50 @@ public class EmpService {
         return new EmpResponse(emp);
     }
 
-    private boolean modifySkills(Emp emp, List<SkillDto> requestSkills, Long userId) {
-        return false;
+    private void modifySkills(Emp emp, List<SkillDto> requestSkills, Long userId) {
+        Collection<SkillDto> requestCopy = new ArrayList<>(requestSkills); // 创建 request 的副本
+
+        for (Skill currentSkill : emp.getSkills()) {
+            boolean found = false;
+            Iterator<SkillDto> requestIterator = requestCopy.iterator();
+            while (requestIterator.hasNext()) {
+                SkillDto requestSkill = requestIterator.next();
+                if (Objects.equals(currentSkill.getSkillTypeId()
+                    , requestSkill.getSkillTypeId())
+                ) {
+                    handler.modifySkill(emp
+                        , requestSkill.getSkillTypeId()
+                        , Skill.Level.ofCode(requestSkill.getLevelCode())
+                        , requestSkill.getDuration()
+                        , userId);
+                    found = true;
+                    requestIterator.remove(); // 删除 request 中的相应元素
+                    break;
+                }
+            }
+            if (!found) {
+                handler.removeSkill(emp
+                    , currentSkill.getSkillTypeId()
+                    , userId);
+            }
+        }
+
+        for (SkillDto requestSkill : requestCopy) {
+            handler.addSkill(emp
+                , requestSkill.getSkillTypeId()
+                , Skill.Level.ofCode(requestSkill.getLevelCode())
+                , requestSkill.getDuration()
+                , userId);
+        }
     }
 
     private boolean modifyExperiences(Emp emp, List<WorkExperienceDto> requestExps, Long userId) {
+        // 类似 modifySkills
         return false;
     }
 
     private boolean modifyPosts(Emp emp, List<String> requestPosts, Long userId) {
+        // 类似 modifySkills
         return false;
     }
 }
