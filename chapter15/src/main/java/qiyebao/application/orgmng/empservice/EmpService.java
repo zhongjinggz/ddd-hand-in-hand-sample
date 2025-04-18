@@ -3,6 +3,7 @@ package qiyebao.application.orgmng.empservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import qiyebao.common.framework.exception.BusinessException;
 import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.EmpBuilder;
 import qiyebao.domain.orgmng.emp.EmpBuilderFactory;
