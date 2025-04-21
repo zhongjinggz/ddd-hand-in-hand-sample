@@ -7,16 +7,14 @@ import qiyebao.domain.orgmng.emp.EmpHandler;
 import qiyebao.domain.orgmng.emp.Skill;
 
 import java.util.Collection;
-import java.util.List;
 
 @Component
-public class SkillModifier extends CollectionModifier<Emp, Skill, SkillDto> {
+public class SkillsModifier extends CollectionModifier<Emp, Skill, SkillDto> {
     private final EmpHandler handler;
 
-    SkillModifier(EmpHandler handler) {
+    SkillsModifier(EmpHandler handler) {
         this.handler = handler;
     }
-
 
     @Override
     protected Collection<Skill> getCurrItems(Emp emp) {
@@ -24,8 +22,8 @@ public class SkillModifier extends CollectionModifier<Emp, Skill, SkillDto> {
     }
 
     @Override
-    protected boolean isSame(Skill currSkill, SkillDto reqISkill) {
-        return currSkill.getSkillTypeId().equals(reqISkill.getSkillTypeId());
+    protected boolean isSame(Skill currSkill, SkillDto reqSkill) {
+        return currSkill.getSkillTypeId().equals(reqSkill.getSkillTypeId());
     }
 
     @Override

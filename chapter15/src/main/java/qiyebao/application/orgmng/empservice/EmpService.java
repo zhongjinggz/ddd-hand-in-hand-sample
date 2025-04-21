@@ -6,25 +6,29 @@ import org.springframework.transaction.annotation.Transactional;
 import qiyebao.common.framework.exception.BusinessException;
 import qiyebao.domain.orgmng.emp.*;
 
-import java.util.*;
-
 @Service
 public class EmpService {
     private final EmpRepository empRepository;
     private final EmpBuilderFactory builderFactory;
     private final EmpHandler handler;
-    private final SkillModifier skillModifier;
+    private final SkillsModifier skillsModifier;
+    private final ExperiencesModifier experiencesModifier;
+    private final PostsModifier postsModifier;
 
     @Autowired
     public EmpService(EmpRepository empRepository
         , EmpBuilderFactory builderFactory
         , EmpHandler handler
-        , SkillModifier skillModifier
+        , SkillsModifier skillsModifier
+        , ExperiencesModifier experiencesModifier
+        , PostsModifier postsModifier
     ) {
         this.empRepository = empRepository;
         this.builderFactory = builderFactory;
         this.handler = handler;
-        this.skillModifier = skillModifier;
+        this.skillsModifier = skillsModifier;
+        this.experiencesModifier = experiencesModifier;
+        this.postsModifier = postsModifier;
     }
 
     @Transactional
@@ -100,58 +104,13 @@ public class EmpService {
         handler.modifyDob(emp, request.getDob());
         handler.modifyGender(emp, Gender.ofCode(request.getGenderCode()));
 
-        modifySkills(emp, request.getSkills(), userId);
-        modifyExperiences(emp, request.getExperiences(), userId);
-        modifyPosts(emp, request.getPosts(), userId);
+        skillsModifier.modify(emp, request.getSkills(), userId);
+        experiencesModifier.modify(emp, request.getExperiences(), userId);
+        postsModifier.modify(emp, request.getPosts(), userId);
 
         handler.setUpdatedInfo(emp, userId);
 
         empRepository.save(emp);
         return new EmpResponse(emp);
-    }
-
-    private void modifySkills(Emp emp, List<SkillDto> requestSkills, Long userId) {
-        Collection<SkillDto> requestCopy = new ArrayList<>(requestSkills); // 创建 request 的副本
-
-        for (Skill currentSkill : emp.getSkills()) {
-            boolean found = false;
-            Iterator<SkillDto> requestIterator = requestCopy.iterator();
-            while (requestIterator.hasNext()) {
-                SkillDto requestSkill = requestIterator.next();
-                if (Objects.equals(currentSkill.getSkillTypeId()
-                    , requestSkill.getSkillTypeId())
-                ) {
-                    handler.modifySkill(emp
-                        , requestSkill.getSkillTypeId()
-                        , Skill.Level.ofCode(requestSkill.getLevelCode())
-                        , requestSkill.getDuration()
-                        , userId);
-                    found = true;
-                    requestIterator.remove(); // 删除 request 中的相应元素
-                    break;
-                }
-            }
-            if (!found) {
-                handler.removeSkill(emp
-                    , currentSkill.getSkillTypeId()
-                    , userId);
-            }
-        }
-
-        for (SkillDto requestSkill : requestCopy) {
-            handler.addSkill(emp
-                , requestSkill.getSkillTypeId()
-                , Skill.Level.ofCode(requestSkill.getLevelCode())
-                , requestSkill.getDuration()
-                , userId);
-        }
-    }
-
-    private void modifyExperiences(Emp emp, List<WorkExperienceDto> requestExps, Long userId) {
-        // 类似 modifySkills
-    }
-
-    private void modifyPosts(Emp emp, List<String> requestPosts, Long userId) {
-        // 类似 modifySkills
     }
 }
