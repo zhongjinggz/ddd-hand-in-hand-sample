@@ -13,15 +13,18 @@ public class EmpService {
     private final EmpRepository empRepository;
     private final EmpBuilderFactory builderFactory;
     private final EmpHandler handler;
+    private final SkillModifier skillModifier;
 
     @Autowired
     public EmpService(EmpRepository empRepository
         , EmpBuilderFactory builderFactory
         , EmpHandler handler
+        , SkillModifier skillModifier
     ) {
         this.empRepository = empRepository;
         this.builderFactory = builderFactory;
         this.handler = handler;
+        this.skillModifier = skillModifier;
     }
 
     @Transactional
