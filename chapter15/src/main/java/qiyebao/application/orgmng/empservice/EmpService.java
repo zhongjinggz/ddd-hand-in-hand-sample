@@ -66,17 +66,16 @@ public class EmpService {
             .orElseThrow(() -> new BusinessException(
                 "Emp id(" + empId + ") 不正确！"));
 
-        handler.modifyRoot(emp
-            , request.getIdNum()
-            , request.getName()
-            , request.getDob()
-            , Gender.ofCode(request.getGenderCode())
-            , userId
-        );
+        handler.modifyIdNum(emp, request.getIdNum());
+        handler.modifyName(emp, request.getName());
+        handler.modifyDob(emp, request.getDob());
+        handler.modifyGender(emp, Gender.ofCode(request.getGenderCode()));
 
         modifySkills(emp, request.getSkills(), userId);
         modifyExperiences(emp, request.getExperiences(), userId);
         modifyPosts(emp, request.getPosts(), userId);
+
+        handler.setUpdatedInfo(emp, userId);
 
         empRepository.save(emp);
         return new EmpResponse(emp);

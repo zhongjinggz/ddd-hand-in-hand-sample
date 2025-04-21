@@ -1,11 +1,9 @@
 package qiyebao.domain.orgmng.emp;
 
 import org.springframework.stereotype.Component;
-import qiyebao.common.framework.domain.PersistentStatus;
 import qiyebao.domain.orgmng.emp.validator.EmpValidators;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Component
 public class EmpHandler {
@@ -15,43 +13,26 @@ public class EmpHandler {
         this.expect = expect;
     }
 
-    public void modifyRoot(Emp emp
-        , String idNum
-        , String name
-        , LocalDate dob
-        , Gender gender
-        , Long userId
-    ) {
-        modifyIdNum(emp, idNum);
-        modifyName(emp, name);
-        modifyDob(emp, dob);
-        modifyGender(emp, gender);
-
-        emp.setUpdatedInfo(userId);
-    }
-
-    private void modifyIdNum(Emp emp, String newIdNum) {
+    public void modifyIdNum(Emp emp, String newIdNum) {
         if (newIdNum != null) {
-            expect.idNum().shouldValid(newIdNum);
             emp.setIdNum(newIdNum);
         }
     }
 
-    private void modifyName(Emp emp, String newName) {
+    public void modifyName(Emp emp, String newName) {
         if (newName != null) {
-            expect.empName().shouldNotBlank(newName);
             emp.setName(newName);
         }
     }
 
-    private void modifyDob(Emp emp, LocalDate newDob) {
+    public void modifyDob(Emp emp, LocalDate newDob) {
         if (newDob != null) {
             expect.dob().ageShouldValid(newDob);
             emp.setDob(newDob);
         }
     }
 
-    private void modifyGender(Emp emp, Gender newGender) {
+    public void modifyGender(Emp emp, Gender newGender) {
         if (newGender != null) {
             emp.setGender(newGender);
         }
@@ -118,5 +99,9 @@ public class EmpHandler {
 
     public void removePost(Emp emp, String postCode, Long userId) {
         emp.removePost(postCode, userId);
+    }
+
+    public void setUpdatedInfo(Emp emp, Long userId) {
+        emp.setUpdatedInfo(userId);
     }
 }

@@ -80,9 +80,15 @@ public class Emp extends AuditableEntity {
 
     void setIdNum(String idNum) {
         if (!Objects.equals(this.idNum, idNum)) {
+            idNumShouldValid(idNum);
+
             this.idNum = idNum;
             asIsToUpdated();
         }
+    }
+
+    private void idNumShouldValid(String idNum){
+        // TODO: 验证身份证
     }
 
 
@@ -92,8 +98,16 @@ public class Emp extends AuditableEntity {
 
     void setName(String name) {
         if(!Objects.equals(this.name, name)) {
+            nameShouldNotBlank(name);
+
             this.name = name;
             asIsToUpdated();
+        }
+    }
+
+    private void nameShouldNotBlank(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new BusinessException("姓名不能为空！");
         }
     }
 
@@ -177,7 +191,6 @@ public class Emp extends AuditableEntity {
         ).toNew();
 
         asIsToUpdated();
-        setUpdatedInfo(userId);
     }
 
     private Skill newSkill(Long skillTypeId
@@ -218,7 +231,6 @@ public class Emp extends AuditableEntity {
             skill.toUpdated();
 
             asIsToUpdated();
-            setUpdatedInfo(userId);
         }
     }
 
@@ -228,7 +240,6 @@ public class Emp extends AuditableEntity {
             .toDeleted();
 
         asIsToUpdated();
-        setUpdatedInfo(userId);
     }
 
     private void expectSkillTypeNotDuplicated(Long otherSkillTypeId) {
@@ -265,7 +276,6 @@ public class Emp extends AuditableEntity {
         ).toNew();
 
         asIsToUpdated();
-        setUpdatedInfo(userId);
     }
 
     private WorkExperience newExperience(LocalDate startDate
@@ -302,7 +312,6 @@ public class Emp extends AuditableEntity {
             exp.toUpdated();
 
             asIsToUpdated();
-            setUpdatedInfo(userId);
         }
     }
 
@@ -312,7 +321,6 @@ public class Emp extends AuditableEntity {
             .toDeleted();
 
         asIsToUpdated();
-        setUpdatedInfo(userId);
     }
 
     private void expectDurationNotOverlap(LocalDate startDate, LocalDate endDate) {
@@ -348,7 +356,6 @@ public class Emp extends AuditableEntity {
         ).toNew();
 
         asIsToUpdated();
-        setUpdatedInfo(userId);
     }
 
     private Post newPost(String postTypeCode, AuditInfo audit) {
@@ -373,7 +380,6 @@ public class Emp extends AuditableEntity {
             .toDeleted();
 
         asIsToUpdated();
-        setUpdatedInfo(userId);
     }
 
     private void expectPostNotDuplicated(String postTypeCode) {
