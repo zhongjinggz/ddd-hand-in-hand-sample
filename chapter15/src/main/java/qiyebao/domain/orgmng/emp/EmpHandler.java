@@ -38,6 +38,14 @@ public class EmpHandler {
         }
     }
 
+    public void becomeRegular(Emp emp) {
+        emp.becomeRegular();
+    }
+
+    public void terminate(Emp emp) {
+        emp.terminate();
+    }
+
     public void addSkill(Emp emp
         , Long skillTypeId
         , Skill.Level level
