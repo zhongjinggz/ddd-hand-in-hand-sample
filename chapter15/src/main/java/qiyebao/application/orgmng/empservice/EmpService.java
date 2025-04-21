@@ -61,6 +61,32 @@ public class EmpService {
     }
 
     @Transactional
+    public EmpResponse becomeRegular(Long tenantId, Long empId, Long userId) {
+        Emp emp = empRepository.findById(tenantId, empId)
+            .orElseThrow(() -> new BusinessException(
+                "Emp id(" + empId + ") 不正确！"));
+
+        handler.becomeRegular(emp);
+        handler.setUpdatedInfo(emp, userId);
+
+        empRepository.save(emp);
+        return new EmpResponse(emp);
+    }
+
+    @Transactional
+    public EmpResponse terminate(Long tenantId, Long empId, Long userId) {
+        Emp emp = empRepository.findById(tenantId, empId)
+            .orElseThrow(() -> new BusinessException(
+                "Emp id(" + empId + ") 不正确！"));
+
+        handler.terminate(emp);
+        handler.setUpdatedInfo(emp, userId);
+
+        empRepository.save(emp);
+        return new EmpResponse(emp);
+    }
+
+    @Transactional
     public EmpResponse modifyEmp(Long empId, ModifyEmpRequest request, Long userId) {
         Emp emp = empRepository.findById(request.getTenantId(), empId)
             .orElseThrow(() -> new BusinessException(
@@ -118,13 +144,11 @@ public class EmpService {
         }
     }
 
-    private boolean modifyExperiences(Emp emp, List<WorkExperienceDto> requestExps, Long userId) {
+    private void modifyExperiences(Emp emp, List<WorkExperienceDto> requestExps, Long userId) {
         // 类似 modifySkills
-        return false;
     }
 
-    private boolean modifyPosts(Emp emp, List<String> requestPosts, Long userId) {
+    private void modifyPosts(Emp emp, List<String> requestPosts, Long userId) {
         // 类似 modifySkills
-        return false;
     }
 }
