@@ -58,6 +58,7 @@ public class EmpHandler {
         , Integer duration
         , Long userId
     ) {
+        expect.skill().typeShouldValid(emp.getTenantId(), skillTypeId);
         emp.modifySkill(skillTypeId, level, duration, userId);
     }
 
