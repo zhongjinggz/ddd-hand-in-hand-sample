@@ -1,4 +1,4 @@
-package qiyebao.application.orgmng.empservice;
+package qiyebao.application.orgmng.empservice.modifier;
 
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.domain.CollectionModifier;

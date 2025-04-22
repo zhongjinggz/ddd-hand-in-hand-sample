@@ -1,4 +1,4 @@
-package qiyebao.application.orgmng.empservice;
+package qiyebao.application.orgmng.empservice.dto;
 
 import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.Post;

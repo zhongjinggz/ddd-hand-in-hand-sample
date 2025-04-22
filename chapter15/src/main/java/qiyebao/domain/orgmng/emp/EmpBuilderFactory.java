@@ -11,13 +11,13 @@ public class EmpBuilderFactory {
     private final EmpNumCounterRepository empNumCounterRepository;
 
     public EmpBuilderFactory(EmpValidators empValidators
-    , EmpNumCounterRepository empNumCounterRepository
+        , EmpNumCounterRepository empNumCounterRepository
     ) {
         this.empValidators = empValidators;
         this.empNumCounterRepository = empNumCounterRepository;
     }
 
-        public EmpBuilder newBuilder () {
+    public EmpBuilder newBuilder() {
         return new EmpBuilder(empValidators, empNumCounterRepository);
     }
-    }
+}

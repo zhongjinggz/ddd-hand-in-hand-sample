@@ -1,4 +1,4 @@
-package qiyebao.application.orgmng.empservice;
+package qiyebao.application.orgmng.empservice.dto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
