@@ -7,6 +7,7 @@ import qiyebao.domain.orgmng.emp.EmpHandler;
 import qiyebao.domain.orgmng.emp.Skill;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Component
 public class SkillsModifier extends CollectionModifier<Emp, Skill, SkillDto> {
@@ -23,7 +24,8 @@ public class SkillsModifier extends CollectionModifier<Emp, Skill, SkillDto> {
 
     @Override
     protected boolean isSame(Skill currSkill, SkillDto reqSkill) {
-        return currSkill.getSkillTypeId().equals(reqSkill.getSkillTypeId());
+        return Objects.equals(currSkill.getSkillTypeId()
+            ,reqSkill.getSkillTypeId());
     }
 
     @Override

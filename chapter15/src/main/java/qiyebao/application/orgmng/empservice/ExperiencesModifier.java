@@ -7,6 +7,7 @@ import qiyebao.domain.orgmng.emp.EmpHandler;
 import qiyebao.domain.orgmng.emp.WorkExperience;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Component
 public class ExperiencesModifier extends CollectionModifier<Emp, WorkExperience, WorkExperienceDto> {
@@ -23,8 +24,8 @@ public class ExperiencesModifier extends CollectionModifier<Emp, WorkExperience,
 
     @Override
     protected boolean isSame(WorkExperience currExperience, WorkExperienceDto reqExperience) {
-        return currExperience.getStartDate().equals(reqExperience.getStartDate())
-            && currExperience.getEndDate().equals(reqExperience.getEndDate());
+        return Objects.equals(currExperience.getStartDate(), (reqExperience.getStartDate()))
+            && Objects.equals(currExperience.getEndDate(), reqExperience.getEndDate());
     }
 
     @Override

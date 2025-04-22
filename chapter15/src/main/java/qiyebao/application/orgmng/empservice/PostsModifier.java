@@ -7,6 +7,7 @@ import qiyebao.domain.orgmng.emp.EmpHandler;
 import qiyebao.domain.orgmng.emp.Post;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Component
 public class PostsModifier extends CollectionModifier<Emp, Post, String> {
@@ -23,7 +24,7 @@ public class PostsModifier extends CollectionModifier<Emp, Post, String> {
 
     @Override
     protected boolean isSame(Post currPost, String reqPost) {
-        return currPost.getPostTypeCode().equals(reqPost);
+        return Objects.equals(currPost.getPostTypeCode(), reqPost);
     }
 
     @Override
