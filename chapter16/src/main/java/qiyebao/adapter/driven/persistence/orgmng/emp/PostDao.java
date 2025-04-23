@@ -2,9 +2,9 @@ package qiyebao.adapter.driven.persistence.orgmng.emp;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
 import qiyebao.common.utils.TypedMap;
+import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.Post;
 
 import java.util.List;
@@ -44,5 +44,18 @@ public class PostDao {
             """;
 
         return jdbc.selectMapList(sql, tenantId, empId);
+    }
+
+    public void save(Post post) {
+
+    }
+
+    void deleteByEmpId(Emp emp) {
+        jdbc.delete("""
+                delete from post 
+                where tenant_id = ? and emp_id = ?
+                """
+            , emp.getTenantId()
+            , emp.getId());
     }
 }

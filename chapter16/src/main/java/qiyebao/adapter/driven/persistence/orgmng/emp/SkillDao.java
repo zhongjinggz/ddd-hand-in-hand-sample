@@ -4,11 +4,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
 import qiyebao.common.utils.TypedMap;
+import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.Skill;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @Component
 public class SkillDao {
@@ -49,5 +51,58 @@ public class SkillDao {
             """;
 
         return jdbc.selectMapList(sql, tenantId, empId);
+    }
+
+    public Skill save(Skill skill) {
+        switch (skill.getPersistentStatus()) {
+            case NEW:
+                insert(skill);
+                break;
+            case UPDATED:
+                update(skill);
+                break;
+            case DELETED:
+                delete(skill);
+                break;
+        }
+
+        return skill;
+    }
+
+    void update(Skill skill) {
+        String sql = """
+            update skill 
+            set level_code = ?
+              , duration = ?
+              , updated_at = ?
+              , updated_by = ?
+            where tenant_id = ? and skill_type_id = ? 
+            """;
+
+        jdbc.update(sql
+            , skill.getLevel().getCode()
+            , skill.getDuration()
+            , skill.getUpdatedAt()
+            , skill.getUpdatedBy()
+            , skill.getTenantId()
+            , skill.getSkillTypeId());
+    }
+
+    void delete(Skill skill) {
+        jdbc.delete("""
+                delete from skill 
+                where tenant_id = ? and skill_type_id = ?
+                """
+            , skill.getTenantId()
+            , skill.getSkillTypeId());
+    }
+
+    void deleteByEmpId(Emp emp) {
+        jdbc.delete("""
+                delete from skill 
+                where tenant_id = ? and emp_id = ?
+                """
+            , emp.getTenantId()
+            , emp.getId());
     }
 }

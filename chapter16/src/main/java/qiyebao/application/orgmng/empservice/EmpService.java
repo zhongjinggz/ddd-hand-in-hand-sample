@@ -69,7 +69,7 @@ public class EmpService {
 
         Emp emp = builder.build();
 
-        empRepository.add(emp);
+        empRepository.save(emp);
         return new EmpResponse(emp);
     }
 

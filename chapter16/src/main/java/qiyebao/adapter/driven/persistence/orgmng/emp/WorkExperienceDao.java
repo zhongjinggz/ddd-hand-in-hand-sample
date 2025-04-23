@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
 import qiyebao.common.utils.TypedMap;
+import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.WorkExperience;
 
 import java.util.HashMap;
@@ -49,5 +50,17 @@ public class WorkExperienceDao {
             """;
 
         return jdbc.selectMapList(sql, tenantId, id);
+    }
+
+    public void save(WorkExperience experience) {
+    }
+
+    void deleteByEmpId(Emp emp) {
+        jdbc.delete("""
+                delete from work_experience 
+                where tenant_id = ? and emp_id = ?
+                """
+            , emp.getTenantId()
+            , emp.getId());
     }
 }

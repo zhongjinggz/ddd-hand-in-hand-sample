@@ -36,19 +36,22 @@ public class EmpRepositoryJdbc implements EmpRepository {
     }
 
     @Override
-    public Emp add(Emp emp) {
-        insertEmp(emp);
-
-        emp.getSkills().forEach(s -> skillDao.insert(s));
-        emp.getExperiences().forEach(e -> workExperienceDao.insert(e));
-        emp.getPosts().forEach(p -> postDao.insert(p));
-
-        return emp;
-    }
-
-    @Override
     public Emp save(Emp emp) {
-        return null;
+        switch (emp.getPersistentStatus()) {
+            case NEW:
+                insertEmp(emp);
+                saveSubEntries(emp);
+                break;
+            case UPDATED:
+                updateEmp(emp);
+                saveSubEntries(emp);
+                break;
+            case DELETED:
+                deleteSubEntries(emp);
+                deleteEmp(emp);
+                break;
+        }
+        return emp;
     }
 
     private void insertEmp(Emp emp) {
@@ -70,6 +73,54 @@ public class EmpRepositoryJdbc implements EmpRepository {
         forceSet(emp, "id", createdId.longValue());
     }
 
+    private void deleteEmp(Emp emp) {
+        jdbc.delete("""
+                delete from emp 
+                where tenant_id = ? and id = ?
+                """
+            , emp.getTenantId()
+            , emp.getId());
+    }
+
+    private void updateEmp(Emp emp) {
+        String sql = """
+             update emp 
+             set org_id = ?
+               , emp_num = ?
+               , id_num =? 
+               , name = ?
+               , gender_code =?
+               , dob = ?
+               , status_code =?
+               , updated_at =?
+               , updated_by =? 
+              where tenant_id = ? and id = ?
+            """;
+        jdbc.update(sql
+            , emp.getOrgId()
+            , emp.getEmpNum()
+            , emp.getIdNum()
+            , emp.getName()
+            , emp.getGender().getCode()
+            , emp.getDob()
+            , emp.getStatus().getCode()
+            , emp.getUpdatedAt()
+            , emp.getUpdatedBy()
+            , emp.getTenantId()
+            , emp.getId());
+    }
+
+    private void saveSubEntries(Emp emp) {
+        emp.getSkills().forEach(skillDao::save);
+        emp.getExperiences().forEach(workExperienceDao::save);
+        emp.getPosts().forEach(postDao::save);
+    }
+
+    private void deleteSubEntries(Emp emp) {
+        skillDao.deleteByEmpId(emp);
+        workExperienceDao.deleteByEmpId(emp);
+        postDao.deleteByEmpId(emp);
+    }
 
     @Override
     public Optional<Emp> findById(Long tenantId, Long id) {
