@@ -55,12 +55,12 @@ public class WorkExperienceDao {
     public void save(WorkExperience experience) {
     }
 
-    void deleteByEmpId(Emp emp) {
+    void deleteByEmpId(Emp emp, Long empId) {
         jdbc.delete("""
                 delete from work_experience 
                 where tenant_id = ? and emp_id = ?
                 """
             , emp.getTenantId()
-            , emp.getId());
+            , empId);
     }
 }

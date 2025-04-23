@@ -50,12 +50,12 @@ public class PostDao {
 
     }
 
-    void deleteByEmpId(Emp emp) {
+    void deleteByEmpId(Emp emp, Long empId) {
         jdbc.delete("""
                 delete from post 
                 where tenant_id = ? and emp_id = ?
                 """
             , emp.getTenantId()
-            , emp.getId());
+            , empId);
     }
 }

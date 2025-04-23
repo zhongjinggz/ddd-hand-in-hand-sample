@@ -47,7 +47,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
                 saveSubEntries(emp);
                 break;
             case DELETED:
-                deleteSubEntries(emp);
+                removeSubEntries(emp);
                 deleteEmp(emp);
                 break;
         }
@@ -116,10 +116,10 @@ public class EmpRepositoryJdbc implements EmpRepository {
         emp.getPosts().forEach(postDao::save);
     }
 
-    private void deleteSubEntries(Emp emp) {
-        skillDao.deleteByEmpId(emp);
-        workExperienceDao.deleteByEmpId(emp);
-        postDao.deleteByEmpId(emp);
+    private void removeSubEntries(Emp emp) {
+        skillDao.deleteByEmpId(emp, emp.getId());
+        workExperienceDao.deleteByEmpId(emp, emp.getId());
+        postDao.deleteByEmpId(emp, emp.getId());
     }
 
     @Override
