@@ -3,6 +3,7 @@ package qiyebao.adapter.driven.persistence.orgmng.emp;
 import org.springframework.jdbc.core.JdbcTemplate;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
 import qiyebao.common.framework.domain.AuditInfo;
+import qiyebao.common.framework.domain.Persister;
 import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.EmpRepository;
@@ -17,7 +18,7 @@ import static org.apache.commons.lang3.ArrayUtils.*;
 import static qiyebao.common.utils.ReflectUtils.forceSet;
 
 @Repository
-public class EmpRepositoryJdbc implements EmpRepository {
+public class EmpRepositoryJdbc extends Persister<Emp> implements EmpRepository {
 
     private final JdbcHelper jdbc;
     private final SkillDao skillDao;
@@ -36,25 +37,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
     }
 
     @Override
-    public Emp save(Emp emp) {
-        switch (emp.getPersistentStatus()) {
-            case NEW:
-                insertEmp(emp);
-                saveSubEntries(emp);
-                break;
-            case UPDATED:
-                updateEmp(emp);
-                saveSubEntries(emp);
-                break;
-            case DELETED:
-                removeSubEntries(emp);
-                deleteEmp(emp);
-                break;
-        }
-        return emp;
-    }
-
-    private void insertEmp(Emp emp) {
+    protected void insert(Emp emp) {
         Map<String, Object> parms = Map.of(
             "tenant_id", emp.getTenantId()
             , "org_id", emp.getOrgId()
@@ -73,7 +56,8 @@ public class EmpRepositoryJdbc implements EmpRepository {
         forceSet(emp, "id", createdId.longValue());
     }
 
-    private void deleteEmp(Emp emp) {
+    @Override
+    protected void delete(Emp emp) {
         jdbc.delete("""
                 delete from emp 
                 where tenant_id = ? and id = ?
@@ -82,7 +66,8 @@ public class EmpRepositoryJdbc implements EmpRepository {
             , emp.getId());
     }
 
-    private void updateEmp(Emp emp) {
+    @Override
+    protected void update(Emp emp) {
         String sql = """
              update emp 
              set org_id = ?
@@ -110,13 +95,15 @@ public class EmpRepositoryJdbc implements EmpRepository {
             , emp.getId());
     }
 
-    private void saveSubEntries(Emp emp) {
+    @Override
+    protected void saveSubEntries(Emp emp) {
         emp.getSkills().forEach(skillDao::save);
         emp.getExperiences().forEach(workExperienceDao::save);
         emp.getPosts().forEach(postDao::save);
     }
 
-    private void removeSubEntries(Emp emp) {
+    @Override
+    protected void removeSubEntries(Emp emp) {
         skillDao.deleteByEmpId(emp, emp.getId());
         workExperienceDao.deleteByEmpId(emp, emp.getId());
         postDao.deleteByEmpId(emp, emp.getId());

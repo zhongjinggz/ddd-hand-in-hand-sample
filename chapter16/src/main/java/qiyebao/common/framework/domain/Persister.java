@@ -7,14 +7,14 @@ public abstract class Persister<T extends Persistent> {
         switch (theObject.getPersistentStatus()) {
             case NEW:
                 insert(theObject);
-                saveSubsidiaries(theObject);
+                saveSubEntries(theObject);
                 break;
             case UPDATED:
                 update(theObject);
-                saveSubsidiaries(theObject);
+                saveSubEntries(theObject);
                 break;
             case DELETED:
-                deleteSubsidiaries(theObject);
+                removeSubEntries(theObject);
                 delete(theObject);
                 break;
         }
@@ -30,10 +30,10 @@ public abstract class Persister<T extends Persistent> {
     protected void delete(T theObject) {
     }
 
-    protected void saveSubsidiaries(T theObject) {
+    protected void saveSubEntries(T theObject) {
     }
 
-    protected void deleteSubsidiaries(T theObject) {
+    protected void removeSubEntries(T theObject) {
     }
 
 }

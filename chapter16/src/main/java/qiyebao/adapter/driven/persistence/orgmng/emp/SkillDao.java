@@ -3,6 +3,8 @@ package qiyebao.adapter.driven.persistence.orgmng.emp;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
+import qiyebao.common.framework.domain.Persistent;
+import qiyebao.common.framework.domain.Persister;
 import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.Skill;
@@ -13,7 +15,7 @@ import java.util.Map;
 
 
 @Component
-public class SkillDao {
+public class SkillDao extends Persister<Skill> {
 
     private final JdbcHelper jdbc;
 
@@ -21,23 +23,24 @@ public class SkillDao {
         this.jdbc = new JdbcHelper(jdbcTemplate, "skill");
     }
 
-    public Skill save(Skill skill) {
-        switch (skill.getPersistentStatus()) {
-            case NEW:
-                insert(skill);
-                break;
-            case UPDATED:
-                update(skill);
-                break;
-            case DELETED:
-                delete(skill);
-                break;
-        }
+//    public Skill save(Skill skill) {
+//        switch (skill.getPersistentStatus()) {
+//            case NEW:
+//                insert(skill);
+//                break;
+//            case UPDATED:
+//                update(skill);
+//                break;
+//            case DELETED:
+//                delete(skill);
+//                break;
+//        }
+//
+//        return skill;
+//    }
 
-        return skill;
-    }
-
-    Skill insert(Skill skill) {
+    @Override
+    protected void insert(Skill skill) {
         Map<String, Object> parms = new HashMap<>();
 
         parms.put("emp_id", skill.getEmp().getId());
@@ -49,27 +52,10 @@ public class SkillDao {
         parms.put("created_by", skill.getCreatedBy());
 
         jdbc.insert(parms);
-        return skill;
     }
 
-    List<TypedMap> selectByEmpId(Long tenantId, Long empId) {
-        String sql = """
-            select skill_type_id
-                 , level_code
-                 , duration
-                 , created_at
-                 , created_by
-                 , updated_at
-                 , updated_by
-            from emp_skill
-            where tenant_id = ? 
-              emp_id = ?
-            """;
-
-        return jdbc.selectMapList(sql, tenantId, empId);
-    }
-
-    void delete(Skill skill) {
+    @Override
+    protected void delete(Skill skill) {
         jdbc.delete("""
                 delete from skill 
                 where tenant_id = ? and skill_type_id = ?
@@ -87,7 +73,8 @@ public class SkillDao {
             , empId);
     }
 
-    void update(Skill skill) {
+    @Override
+    protected void update(Skill skill) {
         String sql = """
             update skill 
             set level_code = ?
@@ -104,5 +91,22 @@ public class SkillDao {
             , skill.getUpdatedBy()
             , skill.getTenantId()
             , skill.getSkillTypeId());
+    }
+
+    List<TypedMap> selectByEmpId(Long tenantId, Long empId) {
+        String sql = """
+            select skill_type_id
+                 , level_code
+                 , duration
+                 , created_at
+                 , created_by
+                 , updated_at
+                 , updated_by
+            from emp_skill
+            where tenant_id = ? 
+              emp_id = ?
+            """;
+
+        return jdbc.selectMapList(sql, tenantId, empId);
     }
 }
