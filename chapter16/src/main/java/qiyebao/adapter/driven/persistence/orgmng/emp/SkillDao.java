@@ -21,6 +21,22 @@ public class SkillDao {
         this.jdbc = new JdbcHelper(jdbcTemplate, "skill");
     }
 
+    public Skill save(Skill skill) {
+        switch (skill.getPersistentStatus()) {
+            case NEW:
+                insert(skill);
+                break;
+            case UPDATED:
+                update(skill);
+                break;
+            case DELETED:
+                delete(skill);
+                break;
+        }
+
+        return skill;
+    }
+
     Skill insert(Skill skill) {
         Map<String, Object> parms = new HashMap<>();
 
@@ -53,20 +69,22 @@ public class SkillDao {
         return jdbc.selectMapList(sql, tenantId, empId);
     }
 
-    public Skill save(Skill skill) {
-        switch (skill.getPersistentStatus()) {
-            case NEW:
-                insert(skill);
-                break;
-            case UPDATED:
-                update(skill);
-                break;
-            case DELETED:
-                delete(skill);
-                break;
-        }
+    void delete(Skill skill) {
+        jdbc.delete("""
+                delete from skill 
+                where tenant_id = ? and skill_type_id = ?
+                """
+            , skill.getTenantId()
+            , skill.getSkillTypeId());
+    }
 
-        return skill;
+    void deleteByEmpId(Emp emp, Long empId) {
+        jdbc.delete("""
+                delete from skill 
+                where tenant_id = ? and emp_id = ?
+                """
+            , emp.getTenantId()
+            , empId);
     }
 
     void update(Skill skill) {
@@ -86,23 +104,5 @@ public class SkillDao {
             , skill.getUpdatedBy()
             , skill.getTenantId()
             , skill.getSkillTypeId());
-    }
-
-    void delete(Skill skill) {
-        jdbc.delete("""
-                delete from skill 
-                where tenant_id = ? and skill_type_id = ?
-                """
-            , skill.getTenantId()
-            , skill.getSkillTypeId());
-    }
-
-    void deleteByEmpId(Emp emp, Long empId) {
-        jdbc.delete("""
-                delete from skill 
-                where tenant_id = ? and emp_id = ?
-                """
-            , emp.getTenantId()
-            , empId);
     }
 }
