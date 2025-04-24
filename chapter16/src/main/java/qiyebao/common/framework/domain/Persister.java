@@ -1,7 +1,7 @@
 package qiyebao.common.framework.domain;
 
 
-public abstract class Persister<T extends AuditableEntity> {
+public abstract class Persister<T extends Persistent> {
 
     public T save(T theObject) {
         switch (theObject.getPersistentStatus()) {
