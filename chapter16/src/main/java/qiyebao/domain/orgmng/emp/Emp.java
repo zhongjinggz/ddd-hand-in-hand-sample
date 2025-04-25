@@ -428,6 +428,7 @@ public class Emp extends AggregateRoot {
 
         private Loader() {
             this.emp = new Emp();
+            emp.toAsIs();
         }
 
         public Loader tenantId(Long tenantId) {

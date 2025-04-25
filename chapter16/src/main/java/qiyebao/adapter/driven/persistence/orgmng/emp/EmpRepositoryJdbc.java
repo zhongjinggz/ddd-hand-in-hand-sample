@@ -3,7 +3,6 @@ package qiyebao.adapter.driven.persistence.orgmng.emp;
 import org.springframework.jdbc.core.JdbcTemplate;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
 import qiyebao.common.framework.domain.AuditInfo;
-import qiyebao.common.framework.exception.OptimisticLockException;
 import qiyebao.common.framework.domain.Persister;
 import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.emp.Emp;
