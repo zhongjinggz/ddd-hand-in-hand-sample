@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Component
 public class SkillDao extends Persister<Skill> {
 
@@ -58,9 +57,12 @@ public class SkillDao extends Persister<Skill> {
     protected void delete(Skill skill) {
         jdbc.delete("""
                 delete from skill 
-                where tenant_id = ? and skill_type_id = ?
+                where tenant_id = ? 
+                  and emp_id = ?
+                  and skill_type_id = ?
                 """
             , skill.getTenantId()
+            , skill.getEmp().getId()
             , skill.getSkillTypeId());
     }
 
@@ -81,7 +83,9 @@ public class SkillDao extends Persister<Skill> {
               , duration = ?
               , updated_at = ?
               , updated_by = ?
-            where tenant_id = ? and skill_type_id = ? 
+            where tenant_id = ? 
+              and emp_id = ?
+              and skill_type_id = ? 
             """;
 
         jdbc.update(sql
@@ -90,6 +94,7 @@ public class SkillDao extends Persister<Skill> {
             , skill.getUpdatedAt()
             , skill.getUpdatedBy()
             , skill.getTenantId()
+            , skill.getEmp().getId()
             , skill.getSkillTypeId());
     }
 
