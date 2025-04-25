@@ -3,6 +3,7 @@ package qiyebao.adapter.driven.persistence.orgmng.emp;
 import org.springframework.jdbc.core.JdbcTemplate;
 import qiyebao.common.framework.adapter.driven.persistence.JdbcHelper;
 import qiyebao.common.framework.domain.AuditInfo;
+import qiyebao.common.framework.exception.OptimisticLockException;
 import qiyebao.common.framework.domain.Persister;
 import qiyebao.common.utils.TypedMap;
 import qiyebao.domain.orgmng.emp.Emp;
@@ -79,9 +80,12 @@ public class EmpRepositoryJdbc extends Persister<Emp> implements EmpRepository {
                , status_code =?
                , updated_at =?
                , updated_by =? 
-              where tenant_id = ? and id = ?
+               , version = version + 1
+              where tenant_id = ? 
+                and id = ?
+                and version = ?
             """;
-        jdbc.update(sql
+        jdbc.optimisticUpdate(sql
             , emp.getOrgId()
             , emp.getEmpNum()
             , emp.getIdNum()
@@ -92,7 +96,8 @@ public class EmpRepositoryJdbc extends Persister<Emp> implements EmpRepository {
             , emp.getUpdatedAt()
             , emp.getUpdatedBy()
             , emp.getTenantId()
-            , emp.getId());
+            , emp.getId()
+            , emp.getVersion());
     }
 
     @Override

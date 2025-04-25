@@ -3,6 +3,7 @@ package qiyebao.common.framework.adapter.driven.persistence;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import qiyebao.common.framework.exception.OptimisticLockException;
 import qiyebao.common.framework.exception.SystemException;
 import qiyebao.common.utils.TypedMap;
 
@@ -47,7 +48,11 @@ public class JdbcHelper {
     }
 
     public int optimisticUpdate(String sql, Object... params) {
-        return jdbc.update(sql, params);
+        int updatedCount = jdbc.update(sql, params);
+        if (updatedCount == 0 ) {
+            throw new OptimisticLockException("数据已经被其他用户修改，请重新操作");
+        }
+        return updatedCount;
     }
 
     public boolean selectExists(String sql, Object... params) {
