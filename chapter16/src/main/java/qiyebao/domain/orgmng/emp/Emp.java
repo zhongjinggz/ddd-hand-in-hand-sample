@@ -1,9 +1,6 @@
 package qiyebao.domain.orgmng.emp;
 
-import qiyebao.common.framework.domain.AuditInfo;
-import qiyebao.common.framework.domain.AuditableEntity;
-import qiyebao.common.framework.domain.CodeEnum;
-import qiyebao.common.framework.domain.PersistentStatus;
+import qiyebao.common.framework.domain.*;
 import qiyebao.common.framework.exception.BusinessException;
 
 import java.time.LocalDate;
@@ -13,7 +10,7 @@ import java.util.*;
 import static qiyebao.domain.orgmng.emp.Emp.Status.PROBATION;
 import static qiyebao.domain.orgmng.emp.Emp.Status.TERMINATED;
 
-public class Emp extends AuditableEntity {
+public class Emp extends AggregateRoot {
     private Long id;
     private Long tenantId;
     private Long orgId;
@@ -498,6 +495,11 @@ public class Emp extends AuditableEntity {
             return this;
         }
 
+        public Loader version(Long version) {
+            emp.setVersion(version);
+            return this;
+        }
+
         public Loader loadSkill(Long skillTypeId
             , String levelCode
             , Integer duration
@@ -538,6 +540,5 @@ public class Emp extends AuditableEntity {
         public Emp load() {
             return this.emp;
         }
-
     }
 }

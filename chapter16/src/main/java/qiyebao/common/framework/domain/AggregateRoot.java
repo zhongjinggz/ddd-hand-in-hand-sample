@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 public class AggregateRoot extends AuditableEntity {
     private Long version;
 
+    public AggregateRoot() {
+    }
+
     public AggregateRoot(PersistentStatus persistentStatus
         , LocalDateTime createdAt
         , Long createdBy

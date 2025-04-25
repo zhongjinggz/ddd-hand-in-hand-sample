@@ -142,7 +142,9 @@ public class EmpRepositoryJdbc extends Persister<Emp> implements EmpRepository {
                 .createdAt(empMap.getLocalDateTime("created_at"))
                 .createdBy(empMap.getLong("created_by"))
                 .updatedAt(empMap.getLocalDateTime("updated_at"))
-                .updatedBy(empMap.getLong("updated_by"));
+                .updatedBy(empMap.getLong("updated_by"))
+                .version(empMap.getLong("version"));
+
             return loader;
         }
     }
@@ -160,6 +162,7 @@ public class EmpRepositoryJdbc extends Persister<Emp> implements EmpRepository {
                  , created_by
                  , updated_at
                  , updated_by
+                 , version
             from emp
             where tenant_id = ? and id = ? 
             """;
