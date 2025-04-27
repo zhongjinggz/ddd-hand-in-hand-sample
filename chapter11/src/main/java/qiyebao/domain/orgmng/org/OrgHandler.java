@@ -12,16 +12,6 @@ public class OrgHandler {
         this.expect = expect;
     }
 
-    public void modify(Org org
-        , String newName
-        , Long newLeaderId
-        , Long userId
-    ) {
-        modifyName(org, newName);
-        modifyLeader(org, newLeaderId);
-        modifyAuditInfo(org, userId);
-    }
-
     public void cancel(Org org, Long userId) {
         expect.orgToBeCancelled().shouldNotHasEmp(org.getTenantId(), org.getId());
 
@@ -29,14 +19,14 @@ public class OrgHandler {
         modifyAuditInfo(org, userId);
     }
 
-    private void modifyLeader(Org org, Long newLeaderId) {
+    public void modifyLeader(Org org, Long newLeaderId) {
         if (newLeaderId != null && !newLeaderId.equals(org.getLeaderId())) {
             expect.orgLeader().shouldValid(org.getTenantId(), newLeaderId);
             org.setLeaderId(newLeaderId);
         }
     }
 
-    private void modifyName(Org org, String newName) {
+    public void modifyName(Org org, String newName) {
         if (newName != null && !newName.equals(org.getName())) {
             expect.orgName().shouldNotBlank(newName);
             expect.orgName().underSameSuperiorShouldNotDuplicated(org.getTenantId()
@@ -46,7 +36,7 @@ public class OrgHandler {
         }
     }
 
-    private void modifyAuditInfo(Org org, Long userId) {
+    public void modifyAuditInfo(Org org, Long userId) {
         org.setUpdatedBy(userId);
         org.setUpdatedAt(LocalDateTime.now());
     }

@@ -12,16 +12,16 @@ import qiyebao.domain.orgmng.org.OrgBuilderFactory;
 public class OrgService {
     private final OrgRepository orgRepository;
     private final OrgBuilderFactory orgBuilderFactory;
-    private final OrgHandler orgHandler;
+    private final OrgHandler handler;
 
     public OrgService(OrgRepository orgRepository
         , OrgBuilderFactory orgBuilderFactory
-        , OrgHandler orgHandler
+        , OrgHandler handler
     ) {
 
         this.orgRepository = orgRepository;
         this.orgBuilderFactory = orgBuilderFactory;
-        this.orgHandler = orgHandler;
+        this.handler = handler;
     }
 
     @Transactional
@@ -45,10 +45,9 @@ public class OrgService {
             .orElseThrow(() -> new BusinessException(
                 "要修改的组织(id =" + id + "  )不存在！"));
 
-        orgHandler.modify(org
-            , request.getName()
-            , request.getLeaderId()
-            , userId);
+        handler.modifyName(org, request.getName());
+        handler.modifyLeader(org, request.getLeaderId());
+        handler.modifyAuditInfo(org, userId);
 
         orgRepository.modify(org);
         return buildOrgResponse(org);
@@ -61,7 +60,7 @@ public class OrgService {
             .orElseThrow(() -> new BusinessException(
                 "要取消的组织(id =" + id + "  )不存在！"));
 
-        orgHandler.cancel(org, userId);
+        handler.cancel(org, userId);
         orgRepository.modify(org);
 
         return org.getId();
