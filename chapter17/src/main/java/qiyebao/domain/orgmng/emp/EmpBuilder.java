@@ -101,7 +101,7 @@ public class EmpBuilder {
     public Emp build() {
         validate();
 
-        Emp result = new Emp(tenantId, Emp.Status.ofCode(statusCode), createdBy);
+        Emp result = new Emp(tenantId, statusCode, createdBy);
         result.setEmpNum(generateEmpNum(tenantId));
         result.setIdNum(idNum);
         result.setDob(dob);

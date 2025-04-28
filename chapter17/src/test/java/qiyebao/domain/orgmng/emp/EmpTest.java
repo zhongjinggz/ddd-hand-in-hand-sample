@@ -17,7 +17,7 @@ public class EmpTest {
 
     @BeforeEach
     public void setUp() {
-        emp = new Emp(1L, Emp.Status.REGULAR, 100L);
+        emp = new Emp(1L, Emp.Status.REGULAR.getCode(), 100L);
     }
 
     @Test

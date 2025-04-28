@@ -35,10 +35,10 @@ public class Emp extends AggregateRoot {
     private Emp() {
     }
 
-    Emp(Long tenantId, Status status, Long createdBy) {
+    Emp(Long tenantId, String statusCode, Long createdBy) {
         super(PersistentStatus.NEW, LocalDateTime.now(), createdBy);
         this.tenantId = tenantId;
-        this.status = status;
+        this.status = Status.addedAs(statusCode);
     }
 
     public Long getId() {
@@ -65,7 +65,7 @@ public class Emp extends AggregateRoot {
     }
 
     void setEmpNum(String empNum) {
-        if(!Objects.equals(this.empNum, empNum)) {
+        if (!Objects.equals(this.empNum, empNum)) {
             this.empNum = empNum;
             asIsToUpdated();
         }
@@ -84,7 +84,7 @@ public class Emp extends AggregateRoot {
         }
     }
 
-    private void idNumShouldValid(String idNum){
+    private void idNumShouldValid(String idNum) {
         // TODO: 验证身份证
     }
 
@@ -94,7 +94,7 @@ public class Emp extends AggregateRoot {
     }
 
     void setName(String name) {
-        if(!Objects.equals(this.name, name)) {
+        if (!Objects.equals(this.name, name)) {
             nameShouldNotBlank(name);
 
             this.name = name;
@@ -113,7 +113,7 @@ public class Emp extends AggregateRoot {
     }
 
     void setGender(Gender gender) {
-        if(!Objects.equals(this.gender, gender)) {
+        if (!Objects.equals(this.gender, gender)) {
             this.gender = gender;
             asIsToUpdated();
         }
@@ -124,7 +124,7 @@ public class Emp extends AggregateRoot {
     }
 
     void setDob(LocalDate dob) {
-        if(!Objects.equals(this.dob, dob)) {
+        if (!Objects.equals(this.dob, dob)) {
             this.dob = dob;
             asIsToUpdated();
         }
@@ -136,33 +136,16 @@ public class Emp extends AggregateRoot {
 
     //转正
     void becomeRegular() {
-        // 调用业务规则: 试用期的员工才能被转正
-        onlyProbationCanBecomeRegular();
-        status = Status.REGULAR;
+        status = status.becameRegular();
         asIsToUpdated();
-    }
-
-    // 实现业务规则: 试用期的员工才能被转正
-    private void onlyProbationCanBecomeRegular() {
-        if (status != PROBATION) {
-            throw new BusinessException("试用期员工才能转正！");
-        }
     }
 
     //终止
     void terminate() {
-        // 调用业务规则: 已经终止的员工不能再次终止
-        shouldNotTerminateAgain();
-        status = TERMINATED;
+        status = status.terminated();
         asIsToUpdated();
     }
 
-    // 实现业务规则: 已经终止的员工不能再次终止
-    private void shouldNotTerminateAgain() {
-        if (status == TERMINATED) {
-            throw new BusinessException("已经终止的员工不能再次终止！");
-        }
-    }
     public List<Skill> getSkills() {
         return Collections.unmodifiableList(skills);
     }
@@ -418,6 +401,28 @@ public class Emp extends AggregateRoot {
 
         public String getDesc() {
             return desc;
+        }
+
+        static Status addedAs(String code) {
+            Status asStatus = ofCode(code);
+            if (!(PROBATION == asStatus) && !(REGULAR == asStatus)) {
+                throw new BusinessException("添加的员工只能是正式工或处于试用期!");
+            }
+            return asStatus;
+        }
+
+        Status becameRegular() {
+            if (this != PROBATION) {
+                throw new BusinessException("试用期员工才能转正！");
+            }
+            return REGULAR;
+        }
+
+        Status terminated() {
+            if (this == TERMINATED) {
+                throw new BusinessException("已经终止的员工不能再次终止！");
+            }
+            return TERMINATED;
         }
     }
 

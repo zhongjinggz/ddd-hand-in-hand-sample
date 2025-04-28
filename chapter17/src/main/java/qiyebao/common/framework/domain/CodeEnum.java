@@ -5,13 +5,8 @@ public interface CodeEnum {
 
     // 根据 code 获取枚举
     static <T extends CodeEnum> T ofCode(T[] values
-        , String code) {
-//        for (T value : values) {
-//            if (value.getCode().equals(code)) {
-//                return value;
-//            }
-//        }
-//        throw new IllegalArgumentException("错误的枚举代码 " + code);
+        , String code
+    ) {
         T result = codeToEnum(values, code);
         if (result != null) {
             return result;
@@ -22,13 +17,6 @@ public interface CodeEnum {
 
     static <T extends CodeEnum> boolean isValidCode(T[] values
         , String code) {
-//        for (T value : values) {
-//            if (value.getCode().equals(code)) {
-//                return true;
-//            }
-//        }
-//        return false;
-
         return codeToEnum(values, code) != null;
     }
 
