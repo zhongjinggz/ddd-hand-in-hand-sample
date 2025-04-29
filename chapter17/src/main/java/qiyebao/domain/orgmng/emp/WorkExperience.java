@@ -3,6 +3,7 @@ package qiyebao.domain.orgmng.emp;
 
 import qiyebao.common.framework.domain.AuditableEntity;
 import qiyebao.common.framework.domain.PersistentStatus;
+import qiyebao.domain.common.valueobject.DatePeriod;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,22 +12,19 @@ import java.time.LocalDateTime;
 public class WorkExperience extends AuditableEntity {
     private Emp emp;
     final private Long tenantId;
-    final private LocalDate startDate;
-    final private LocalDate endDate;
+    final private DatePeriod period;
     private String company;
 
     WorkExperience(Emp emp
         , Long tenantId
-        , LocalDate startDate
-        , LocalDate endDate
+        , DatePeriod period
         , LocalDateTime createdAt
         , Long createdBy) {
 
         super(PersistentStatus.NEW, createdAt, createdBy);
         this.emp = emp;
         this.tenantId = tenantId;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.period = period;
     }
 
     public Emp getEmp() {
@@ -37,13 +35,10 @@ public class WorkExperience extends AuditableEntity {
         return tenantId;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public DatePeriod getPeriod(){
+        return period;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
-    }
 
     public String getCompany() {
         return company;

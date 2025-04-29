@@ -9,7 +9,8 @@ public class WorkExperienceDto {
     private LocalDate endDate;
     private String company;
 
-    public WorkExperienceDto() {}
+    public WorkExperienceDto() {
+    }
 
     public WorkExperienceDto(LocalDate startDate, LocalDate endDate, String company) {
         this.startDate = startDate;
@@ -18,9 +19,9 @@ public class WorkExperienceDto {
     }
 
     public WorkExperienceDto(WorkExperience experience) {
-        this(experience.getStartDate()
-                , experience.getEndDate()
-                , experience.getCompany());
+        this(experience.getPeriod().getStart()
+            , experience.getPeriod().getEnd()
+            , experience.getCompany());
     }
 
     public LocalDate getStartDate() {

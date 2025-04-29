@@ -1,6 +1,7 @@
 package qiyebao.domain.orgmng.emp;
 
 import org.springframework.stereotype.Component;
+import qiyebao.domain.common.valueobject.DatePeriod;
 import qiyebao.domain.orgmng.emp.validator.EmpValidators;
 
 import java.time.LocalDate;
@@ -71,33 +72,28 @@ public class EmpHandler {
     }
 
     public void addExperience(Emp emp
-        , LocalDate startDate
-        , LocalDate endDate
+        , DatePeriod period
         , String company
         , Long userId
     ) {
-        emp.addExperience(startDate
-            , endDate
+        emp.addExperience(period
             , company
             , userId);
     }
 
     public void removeExperience(Emp emp
-        , LocalDate startDate
-        , LocalDate endDate
+        , DatePeriod period
         , Long userId
     ) {
-        emp.removeExperience(startDate, endDate, userId);
+        emp.removeExperience(period, userId);
     }
 
     public void modifyExperience(Emp emp
-        , LocalDate startDate
-        , LocalDate endDate
+        , DatePeriod period
         , String company
         , Long userId
     ) {
-        emp.modifyExperience(startDate
-            , endDate
+        emp.modifyExperience(period
             , company
             , userId);
     }

@@ -1,5 +1,6 @@
 package qiyebao.domain.orgmng.emp;
 
+import qiyebao.domain.common.valueobject.DatePeriod;
 import qiyebao.domain.orgmng.emp.validator.EmpValidators;
 import qiyebao.domain.orgmng.empnumcounter.EmpNumCounterRepository;
 
@@ -119,8 +120,7 @@ public class EmpBuilder {
         );
 
         experiences.forEach(e -> result.addExperience(
-            (LocalDate) e.get("startDate")
-            , (LocalDate) e.get("endDate")
+            DatePeriod.of((LocalDate) e.get("startDate"), (LocalDate) e.get("endDate"))
             , (String) e.get("company")
             , createdBy)
         );

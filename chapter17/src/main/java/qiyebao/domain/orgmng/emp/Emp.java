@@ -2,6 +2,7 @@ package qiyebao.domain.orgmng.emp;
 
 import qiyebao.common.framework.domain.*;
 import qiyebao.common.framework.exception.BusinessException;
+import qiyebao.domain.common.valueobject.DatePeriod;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -233,24 +234,20 @@ public class Emp extends AggregateRoot {
         return Collections.unmodifiableList(experiences);
     }
 
-    public Optional<WorkExperience> getExperience(LocalDate startDate
-        , LocalDate endDate) {
+    public Optional<WorkExperience> getExperience(DatePeriod period) {
         return experiences.stream()
-            .filter(e -> e.getStartDate().equals(startDate)
-                && e.getEndDate().equals(endDate))
+            .filter(e -> e.getPeriod().equals(period))
             .findAny();
     }
 
-    void addExperience(LocalDate startDate
-        , LocalDate endDate
+    void addExperience(DatePeriod period
         , String company
         , Long userId
     ) {
         // 调用业务规则: 工作经验的时间段不能重叠
-        expectDurationNotOverlap(startDate, endDate);
+        expectDurationNotOverlap(period);
 
-        newExperience(startDate
-            , endDate
+        newExperience(period
             , company
             , new AuditInfo(LocalDateTime.now(), userId)
         ).toNew();
@@ -258,14 +255,12 @@ public class Emp extends AggregateRoot {
         asIsToUpdated();
     }
 
-    private WorkExperience newExperience(LocalDate startDate
-        , LocalDate endDate
+    private WorkExperience newExperience(DatePeriod period
         , String company
         , AuditInfo audit) {
         WorkExperience newExperience = new WorkExperience(this
             , tenantId
-            , startDate
-            , endDate
+            , period
             , audit.getCreatedAt()
             , audit.getCreatedBy()
         );
@@ -277,12 +272,11 @@ public class Emp extends AggregateRoot {
         return newExperience;
     }
 
-    public void modifyExperience(LocalDate startDate
-        , LocalDate endDate
+    public void modifyExperience(DatePeriod period
         , String company
         , Long userId
     ) {
-        WorkExperience exp = this.getExperience(startDate, endDate)
+        WorkExperience exp = this.getExperience(period)
             .orElseThrow(() -> new IllegalArgumentException("不存在要修改的 WorkExperience!"));
 
         if (!exp.getCompany().equals(company)) {
@@ -295,28 +289,20 @@ public class Emp extends AggregateRoot {
         }
     }
 
-    public void removeExperience(LocalDate startDate, LocalDate endDate, Long userId) {
-        this.getExperience(startDate, endDate)
+    public void removeExperience(DatePeriod period, Long userId) {
+        this.getExperience(period)
             .orElseThrow(() -> new IllegalArgumentException("不存在要删除的WorkExperience!"))
             .toDeleted();
 
         asIsToUpdated();
     }
 
-    private void expectDurationNotOverlap(LocalDate startDate, LocalDate endDate) {
+    private void expectDurationNotOverlap(DatePeriod period) {
         if (experiences.stream().anyMatch(
-            e -> overlap(e, startDate, endDate))) {
+            e -> e.getPeriod().isOverlapped(period))
+        ) {
             throw new BusinessException("工作经验的时间段不能重叠!");
         }
-    }
-
-    private boolean overlap(WorkExperience experience
-        , LocalDate otherStart, LocalDate otherEnd) {
-        LocalDate thisStart = experience.getStartDate();
-        LocalDate thisEnd = experience.getEndDate();
-
-        return otherStart.isBefore(thisEnd)
-            && otherEnd.isAfter(thisStart);
     }
 
     public List<Post> getPosts() {
@@ -527,8 +513,7 @@ public class Emp extends AggregateRoot {
             , AuditInfo audit
         ) {
             emp.newExperience(
-                    startDate
-                    , endDate
+                    DatePeriod.of(startDate, endDate)
                     , company
                     , audit)
                 .toAsIs();

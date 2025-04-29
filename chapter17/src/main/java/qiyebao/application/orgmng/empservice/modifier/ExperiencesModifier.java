@@ -3,6 +3,7 @@ package qiyebao.application.orgmng.empservice.modifier;
 import org.springframework.stereotype.Component;
 import qiyebao.application.orgmng.empservice.dto.WorkExperienceDto;
 import qiyebao.common.framework.domain.CollectionModifier;
+import qiyebao.domain.common.valueobject.DatePeriod;
 import qiyebao.domain.orgmng.emp.Emp;
 import qiyebao.domain.orgmng.emp.EmpHandler;
 import qiyebao.domain.orgmng.emp.WorkExperience;
@@ -25,15 +26,15 @@ public class ExperiencesModifier extends CollectionModifier<Emp, WorkExperience,
 
     @Override
     protected boolean isSame(WorkExperience currExperience, WorkExperienceDto reqExperience) {
-        return Objects.equals(currExperience.getStartDate(), (reqExperience.getStartDate()))
-            && Objects.equals(currExperience.getEndDate(), reqExperience.getEndDate());
+        return Objects.equals(currExperience.getPeriod(),
+            DatePeriod.of(reqExperience.getStartDate(), reqExperience.getEndDate())
+        );
     }
 
     @Override
     protected void modifyItem(Emp emp, WorkExperienceDto reqExperience, Long userId) {
         handler.modifyExperience(emp
-            , reqExperience.getStartDate()
-            , reqExperience.getEndDate()
+            , DatePeriod.of(reqExperience.getStartDate(), reqExperience.getEndDate())
             , reqExperience.getCompany()
             , userId
         );
@@ -42,16 +43,14 @@ public class ExperiencesModifier extends CollectionModifier<Emp, WorkExperience,
     @Override
     protected void removeItem(Emp emp, WorkExperience currExperience, Long userId) {
         handler.removeExperience(emp
-            , currExperience.getStartDate()
-            , currExperience.getEndDate()
+            , currExperience.getPeriod()
             , userId);
     }
 
     @Override
     protected void addItem(Emp emp, WorkExperienceDto reqExperience, Long userId) {
         handler.addExperience(emp
-            , reqExperience.getStartDate()
-            , reqExperience.getEndDate()
+            , DatePeriod.of(reqExperience.getStartDate(), reqExperience.getEndDate())
             , reqExperience.getCompany()
             , userId
         );

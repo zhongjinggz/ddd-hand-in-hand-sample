@@ -27,8 +27,8 @@ public class WorkExperienceDao extends Persister<WorkExperience> {
 
         parms.put("emp_id", experience.getEmp().getId());
         parms.put("tenant_id", experience.getTenantId());
-        parms.put("start_date", experience.getStartDate());
-        parms.put("end_date", experience.getEndDate());
+        parms.put("start_date", experience.getPeriod().getStart());
+        parms.put("end_date", experience.getPeriod().getEnd());
         parms.put("company", experience.getCompany());
         parms.put("created_at", experience.getCreatedAt());
         parms.put("created_by", experience.getCreatedBy());
@@ -47,8 +47,8 @@ public class WorkExperienceDao extends Persister<WorkExperience> {
                 """
             , experience.getTenantId()
             , experience.getEmp().getId()
-            , experience.getStartDate()
-            , experience.getEndDate()
+            , experience.getPeriod().getStart()
+            , experience.getPeriod().getEnd()
         );
     }
     protected void deleteByEmpId(Emp emp, Long empId) {
@@ -77,8 +77,8 @@ public class WorkExperienceDao extends Persister<WorkExperience> {
             , experience.getUpdatedBy()
             , experience.getTenantId()
             , experience.getEmp().getId()
-            , experience.getStartDate()
-            , experience.getEndDate()
+            , experience.getPeriod().getStart()
+            , experience.getPeriod().getEnd()
         );
     }
 
@@ -92,7 +92,7 @@ public class WorkExperienceDao extends Persister<WorkExperience> {
                  , updated_at
                  , updated_by
             from work_experience
-            where tenant_id = ? 
+            where tenant_id = ?
               and emp_id = ?
             """;
 
