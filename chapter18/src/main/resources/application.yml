@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/unjuanable"
+    username: unjuanable
+    password: unjuanable
+    driver-class-name: com.mysql.cj.jdbc.Driver
+log:
+  level:
+    root: INFO
+    org:
+      springframework:
+        jdbc:
+          core: DEBUG
