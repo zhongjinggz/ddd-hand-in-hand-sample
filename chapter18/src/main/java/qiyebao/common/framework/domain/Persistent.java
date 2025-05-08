@@ -14,25 +14,23 @@ public class Persistent {
         return persistentStatus;
     }
 
-    public void toAsIs() {
-        this.persistentStatus = PersistentStatus.AS_IS;
+    public void loaded() {
+        persistentStatus = PersistentStatus.loaded();
     }
 
-    public void toNew() {
-        this.persistentStatus = PersistentStatus.NEW;
+    public void added() {
+        persistentStatus = PersistentStatus.added();
     }
 
-    public void toDeleted() {
-        this.persistentStatus = PersistentStatus.DELETED;
+    public void removed() {
+        persistentStatus = persistentStatus.removed();
     }
 
-    public void toUpdated() {
-        this.persistentStatus = PersistentStatus.UPDATED;
+     public void modified() {
+        persistentStatus = persistentStatus.modified();
     }
 
-    protected void asIsToUpdated() {
-        if (this.persistentStatus == PersistentStatus.AS_IS) {
-            this.toUpdated();
-        }
+    public void saved() {
+        persistentStatus = persistentStatus.saved();
     }
 }

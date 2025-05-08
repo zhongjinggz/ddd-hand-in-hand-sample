@@ -8,9 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static qiyebao.domain.orgmng.emp.Emp.Status.PROBATION;
-import static qiyebao.domain.orgmng.emp.Emp.Status.TERMINATED;
-
 public class Emp extends AggregateRoot {
     private Long id;
     private Long tenantId;
@@ -57,7 +54,7 @@ public class Emp extends AggregateRoot {
     void setOrgId(Long orgId) {
         if (!Objects.equals(this.orgId, orgId)) {
             this.orgId = orgId;
-            asIsToUpdated();
+            modified();
         }
     }
 
@@ -68,7 +65,7 @@ public class Emp extends AggregateRoot {
     void setEmpNum(String empNum) {
         if (!Objects.equals(this.empNum, empNum)) {
             this.empNum = empNum;
-            asIsToUpdated();
+            modified();
         }
     }
 
@@ -81,7 +78,7 @@ public class Emp extends AggregateRoot {
             idNumShouldValid(idNum);
 
             this.idNum = idNum;
-            asIsToUpdated();
+            modified();
         }
     }
 
@@ -99,7 +96,7 @@ public class Emp extends AggregateRoot {
             nameShouldNotBlank(name);
 
             this.name = name;
-            asIsToUpdated();
+            modified();
         }
     }
 
@@ -116,7 +113,7 @@ public class Emp extends AggregateRoot {
     void setGender(Gender gender) {
         if (!Objects.equals(this.gender, gender)) {
             this.gender = gender;
-            asIsToUpdated();
+            modified();
         }
     }
 
@@ -127,7 +124,7 @@ public class Emp extends AggregateRoot {
     void setDob(LocalDate dob) {
         if (!Objects.equals(this.dob, dob)) {
             this.dob = dob;
-            asIsToUpdated();
+            modified();
         }
     }
 
@@ -138,13 +135,13 @@ public class Emp extends AggregateRoot {
     //转正
     void becomeRegular() {
         status = status.becameRegular();
-        asIsToUpdated();
+        modified();
     }
 
     //终止
     void terminate() {
         status = status.terminated();
-        asIsToUpdated();
+        modified();
     }
 
     public List<Skill> getSkills() {
@@ -169,9 +166,9 @@ public class Emp extends AggregateRoot {
             , level
             , duration
             , new AuditInfo(LocalDateTime.now(), userId)
-        ).toNew();
+        ).added();
 
-        asIsToUpdated();
+        modified();
     }
 
     private Skill newSkill(Long skillTypeId
@@ -209,18 +206,18 @@ public class Emp extends AggregateRoot {
             skill.setDuration(duration);
             skill.setUpdatedBy(userId);
             skill.setUpdatedAt(LocalDateTime.now());
-            skill.toUpdated();
+            skill.modified();
 
-            asIsToUpdated();
+            modified();
         }
     }
 
     public void removeSkill(Long skillTypeId, Long userId) {
         this.getSkill(skillTypeId)
             .orElseThrow(() -> new IllegalArgumentException("中不存在要删除的skillTypeId!"))
-            .toDeleted();
+            .removed();
 
-        asIsToUpdated();
+        modified();
     }
 
     private void expectSkillTypeNotDuplicated(Long otherSkillTypeId) {
@@ -250,9 +247,9 @@ public class Emp extends AggregateRoot {
         newExperience(period
             , company
             , new AuditInfo(LocalDateTime.now(), userId)
-        ).toNew();
+        ).added();
 
-        asIsToUpdated();
+        modified();
     }
 
     private WorkExperience newExperience(DatePeriod period
@@ -283,18 +280,18 @@ public class Emp extends AggregateRoot {
             exp.setCompany(company);
             exp.setUpdatedBy(userId);
             exp.setUpdatedAt(LocalDateTime.now());
-            exp.toUpdated();
+            exp.modified();
 
-            asIsToUpdated();
+            modified();
         }
     }
 
     public void removeExperience(DatePeriod period, Long userId) {
         this.getExperience(period)
             .orElseThrow(() -> new IllegalArgumentException("不存在要删除的WorkExperience!"))
-            .toDeleted();
+            .removed();
 
-        asIsToUpdated();
+        modified();
     }
 
     private void expectDurationNotOverlap(DatePeriod period) {
@@ -319,9 +316,9 @@ public class Emp extends AggregateRoot {
         expectPostNotDuplicated(postTypeCode);
         newPost(postTypeCode
             , new AuditInfo(LocalDateTime.now(), userId)
-        ).toNew();
+        ).added();
 
-        asIsToUpdated();
+        modified();
     }
 
     private Post newPost(String postTypeCode, AuditInfo audit) {
@@ -343,9 +340,9 @@ public class Emp extends AggregateRoot {
     void removePost(String postTypeCode, Long userId) {
         this.getPost(postTypeCode)
             .orElseThrow(() -> new IllegalArgumentException("不存在要删除的岗位!"))
-            .toDeleted();
+            .removed();
 
-        asIsToUpdated();
+        modified();
     }
 
     private void expectPostNotDuplicated(String postTypeCode) {
@@ -419,7 +416,6 @@ public class Emp extends AggregateRoot {
 
         private Loader() {
             this.emp = new Emp();
-            emp.toAsIs();
         }
 
         public Loader tenantId(Long tenantId) {
@@ -502,7 +498,7 @@ public class Emp extends AggregateRoot {
                     , Skill.Level.ofCode(levelCode)
                     , duration
                     , audit)
-                .toAsIs();
+                .loaded();
 
             return this;
         }
@@ -516,7 +512,7 @@ public class Emp extends AggregateRoot {
                     DatePeriod.of(startDate, endDate)
                     , company
                     , audit)
-                .toAsIs();
+                .loaded();
 
             return this;
         }
@@ -524,11 +520,12 @@ public class Emp extends AggregateRoot {
         public Loader loadPost(String postTypeCode, AuditInfo audit
         ) {
             emp.newPost(postTypeCode, audit)
-                .toAsIs();
+                .loaded();
             return this;
         }
 
         public Emp load() {
+            emp.loaded();
             return this.emp;
         }
     }
