@@ -2,6 +2,7 @@ package qiyebao.domain.orgmng.emp;
 
 import org.springframework.stereotype.Component;
 import qiyebao.domain.common.valueobject.DatePeriod;
+import qiyebao.domain.common.valueobject.IndividualName;
 import qiyebao.domain.orgmng.emp.validator.EmpValidators;
 
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class EmpHandler {
         }
     }
 
-    public void modifyName(Emp emp, String newName) {
+    public void modifyName(Emp emp, IndividualName newName) {
         if (newName != null) {
             emp.setName(newName);
         }

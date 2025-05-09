@@ -28,7 +28,7 @@ public class EmpResponse {
         this.orgId = emp.getOrgId();
         this.empNum = emp.getEmpNum();
         this.idNum = emp.getIdNum();
-        this.name = emp.getName();
+        this.name = emp.getName().toString();
         this.genderCode = emp.getGender().getCode();
         this.dob = emp.getDob();
         this.statusCode = emp.getStatus().getCode();

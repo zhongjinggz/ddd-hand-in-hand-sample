@@ -1,6 +1,7 @@
 package qiyebao.domain.orgmng.emp;
 
 import qiyebao.domain.common.valueobject.DatePeriod;
+import qiyebao.domain.common.valueobject.IndividualName;
 import qiyebao.domain.orgmng.emp.validator.EmpValidators;
 import qiyebao.domain.orgmng.empnumcounter.EmpNumCounterRepository;
 
@@ -107,7 +108,7 @@ public class EmpBuilder {
         result.setIdNum(idNum);
         result.setDob(dob);
         result.setOrgId(orgId);
-        result.setName(name);
+        result.setName(IndividualName.of(name));
         result.setGender(Gender.ofCode(genderCode));
 
 

@@ -3,6 +3,7 @@ package qiyebao.domain.orgmng.emp;
 import qiyebao.common.framework.domain.*;
 import qiyebao.common.framework.exception.BusinessException;
 import qiyebao.domain.common.valueobject.DatePeriod;
+import qiyebao.domain.common.valueobject.IndividualName;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public class Emp extends AggregateRoot {
     private String empNum;
     private String idNum;
 
-    private String name;
+    private IndividualName name;
     private Gender gender;
     private LocalDate dob;
     private Status status;
@@ -87,23 +88,14 @@ public class Emp extends AggregateRoot {
     }
 
 
-    public String getName() {
+    public IndividualName getName() {
         return name;
     }
 
-    void setName(String name) {
-        if (!Objects.equals(this.name, name)) {
-            nameShouldNotBlank(name);
-
-            this.name = name;
-            modified();
-        }
-    }
-
-    private void nameShouldNotBlank(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new BusinessException("姓名不能为空！");
-        }
+    void setName(IndividualName name) {
+        Objects.requireNonNull("姓名不能为空");
+        this.name = name;
+        modified();
     }
 
     public Gender getGender() {
@@ -449,7 +441,7 @@ public class Emp extends AggregateRoot {
         }
 
         public Loader name(String name) {
-            emp.name = name;
+            emp.name = IndividualName.of(name);
             return this;
         }
 

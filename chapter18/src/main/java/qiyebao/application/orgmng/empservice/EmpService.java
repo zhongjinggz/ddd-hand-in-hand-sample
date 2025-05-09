@@ -10,6 +10,7 @@ import qiyebao.application.orgmng.empservice.modifier.ExperiencesModifier;
 import qiyebao.application.orgmng.empservice.modifier.PostsModifier;
 import qiyebao.application.orgmng.empservice.modifier.SkillsModifier;
 import qiyebao.common.framework.exception.BusinessException;
+import qiyebao.domain.common.valueobject.IndividualName;
 import qiyebao.domain.orgmng.emp.*;
 
 @Service
@@ -106,7 +107,7 @@ public class EmpService {
                 "Emp id(" + empId + ") 不正确！"));
 
         handler.modifyIdNum(emp, request.getIdNum());
-        handler.modifyName(emp, request.getName());
+        handler.modifyName(emp, IndividualName.of(request.getName()));
         handler.modifyDob(emp, request.getDob());
         handler.modifyGender(emp, Gender.ofCode(request.getGenderCode()));
 
