@@ -58,8 +58,8 @@ public class EmpHandler {
         emp.addSkill(skillTypeId, level, duration, userId);
     }
 
-    public void removeSkill(Emp emp, Long skillTypeId, Long userId) {
-        emp.removeSkill(skillTypeId, userId);
+    public void removeSkill(Emp emp, Long skillTypeId) {
+        emp.removeSkill(skillTypeId);
     }
 
     public void modifySkill(Emp emp
@@ -84,9 +84,8 @@ public class EmpHandler {
 
     public void removeExperience(Emp emp
         , DatePeriod period
-        , Long userId
     ) {
-        emp.removeExperience(period, userId);
+        emp.removeExperience(period);
     }
 
     public void modifyExperience(Emp emp

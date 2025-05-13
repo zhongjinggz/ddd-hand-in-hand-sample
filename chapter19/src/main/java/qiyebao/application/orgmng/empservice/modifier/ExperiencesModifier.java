@@ -44,7 +44,7 @@ public class ExperiencesModifier extends CollectionModifier<Emp, WorkExperience,
     protected void removeItem(Emp emp, WorkExperience currExperience, Long userId) {
         handler.removeExperience(emp
             , currExperience.getPeriod()
-            , userId);
+        );
     }
 
     @Override

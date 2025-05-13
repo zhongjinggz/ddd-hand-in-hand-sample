@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import qiyebao.common.framework.exception.BusinessException;
 import qiyebao.domain.common.valueobject.DatePeriod;
 
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,10 +24,10 @@ public class EmpTest {
     public void addSkill_SkillTypeNotDuplicated_ShouldAddSkill() {
         emp.addSkill(1L, Skill.Level.BEGINNER, 12, 100L);
 
-        List<Skill> skills = emp.getSkills();
+        Collection<Skill> skills = emp.getSkills();
         assertEquals(1, skills.size());
 
-        Skill skill = skills.get(0);
+        Skill skill = skills.iterator().next();
         assertEquals(1L, skill.getSkillTypeId());
         assertEquals(Skill.Level.BEGINNER, skill.getLevel());
         assertEquals(12, skill.getDuration());

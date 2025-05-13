@@ -40,7 +40,7 @@ public class SkillsModifier extends CollectionModifier<Emp, Skill, SkillDto> {
 
     @Override
     protected void removeItem(Emp emp, Skill currSkill, Long userId) {
-        handler.removeSkill(emp, currSkill.getSkillTypeId(), userId);
+        handler.removeSkill(emp, currSkill.getSkillTypeId());
     }
 
     @Override

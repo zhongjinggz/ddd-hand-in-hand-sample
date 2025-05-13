@@ -22,9 +22,13 @@ public class Emp extends AggregateRoot {
     private LocalDate dob;
     private Status status;
 
-    final private List<Skill> skills = new ArrayList<>();
+    // final private List<Skill> skills = new ArrayList<>();
+    final private Map<Long, Skill> skills = new HashMap<>();
+
     final private List<WorkExperience> experiences = new ArrayList<>();
-    final private List<Post> posts = new ArrayList<>();
+
+    //    final private List<Post> posts = new ArrayList<>();
+    final private Map<String,Post> posts = new HashMap<>();
 
     // 仅用于从数据库中加载数据或编写测试案例
     public static Loader loader() {
@@ -93,7 +97,7 @@ public class Emp extends AggregateRoot {
     }
 
     void setName(IndividualName name) {
-        Objects.requireNonNull("姓名不能为空");
+        Objects.requireNonNull(name);
         this.name = name;
         modified();
     }
@@ -136,14 +140,16 @@ public class Emp extends AggregateRoot {
         modified();
     }
 
-    public List<Skill> getSkills() {
-        return Collections.unmodifiableList(skills);
+    // public List<Skill> getSkills() {
+    public Collection<Skill> getSkills() {
+        return Collections.unmodifiableCollection(skills.values());
     }
 
     public Optional<Skill> getSkill(Long skillTypeId) {
-        return skills.stream()
-            .filter(s -> s.getSkillTypeId() == skillTypeId)
-            .findAny();
+        //return skills.stream()
+        //    .filter(s -> s.getSkillTypeId() == skillTypeId)
+        //    .findAny();
+        return Optional.ofNullable(skills.get(skillTypeId));
     }
 
     void addSkill(Long skillTypeId
@@ -179,7 +185,8 @@ public class Emp extends AggregateRoot {
         newSkill.setUpdatedAt(audit.getUpdatedAt());
         newSkill.setUpdatedBy(audit.getUpdatedBy());
 
-        skills.add(newSkill);
+        // skills.add(newSkill);
+        skills.put(skillTypeId, newSkill);
         return newSkill;
     }
 
@@ -204,7 +211,7 @@ public class Emp extends AggregateRoot {
         }
     }
 
-    public void removeSkill(Long skillTypeId, Long userId) {
+    public void removeSkill(Long skillTypeId) {
         this.getSkill(skillTypeId)
             .orElseThrow(() -> new IllegalArgumentException("中不存在要删除的skillTypeId!"))
             .removed();
@@ -213,8 +220,11 @@ public class Emp extends AggregateRoot {
     }
 
     private void expectSkillTypeNotDuplicated(Long otherSkillTypeId) {
-        if (skills.stream().anyMatch(
-            s -> s.getSkillTypeId() == otherSkillTypeId)) {
+        //if (skills.stream().anyMatch(
+        //    s -> s.getSkillTypeId() == otherSkillTypeId)) {
+        //    throw new BusinessException("同一技能不能录入两次！");
+        //}
+        if (skills.get(otherSkillTypeId) != null) {
             throw new BusinessException("同一技能不能录入两次！");
         }
     }
@@ -278,7 +288,7 @@ public class Emp extends AggregateRoot {
         }
     }
 
-    public void removeExperience(DatePeriod period, Long userId) {
+    public void removeExperience(DatePeriod period) {
         this.getExperience(period)
             .orElseThrow(() -> new IllegalArgumentException("不存在要删除的WorkExperience!"))
             .removed();
@@ -294,14 +304,12 @@ public class Emp extends AggregateRoot {
         }
     }
 
-    public List<Post> getPosts() {
-        return Collections.unmodifiableList(posts);
+    public Collection<Post> getPosts() {
+        return Collections.unmodifiableCollection(posts.values());
     }
 
     public Optional<Post> getPost(String postTypeCode) {
-        return posts.stream()
-            .filter(p -> p.getPostTypeCode().equals(postTypeCode))
-            .findAny();
+        return Optional.ofNullable(posts.get(postTypeCode));
     }
 
     void addPost(String postTypeCode, Long userId) {
@@ -323,8 +331,8 @@ public class Emp extends AggregateRoot {
         newPost.setUpdatedAt(audit.getUpdatedAt());
         newPost.setUpdatedBy(audit.getUpdatedBy());
 
-        posts.add(newPost);
-
+//        posts.add(newPost);
+        posts.put(postTypeCode, newPost);
         return newPost;
     }
 
@@ -338,17 +346,14 @@ public class Emp extends AggregateRoot {
     }
 
     private void expectPostNotDuplicated(String postTypeCode) {
-        if (posts.stream().anyMatch(
-            post ->
-                post.getPostTypeCode().equals(postTypeCode))
-        ) {
+        if (posts.get(postTypeCode) != null) {
             throw new BusinessException("不能重复添加岗位!");
         }
     }
 
     // ==== internal classes ====
 
-    public static enum Status implements CodeEnum {
+    public enum Status implements CodeEnum {
         REGULAR("REG", "正式"),
         PROBATION("PRO", "试用期"),
         TERMINATED("TER", "终止");
