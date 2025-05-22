@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class DatePeriod {
+    final public static LocalDate MAX = LocalDate.of(9999, 12, 31);
+
+
     final private LocalDate start;
     final private LocalDate end;
 
@@ -45,6 +48,10 @@ public class DatePeriod {
     ) {
         return new DatePeriod(LocalDate.of(startYear, startMonth, startDay)
             , LocalDate.of(endYear, endMonth, endDay));
+    }
+
+    public static DatePeriod startAt(LocalDate start){
+        return new DatePeriod(start, LocalDate.MAX);
     }
 
     //是否与入参时间段重叠
