@@ -2,7 +2,7 @@ package qiyebao.common.framework.domain;
 
 import java.time.LocalDateTime;
 
-public class AggregateRoot extends AuditableEntity {
+public abstract class AggregateRoot extends AuditableEntity {
     private Long version;
 
     public AggregateRoot() {
