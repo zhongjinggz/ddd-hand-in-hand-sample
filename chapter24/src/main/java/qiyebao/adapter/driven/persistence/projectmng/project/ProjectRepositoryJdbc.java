@@ -1,7 +1,19 @@
 package qiyebao.adapter.driven.persistence.projectmng.project;
 
 import org.springframework.stereotype.Repository;
+import qiyebao.domain.projectmng.project.Project;
+import qiyebao.domain.projectmng.project.ProjectRepository;
+import java.util.List;
 
 @Repository
-public class ProjectRepositoryJdbc {
+public class ProjectRepositoryJdbc implements ProjectRepository {
+    @Override
+    public List<Project> findAssignmentsByEmp(Long empId) {
+        return null;
+    }
+
+    @Override
+    public List<Project> findInternalProjects() {
+        return null;
+    }
 }

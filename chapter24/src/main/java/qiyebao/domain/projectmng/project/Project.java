@@ -65,6 +65,20 @@ public class Project extends AggregateRoot
         return this.name = name;
     }
 
+    public List<SubProject> getSubProjects() {
+        return Collections.unmodifiableList(subProjects);
+    }
+
+    @Override
+    public List<? extends EffortItem> getSubEffortItems() {
+//        List<EffortItem> result = new ArrayList<>();
+//        for (var sub : subProjects) {
+//            result.add(sub);
+//        }
+//        return result;
+        return subProjects;
+    }
+
     public enum Status {
         TODO, DOING, DONE
     }

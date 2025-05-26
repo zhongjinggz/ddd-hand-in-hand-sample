@@ -41,7 +41,7 @@ public class SubProject extends AuditableEntity
         return this.name = name;
     }
 
-    public static enum Status {
-        TODO, DOING, DONE;
+    public enum Status {
+        TODO, DOING, DONE
     }
 }
