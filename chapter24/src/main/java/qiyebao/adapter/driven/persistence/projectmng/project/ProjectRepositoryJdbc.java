@@ -9,11 +9,13 @@ import java.util.List;
 public class ProjectRepositoryJdbc implements ProjectRepository {
     @Override
     public List<Project> findAssignmentsByEmp(Long empId) {
+        //TODO
         return null;
     }
 
     @Override
-    public List<Project> findInternalProjects() {
+    public List<Project> findProjectsNotRequireAssignment() {
+        //TODO
         return null;
     }
 }

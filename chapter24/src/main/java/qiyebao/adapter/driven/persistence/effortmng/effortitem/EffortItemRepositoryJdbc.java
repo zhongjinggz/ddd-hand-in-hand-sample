@@ -25,7 +25,7 @@ public class EffortItemRepositoryJdbc implements EffortItemRepository {
         List<EffortItem> result = new ArrayList<>();
 
         result.addAll(projectRepository.findAssignmentsByEmp(empId));
-        result.addAll(projectRepository.findInternalProjects());
+        result.addAll(projectRepository.findProjectsNotRequireAssignment());
         result.addAll(commonEffortItemRepository.findAll());
 
         return result;

@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface ProjectRepository {
     List<Project> findAssignmentsByEmp(Long empId);
-    List<Project> findInternalProjects();
+    List<Project> findProjectsNotRequireAssignment();
 }

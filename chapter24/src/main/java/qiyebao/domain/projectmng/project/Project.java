@@ -71,12 +71,7 @@ public class Project extends AggregateRoot
 
     @Override
     public List<? extends EffortItem> getSubEffortItems() {
-//        List<EffortItem> result = new ArrayList<>();
-//        for (var sub : subProjects) {
-//            result.add(sub);
-//        }
-//        return result;
-        return subProjects;
+        return getSubProjects();
     }
 
     public enum Status {
