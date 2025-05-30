@@ -10,11 +10,14 @@ public class CorporateClient extends Client {
     private String name;
     private String taxNum;
 
-    public CorporateClient(PersistentStatus persistentStatus
-        , LocalDateTime createdAt
-        , Long createdBy
-    ) {
-        super(persistentStatus, createdAt, createdBy);
+    // 用于新增
+    public CorporateClient(LocalDateTime createdAt, Long createdBy) {
+        super(PersistentStatus.added(), null, createdAt, createdBy);
+    }
+
+    // 用于从数据库加载
+    public CorporateClient(Long id, LocalDateTime createdAt, Long createdBy) {
+        super(PersistentStatus.loaded(), id, createdAt, createdBy);
     }
 
     @Override

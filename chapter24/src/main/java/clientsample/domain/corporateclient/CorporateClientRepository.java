@@ -1,8 +1,10 @@
 package clientsample.domain.corporateclient;
 
+import clientsample.adapter.driven.persistence.CorporateClientRepositoryJdbc;
+
 import java.util.Optional;
 
 public interface CorporateClientRepository {
-    boolean save(CorporateClient corporateClient);
+    CorporateClient save(CorporateClient corporateClient);
     Optional<CorporateClient> findById(Long id);
 }

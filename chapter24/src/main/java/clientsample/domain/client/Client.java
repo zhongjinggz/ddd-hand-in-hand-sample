@@ -11,10 +11,11 @@ public abstract class Client extends AggregateRoot {
     private Address address;
 
     protected Client(PersistentStatus persistentStatus
+        , Long id
         , LocalDateTime createdAt
-        , Long createdBy
-    ) {
+        , Long createdBy) {
         super(persistentStatus, createdAt, createdBy);
+        this.id = id;
     }
 
     public abstract String getClientType();

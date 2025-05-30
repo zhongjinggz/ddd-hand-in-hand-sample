@@ -18,7 +18,9 @@ import static org.apache.commons.lang3.ArrayUtils.*;
 import static qiyebao.common.utils.ReflectUtils.forceSet;
 
 @Repository
-public class EmpRepositoryJdbc extends Persister<Emp> implements EmpRepository {
+public class EmpRepositoryJdbc
+    extends Persister<Emp>
+    implements EmpRepository {
 
     private final JdbcHelper jdbc;
     private final SkillDao skillDao;
