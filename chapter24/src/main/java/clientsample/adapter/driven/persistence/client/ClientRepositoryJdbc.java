@@ -1,4 +1,4 @@
-package clientsample.adapter.driven.persistence;
+package clientsample.adapter.driven.persistence.client;
 
 import clientsample.domain.client.Client;
 import clientsample.domain.client.ClientRepository;

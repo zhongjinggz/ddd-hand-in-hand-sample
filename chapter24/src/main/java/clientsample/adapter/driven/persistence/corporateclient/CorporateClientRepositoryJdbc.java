@@ -1,5 +1,6 @@
-package clientsample.adapter.driven.persistence;
+package clientsample.adapter.driven.persistence.corporateclient;
 
+import clientsample.adapter.driven.persistence.client.ClientDao;
 import clientsample.domain.corporateclient.CorporateClient;
 import clientsample.domain.corporateclient.CorporateClientRepository;
 import clientsample.common.framework.domain.Persister;

@@ -1,5 +1,6 @@
-package clientsample.adapter.driven.persistence;
+package clientsample.adapter.driven.persistence.personalclient;
 
+import clientsample.adapter.driven.persistence.client.ClientDao;
 import clientsample.common.framework.domain.Persister;
 import clientsample.domain.personalclient.PersonalClient;
 import clientsample.domain.personalclient.PersonalClientRepository;

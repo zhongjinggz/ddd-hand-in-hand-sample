@@ -1,8 +1,8 @@
-package clientsample.adapter.driven.persistence;
+package clientsample.adapter.driven.persistence.personalclient;
 
 import clientsample.common.framework.adapter.driven.persistence.JdbcHelper;
 import clientsample.domain.common.valueobject.Address;
-import clientsample.domain.corporateclient.CorporateClient;
+import clientsample.domain.personalclient.PersonalClient;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -11,48 +11,47 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Objects.requireNonNull;
 import static qiyebao.common.utils.SqlUtils.toLocalDateTime;
 
+
 @Component
-public class CorporateClientDao {
+public class PersonalClientDao {
 
     private final JdbcHelper jdbc;
 
-    public CorporateClientDao(JdbcTemplate jdbcTemplate) {
-        this.jdbc = new JdbcHelper(jdbcTemplate, "corporate_client");
+    public PersonalClientDao(JdbcTemplate jdbcTemplate) {
+        this.jdbc = new JdbcHelper(jdbcTemplate, "personal_client");
     }
 
-    void insert(CorporateClient client) {
-        Map<String, Object> params = Map.of(
-            "id", client.getId()
+    void insert(PersonalClient client) {
+        jdbc.insert(Map.<String, Object>of(
+            "id", requireNonNull(client.getId())
             , "name", client.getName()
-            , "tax_num", client.getTaxNum()
+            , "id_num", client.getIdNum()
             , "created_at", client.getCreatedAt()
             , "created_by", client.getCreatedBy()
-        );
-
-        jdbc.insert(params);
+        ));
     }
 
-    void update(CorporateClient client) {
+    void update(PersonalClient client) {
         String sql = """
-            update corporate_client
-            set name = ?
-              , tax_num =?
-              , last_updated_at =?
-              , last_updated_by =?
-             where id = ?
+            update personal_client 
+               set name = ?
+                 , id_num =? 
+                 , updated_at =?
+                 , updated_by =? 
+             where id = ? 
             """;
-
         jdbc.update(sql
             , client.getName()
-            , client.getTaxNum()
+            , client.getIdNum()
             , client.getUpdatedAt()
             , client.getUpdatedBy()
             , client.getId());
     }
 
-    Optional<CorporateClient> selectById(Long id) {
+    Optional<PersonalClient> selectById(Long id) {
         String sql = """
             select c.version
                  , c.addr_country
@@ -60,25 +59,26 @@ public class CorporateClientDao {
                  , c.addr_city
                  , c.addr_district
                  , c.addr_detail
-                 , cc.name
-                 , cc.tax_num
-                 , cc.created_at
-                 , cc.created_by
-                 , cc.update_at
-                 , cc.updated_by
-            from client as c
-            left join corporate_client  as cc
-              on c.id = cc.id
-            where c.id = ? and c.client_type = 'C'
+                 , pc.name
+                 , pc.id_num
+                 , pc.created_at
+                 , pc.created_by
+                 , pc.update_at
+                 , pc.updated_by
+             from personal_client as pc
+               left join client  as c
+               on c.id = pc.id 
+             where c.id = ?
+               and c.client_type = 'P' 
             """;
 
-        return jdbc.selectOne(sql, this::mapToCorporateClient, id);
+        return jdbc.selectOne(sql, this::mapToPersonalClient, id);
     }
 
-    private CorporateClient mapToCorporateClient(ResultSet rs, int rowNum)
+    private PersonalClient mapToPersonalClient(ResultSet rs, int rowNum)
         throws SQLException {
 
-        CorporateClient result = new CorporateClient(
+        PersonalClient result = new PersonalClient(
             rs.getLong("id")
             , toLocalDateTime(rs, "created_at")
             , rs.getLong("created_by")
@@ -92,7 +92,7 @@ public class CorporateClientDao {
             , rs.getString("addr_detail")
         ));
         result.setName(rs.getString("name"));
-        result.setTaxNum(rs.getString("tax_num"));
+        result.setIdNum(rs.getString("id_num"));
         result.setUpdatedAt(toLocalDateTime(rs, "updated_at"));
         result.setUpdatedBy(rs.getLong("updated_by"));
 
