@@ -98,4 +98,13 @@ public class CorporateClientDao {
 
         return result;
     }
+
+    public void delete(CorporateClient client) {
+        jdbc.delete("""
+                delete from corporate_client 
+                where id = ?
+                """
+            , client.getId()
+        );
+    }
 }

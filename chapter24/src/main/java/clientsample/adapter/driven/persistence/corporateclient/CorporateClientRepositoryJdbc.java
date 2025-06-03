@@ -37,6 +37,11 @@ public class CorporateClientRepositoryJdbc
         corporateClientDao.update(client);
     }
 
+    @Override
+    protected void delete(CorporateClient client) {
+        corporateClientDao.delete(client);
+        clientDao.delete(client);
+    }
 
     @Override
     public Optional<CorporateClient> findById(Long id) {

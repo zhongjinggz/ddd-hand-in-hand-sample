@@ -2,6 +2,7 @@ package clientsample.adapter.driven.persistence.client;
 
 import clientsample.domain.client.Client;
 import clientsample.domain.common.valueobject.Address;
+import clientsample.domain.corporateclient.CorporateClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -64,5 +65,13 @@ public class ClientDao {
             , client.getUpdatedBy()
             , client.getId()
             , client.getVersion());
+    }
+
+    public void delete(CorporateClient client) {
+        jdbc.delete("""
+                delete from corporate_client
+                where id = ?
+                """
+            , client.getId());
     }
 }
