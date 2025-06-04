@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static qiyebao.common.utils.SqlUtils.toLocalDateTime;
@@ -23,6 +24,8 @@ public class CorporateClientDao {
     }
 
     void insert(CorporateClient client) {
+        Objects.requireNonNull(client.getId());
+
         Map<String, Object> params = Map.of(
             "id", client.getId()
             , "name", client.getName()
