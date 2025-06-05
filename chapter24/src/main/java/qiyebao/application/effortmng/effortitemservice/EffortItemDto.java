@@ -3,13 +3,13 @@ package qiyebao.application.effortmng.effortitemservice;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EffortItemDTO {
+public class EffortItemDto {
     private Long effortItemId;
     private String name;
     private Type type;
-    private List<EffortItemDTO> subEffortItems = new ArrayList<>();
+    private List<EffortItemDto> subEffortItems = new ArrayList<>();
 
-    public EffortItemDTO(Long effortItemId, String name, Type type) {
+    public EffortItemDto(Long effortItemId, String name, Type type) {
         this.effortItemId = effortItemId;
         this.name = name;
         this.type = type;
@@ -29,11 +29,11 @@ public class EffortItemDTO {
     }
 
 
-    public List<EffortItemDTO> getSubEffortItems() {
+    public List<EffortItemDto> getSubEffortItems() {
         return subEffortItems;
     }
 
-    public void addSubItem(EffortItemDTO subEffortItem) {
+    public void addSubItem(EffortItemDto subEffortItem) {
         this.subEffortItems.add(subEffortItem);
     }
 

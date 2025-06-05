@@ -9,7 +9,7 @@ import qiyebao.domain.projectmng.project.SubProject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static qiyebao.application.effortmng.effortitemservice.EffortItemDTO.Type.*;
+import static qiyebao.application.effortmng.effortitemservice.EffortItemDto.Type.*;
 
 public class EffortItemService {
     final private EffortItemRepository effortItemRepository;
@@ -19,37 +19,37 @@ public class EffortItemService {
     }
 
     // 查询员工的工时项
-    public List<EffortItemDTO> findEffortItemsByEmp(Long empId) {
+    public List<EffortItemDto> findEffortItemsByEmp(Long empId) {
         List<EffortItem> effortItems = effortItemRepository.findByEmp(empId);
 
-        List<EffortItemDTO> result = new ArrayList<>();
+        List<EffortItemDto> result = new ArrayList<>();
         for (EffortItem item : effortItems) {
-            result.add(buildEffortItemDTO(item));
+            result.add(buildEffortItemDto(item));
         }
 
         return result;
     }
 
     // 根据 EffortItem 构建 EffortItemDTO
-    private EffortItemDTO buildEffortItemDTO(EffortItem item) {
-        EffortItemDTO.Type type = typeOf(item);
+    private EffortItemDto buildEffortItemDto(EffortItem item) {
+        EffortItemDto.Type type = typeOf(item);
 
-        EffortItemDTO effortItemDTO = new EffortItemDTO(item.getEffortItemId()
+        EffortItemDto effortItemDto = new EffortItemDto(item.getEffortItemId()
             , item.getName()
             , type);
 
         // 递归构建子工时项
         List<? extends EffortItem> subItems = item.getSubEffortItems();
         for (EffortItem subItem : subItems) {
-            EffortItemDTO subEffortItemDTO = buildEffortItemDTO(subItem);
-            effortItemDTO.addSubItem(subEffortItemDTO);
+            EffortItemDto subEffortItemDto = buildEffortItemDto(subItem);
+            effortItemDto.addSubItem(subEffortItemDto);
         }
 
-        return effortItemDTO;
+        return effortItemDto;
     }
 
     // 根据工时项类型
-    private EffortItemDTO.Type typeOf(EffortItem effortItem) {
+    private EffortItemDto.Type typeOf(EffortItem effortItem) {
         return switch (effortItem) {
             case Project p -> PROJECT;
             case SubProject s -> SUB_PROJECT;
